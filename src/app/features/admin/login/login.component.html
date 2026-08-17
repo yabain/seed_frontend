@@ -1,0 +1,90 @@
+<div class="login-layout">
+  <div class="login-panel">
+    <a routerLink="/" class="brand">
+      <img
+        *ngIf="siteConfig()?.logo"
+        [src]="siteConfig()?.logo"
+        alt="Logo"
+        class="brand-badge brand-badge--img"
+      />
+      <span class="brand-badge" *ngIf="!siteConfig()?.logo">{{ (siteConfig()?.orgName || 'S').charAt(0) }}</span>
+      <span class="brand-text"><strong>{{ siteConfig()?.orgName || 'SEEDS' }}</strong><small>{{ siteConfig()?.tagline || 'Yaba-In SARL' }}</small></span>
+    </a>
+
+    <h1>Espace administrateur</h1>
+    <p class="text-muted" *ngIf="!requiresTwoFactor()">Connectez-vous pour gérer la plateforme.</p>
+    <p class="text-muted" *ngIf="requiresTwoFactor()">
+      Un code de vérification a été envoyé à <strong>{{ emailFor2FA() }}</strong>.
+    </p>
+
+    <form *ngIf="!requiresTwoFactor(); else twoFactorTemplate" [formGroup]="loginForm" (ngSubmit)="submitCredentials()">
+      <div class="form-field">
+        <label for="login-email">Adresse e-mail</label>
+        <input
+          id="login-email"
+          class="form-control"
+          type="email"
+          formControlName="email"
+          placeholder="admin@seeds.org"
+        />
+        <p class="error-msg" *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
+          {{ loginForm.get('email')?.hasError('required') ? 'L’e-mail est requis.' : 'E-mail invalide.' }}
+        </p>
+      </div>
+
+      <div class="form-field">
+        <label for="login-password">Mot de passe</label>
+        <input
+          id="login-password"
+          class="form-control"
+          type="password"
+          formControlName="password"
+          placeholder="••••••••"
+        />
+        <p class="error-msg" *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+          Le mot de passe doit contenir au moins 6 caractères.
+        </p>
+      </div>
+
+      <button class="btn btn--primary btn--block" type="submit" [disabled]="submitting()">
+        {{ submitting() ? 'Connexion…' : 'Se connecter' }}
+      </button>
+    </form>
+
+    <ng-template #twoFactorTemplate>
+      <form [formGroup]="codeForm" (ngSubmit)="submitCode()">
+        <div class="form-field">
+          <label for="login-2fa-code">Code de vérification</label>
+          <input
+            id="login-2fa-code"
+            class="form-control"
+            type="text"
+            inputmode="numeric"
+            maxlength="6"
+            formControlName="code"
+            placeholder="123456"
+            autocomplete="one-time-code"
+          />
+          <p class="error-msg" *ngIf="codeForm.get('code')?.touched && codeForm.get('code')?.invalid">
+            {{ codeForm.get('code')?.hasError('required') ? 'Le code est requis.' : 'Le code doit contenir exactement 6 chiffres.' }}
+          </p>
+        </div>
+
+        <button class="btn btn--primary btn--block" type="submit" [disabled]="submitting()">
+          {{ submitting() ? 'Vérification…' : 'Vérifier' }}
+        </button>
+      </form>
+
+      <div class="login-2fa-actions">
+        <button class="btn btn--ghost btn--sm" type="button" (click)="resendCode()" [disabled]="resending()">
+          {{ resending() ? 'Envoi…' : 'Renvoyer le code' }}
+        </button>
+        <button class="btn btn--ghost btn--sm" type="button" (click)="backToCredentials()"><i class="fa-solid fa-arrow-left"></i> Retour</button>
+      </div>
+    </ng-template>
+
+    <div class="login-back" *ngIf="!requiresTwoFactor()">
+      <a routerLink="/" class="btn btn--ghost btn--sm"><i class="fa-solid fa-arrow-left"></i> Retour au site</a>
+    </div>
+  </div>
+</div>

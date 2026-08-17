@@ -1,0 +1,87 @@
+.page-hero {
+  background: linear-gradient(135deg, var(--color-primary-darker), var(--color-primary));
+  color: var(--color-white);
+  padding: 3.5rem 0;
+  text-align: center;
+
+  h1 {
+    color: var(--color-white);
+    font-size: 2.2rem;
+  }
+
+  p {
+    color: rgba(255, 255, 255, 0.85);
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-bottom: 0.5rem;
+  }
+}
+
+.search-bar {
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+
+  input {
+    flex: 1;
+  }
+}
+
+.news-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.news-thumb {
+  position: relative;
+  height: 180px;
+  background: var(--color-primary-lighter);
+  display: grid;
+  place-items: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.news-thumb-placeholder {
+  font-size: 3rem;
+  opacity: 0.4;
+}
+
+.news-date {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background: var(--color-white);
+}
+
+.news-body {
+  padding: 1.25rem;
+
+  .badge {
+    margin: 0 0.35rem 0.5rem 0;
+  }
+
+  h3 {
+    font-size: 1.05rem;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: var(--color-gray-500);
+    font-size: 0.9rem;
+    margin-bottom: 0.8rem;
+  }
+}

@@ -1,0 +1,76 @@
+<div class="admin-page">
+  <header class="page-head page-head--between">
+    <div class="page-head__text">
+      <h1><i class="ti ti-users-group"></i> Gestion des partenaires</h1>
+      <p class="text-muted">Ajoutez et mettez à jour les partenaires affichés sur le site.</p>
+    </div>
+    <app-segment-visibility segment="partners" />
+  </header>
+
+  <div class="toolbar">
+    <div class="spacer"></div>
+    <a
+      class="btn btn--outline"
+      routerLink="/admin/partners/new"
+    >+ Nouveau partenaire</a>
+  </div>
+
+  <!-- Liste -->
+  <div class="card mt-2 table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Site web</th>
+          <th>Statut</th>
+          <th class="text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of items()">
+          <td>
+            <div class="partner-cell">
+              <span class="partner-cell__logo">
+                <img *ngIf="item.logo" [src]="item.logo" [alt]="item.name" />
+                <span *ngIf="!item.logo">{{ item.name.charAt(0) }}</span>
+              </span>
+              <span class="partner-cell__meta">
+                <strong>{{ item.name }}</strong>
+                <span class="partner-cell__sub" *ngIf="item.email">
+                  <i class="ti ti-mail"></i>
+                  <a [href]="'mailto:' + item.email">{{ item.email }}</a>
+                </span>
+                <span class="partner-cell__sub" *ngIf="item.phone1">
+                  <i class="ti ti-phone"></i>
+                  <span>{{ item.phone1 }}</span>
+                </span>
+                <span class="partner-cell__sub" *ngIf="item.phone2">
+                  <i class="ti ti-phone"></i>
+                  <span>{{ item.phone2 }}</span>
+                </span>
+              </span>
+            </div>
+          </td>
+          <td>
+            <a *ngIf="item.website" [href]="item.website" target="_blank" rel="noopener" class="text-sm">{{ item.website }}</a>
+            <span *ngIf="!item.website">—</span>
+          </td>
+          <td>
+            <span class="badge" [class.badge--green]="item.isActive" [class.badge--gray]="!item.isActive">
+              {{ item.isActive ? 'Actif' : 'Masqué' }}
+            </span>
+          </td>
+          <td>
+            <div class="row-actions">
+              <button class="btn btn--sm btn--ghost" (click)="edit(item)">Modifier</button>
+              <button class="btn btn--sm btn--danger" (click)="remove(item)">Supprimer</button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="!items().length">
+          <td colspan="4"><p class="empty-state">Aucun partenaire.</p></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

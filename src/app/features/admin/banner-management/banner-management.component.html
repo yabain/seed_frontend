@@ -1,0 +1,92 @@
+<div class="admin-page">
+  <header class="page-head">
+    <h1><i class="ti ti-photo"></i> Bannière</h1>
+    <p class="text-muted">
+      Gérez les 3 slides de la bannière de la page d’accueil. Les images sont automatiquement
+      converties en WebP avant l’enregistrement.
+    </p>
+  </header>
+
+  <!-- Onglets -->
+  <div class="showcase-tabs" *ngIf="loaded()">
+    <button
+      class="showcase-tab"
+      *ngFor="let slide of slides(); let i = index"
+      [class.is-active]="activeTab() === i"
+      (click)="activeTab.set(i)"
+    >
+      <span class="showcase-tab__thumb" *ngIf="slide.image">
+        <img [src]="slide.image" alt="Aperçu slide {{ i + 1 }}" />
+      </span>
+      <span class="showcase-tab__thumb showcase-tab__thumb--empty" *ngIf="!slide.image">
+        <i class="ti ti-photo"></i>
+      </span>
+      <span>Slide {{ i + 1 }}</span>
+    </button>
+  </div>
+
+  <!-- Édition du slide actif -->
+  <section class="card mt-2" *ngIf="loaded()">
+    <h2>Slide {{ activeTab() + 1 }}</h2>
+
+    <div class="form-field">
+      <label>Image de bannière (convertie en WebP puis importée dans « uploads »)</label>
+      <app-admin-image-field
+        [image]="slides()[activeTab()].image"
+        (imageChange)="setImage(activeTab(), $event)"
+        variant="wide"
+        alt="Aperçu bannière slide {{ activeTab() + 1 }}"
+      />
+    </div>
+
+    <div class="form-field">
+      <label>Texte du badge supérieur</label>
+      <input
+        class="form-control"
+        type="text"
+        [(ngModel)]="slides()[activeTab()].eyebrow"
+        name="banner-eyebrow"
+        maxlength="300"
+        placeholder="Yaba-In SARL"
+      />
+    </div>
+
+    <div class="form-field">
+      <label>Texte en gras (titre principal)</label>
+      <input
+        class="form-control"
+        type="text"
+        [(ngModel)]="slides()[activeTab()].title"
+        name="banner-title"
+        maxlength="300"
+        placeholder="Construisons un avenir durable et solidaire"
+      />
+    </div>
+
+    <div class="form-field">
+      <label>Texte en dessous (sous-titre)</label>
+      <textarea
+        class="form-control"
+        rows="3"
+        [(ngModel)]="slides()[activeTab()].subtitle"
+        name="banner-subtitle"
+        maxlength="500"
+        placeholder="Pour l’éducation, l’environnement et le développement des communautés."
+      ></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button
+        class="btn btn--primary"
+        (click)="save(activeTab())"
+        [disabled]="saving()"
+      >
+        {{ saving() ? 'Enregistrement…' : 'Enregistrer le slide' }}
+      </button>
+    </div>
+  </section>
+
+  <div *ngIf="!loaded()" class="card mt-2">
+    <p class="empty-state">Chargement de la bannière…</p>
+  </div>
+</div>

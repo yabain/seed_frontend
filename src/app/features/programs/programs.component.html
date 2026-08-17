@@ -1,0 +1,38 @@
+<section class="page-hero">
+  <div class="container">
+    <span class="eyebrow">Nos Actions</span>
+    <h1>Programmes & domaines d’intervention</h1>
+    <p>Découvrez les actions concrètes menées par SEEDS au service des communautés.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="grid grid--2" *ngIf="programs().length; else empty">
+      <article class="program-card card card--hover" *ngFor="let program of programs()">
+        <div class="program-top">
+          <span class="program-icon"><i [class]="iconFor(program)"></i></span>
+          <span class="badge badge--green">Programme actif</span>
+        </div>
+        <h2>{{ program.title }}</h2>
+        <p class="program-excerpt">{{ program.excerpt }}</p>
+        <p class="program-desc">{{ program.description }}</p>
+        <a routerLink="/contact" class="btn btn--sm btn--outline">Nous rejoindre</a>
+      </article>
+    </div>
+
+    <ng-template #empty>
+      <p class="empty-state" *ngIf="!loading()">Les programmes seront bientôt présentés ici.</p>
+    </ng-template>
+  </div>
+</section>
+
+<section class="section section--dark cta-band">
+  <div class="container cta-inner">
+    <div>
+      <h2>Vous souhaitez soutenir nos actions ?</h2>
+      <p>Devenir partenaire ou bénévole, faire un don, ou simplement en savoir plus.</p>
+    </div>
+    <a routerLink="/contact" class="btn btn--white">Contactez-nous</a>
+  </div>
+</section>

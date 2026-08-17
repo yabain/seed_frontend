@@ -1,0 +1,266 @@
+<div class="lq-scene">
+  <!-- Ombres / orbes décoratifs parallaxe -->
+  <div class="parallax lq-orb lq-orb--1" data-speed="-0.18" aria-hidden="true"></div>
+  <div class="parallax lq-orb lq-orb--2" data-speed="-0.28" aria-hidden="true"></div>
+  <div class="parallax lq-orb lq-orb--3" data-speed="-0.1" aria-hidden="true"></div>
+
+  <!-- ================= HERO 100vh ================= -->
+  <section class="lq-hero" id="accueil">
+    <div class="lq-hero__slides" aria-hidden="true">
+      <div class="lq-hero__slide" *ngFor="let slide of slides(); let i = index" [class.is-active]="activeSlide() === i">
+        <div class="lq-hero__media">
+          <img *ngIf="slide.img" [src]="slide.img" [alt]="slide.title" />
+          <span class="lq-hero__scrim"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="lq-hero__inner container"
+      *ngIf="slides()[activeSlide()].eyebrow || slides()[activeSlide()].title || slides()[activeSlide()].subtitle">
+      <div class="lq-glass lq-hero__card">
+        <span class="lq-eyebrow" *ngIf="slides()[activeSlide()].eyebrow"> {{ slides()[activeSlide()].eyebrow }}</span>
+        <h1 class="lq-hero__title" *ngIf="slides()[activeSlide()].title">{{ slides()[activeSlide()].title }}</h1>
+        <p class="lq-hero__sub" *ngIf="slides()[activeSlide()].subtitle">{{ slides()[activeSlide()].subtitle }}</p>
+        <div class="lq-hero__actions"
+          *ngIf="slides()[activeSlide()].eyebrow || slides()[activeSlide()].title || slides()[activeSlide()].subtitle">
+          <a routerLink="/contact" class="btn lq-btn--glow">
+            Nous contacter <i class="fa-solid fa-arrow-right"></i>
+          </a>
+          <a routerLink="/programs" class="btn lq-btn--glass">Découvrir nos actions</a>
+        </div>
+        <div class="lq-hero__stats">
+          <span class="lq-hero__stat" *ngFor="let figure of figures | slice:0:3">
+            <strong>{{ figure.value }}</strong>
+            <small>{{ figure.label }}</small>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="lq-hero__progress container">
+      <button class="lq-progress" *ngFor="let slide of slides(); let i = index" [class.is-active]="activeSlide() === i"
+        (click)="goTo(i)" [attr.aria-label]="'Aller au panneau ' + (i + 1)">
+        <span class="lq-progress__fill" [class.is-playing]="activeSlide() === i"></span>
+      </button>
+      <span class="lq-hero__hint"><i class="ti ti-mouse-2"></i> Défiler pour découvrir</span>
+    </div>
+  </section>
+
+  <!-- ================= MARQUEE PARTENAIRES ================= -->
+  <section class="lq-partners" aria-label="Nos partenaires" *ngIf="siteConfig()?.segments?.partners ?? true">
+    <div class="lq-marquee">
+      <div class="lq-marquee__track">
+        <div class="lq-marquee__group">
+          <span class="lq-chip" *ngFor="let item of marqueeItems()">
+            <i class="fa-solid fa-handshake"></i> {{ item }}
+          </span>
+        </div>
+        <div class="lq-marquee__group" aria-hidden="true">
+          <span class="lq-chip" *ngFor="let item of marqueeItems()">
+            <i class="fa-solid fa-handshake"></i> {{ item }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= À PROPOS / MISSION / VISION ================= -->
+  <section class="lq-section" id="apropos">
+    <div class="container">
+      <div class="lq-section__head reveal">
+        <span class="lq-eyebrow lq-eyebrow--solid">À propos</span>
+        <h2>Une organisation engagée au service des communautés</h2>
+        <p>
+          {{ siteConfig()?.description ||
+          'SEEDS est une organisation qui œuvre pour un développement durable, équitable et solidaire à travers des
+          programmes éducatifs, environnementaux et sociaux.' }}
+        </p>
+      </div>
+
+      <div class="lq-cards">
+        <article class="lq-glass lq-card reveal">
+          <span class="lq-card__icon"><i class="fa-solid fa-bullseye"></i></span>
+          <h3>Notre mission</h3>
+          <p>
+            {{ about()?.mission ||
+            'Renforcer les communautés par l’éducation, l’emploi et un environnement protégé, pour un impact durable et
+            mesurable.' }}
+          </p>
+        </article>
+        <article class="lq-glass lq-card reveal">
+          <span class="lq-card__icon"><i class="fa-solid fa-eye"></i></span>
+          <h3>Notre vision</h3>
+          <p>
+            {{ about()?.vision ||
+            'Un monde où chaque communauté dispose des moyens d’un avenir prospère, résilient et respectueux de la
+            planète.' }}
+          </p>
+        </article>
+        <article class="lq-glass lq-card reveal">
+          <span class="lq-card__icon"><i class="fa-solid fa-heart"></i></span>
+          <h3>Nos valeurs</h3>
+          <ul class="lq-card__list">
+            <li><i class="ti ti-circle-check"></i> {{ about()?.values?.[0] || 'Solidarité et inclusivité' }}</li>
+            <li><i class="ti ti-circle-check"></i> {{ about()?.values?.[1] || 'Transparence et redevabilité' }}</li>
+            <li><i class="ti ti-circle-check"></i> {{ about()?.values?.[2] || 'Durabilité environnementale' }}</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= DOMAINES D'INTERVENTION ================= -->
+  <section class="lq-section" id="domaines">
+    <div class="container">
+      <div class="lq-section__head reveal">
+        <span class="lq-eyebrow lq-eyebrow--solid">Domaines d’intervention</span>
+        <h2>Ce que nous faisons</h2>
+        <p>Quatre axes d’action concrets pour répondre aux besoins des communautés.</p>
+      </div>
+
+      <div class="lq-cards lq-cards--4">
+        <article class="lq-glass lq-card lq-card--feature reveal" *ngFor="let feature of features">
+          <span class="lq-card__icon"><i [class]="feature.icon"></i></span>
+          <h3>{{ feature.title }}</h3>
+          <p>{{ feature.text }}</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CHIFFRES CLÉS ================= -->
+  <section class="lq-section lq-stats">
+    <div class="container lq-cards lq-cards--4">
+      <div class="lq-glass lq-stat reveal" *ngFor="let figure of figures">
+        <span class="lq-stat__icon"><i [class]="figure.icon"></i></span>
+        <strong>{{ figure.value }}</strong>
+        <small>{{ figure.label }}</small>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ACTUALITÉS ================= -->
+  <section class="lq-section lq-newsx" id="actualites" *ngIf="siteConfig()?.segments?.news ?? true">
+    <div class="container">
+      <div class="lq-newsx__head reveal">
+        <div class="lq-newsx__heading">
+          <span class="lq-eyebrow lq-eyebrow--solid">Actualités</span>
+          <h2>Nos dernières nouvelles</h2>
+          <p>Suivez l’actualité et les réalisations de SEEDS sur le terrain.</p>
+        </div>
+
+        <div class="lq-newsx__nav" *ngIf="latestNews().length; else noNav">
+          <button class="lq-newsx__arrow" type="button" (click)="scrollNews(-1)" [disabled]="!newsCanPrev()"
+            aria-label="Actualités précédentes">
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <button class="lq-newsx__arrow" type="button" (click)="scrollNews(1)" [disabled]="!newsCanNext()"
+            aria-label="Actualités suivantes">
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+        <ng-template #noNav><span></span></ng-template>
+      </div>
+
+      <p class="lq-empty reveal" *ngIf="!latestNews().length">Les actualités arrivent bientôt.</p>
+    </div>
+
+    <div class="lq-newsx__viewport reveal" *ngIf="latestNews().length" [style.padding-inline-start]="newsInset()"
+      (scroll)="updateNewsArrows()">
+      <div class="lq-newsx__track">
+        <article class="lq-newsx__card" *ngFor="let item of latestNews()">
+          <a class="lq-newsx__media" routerLink="/news/{{ item.slug || item._id }}"
+            [attr.aria-label]="'Lire : ' + item.title">
+            <img *ngIf="item.image" [src]="item.image" [alt]="item.title" loading="lazy" />
+            <span *ngIf="!item.image" class="lq-newsx__placeholder">
+              <i class="fa-solid fa-newspaper"></i>
+            </span>
+            <span class="lq-newsx__badge">{{ categoryLabel(item.categories) }}</span>
+            <span class="lq-newsx__date">
+              {{ formatShortDate(item.publishedAt || item.createdAt) }}
+            </span>
+          </a>
+
+          <div class="lq-newsx__body">
+            <h3>{{ item.title }}</h3>
+            <a class="lq-newsx__cta" routerLink="/news/{{ item.slug || item._id }}">
+              Lire l’article <i class="fa-solid fa-arrow-right"></i>
+            </a>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <div class="container text-left mt-2">
+      <a routerLink="/news" class="btn lq-btn--glass">Toutes les actualités</a>
+    </div>
+  </section>
+
+  <!-- ================= PROGRAMMES ================= -->
+  <section class="lq-section" id="programmes" *ngIf="siteConfig()?.segments?.programs ?? true">
+    <div class="container">
+      <div class="lq-section__head reveal">
+        <span class="lq-eyebrow lq-eyebrow--solid">Nos actions</span>
+        <h2>Programmes et projets actifs</h2>
+        <p>Des initiatives concrètes portées avec nos partenaires.</p>
+      </div>
+
+      <div class="lq-cards lq-cards--4" *ngIf="programs().length; else noPrograms">
+        <article class="lq-glass lq-card lq-card--feature reveal" *ngFor="let program of programs()">
+          <span class="lq-card__icon">
+            <i class="fa-solid fa-seedling" *ngIf="!program.icon"></i>{{ program.icon || '' }}
+          </span>
+          <h3>{{ program.title }}</h3>
+          <p>{{ program.excerpt || program.description }}</p>
+        </article>
+      </div>
+      <ng-template #noPrograms>
+        <p class="lq-empty reveal">Les programmes arrivent bientôt.</p>
+      </ng-template>
+
+      <div class="text-center mt-2">
+        <a routerLink="/programs" class="btn lq-btn--glass">Découvrir tous nos programmes</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= NEWSLETTER / CTA ================= -->
+  <section class="lq-section lq-cta" id="contact">
+    <div class="container lq-glass lq-cta__panel reveal">
+      <div class="lq-cta__text">
+        <span class="lq-eyebrow lq-eyebrow--solid">Newsletter</span>
+        <h2>Restez informé de nos actions</h2>
+        <p>Inscrivez-vous pour recevoir nos actualités et nos appels à action.</p>
+        <div class="lq-cta__links">
+          <a routerLink="/contact" class="btn lq-btn--glow">Nous contacter <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <div class="lq-cta__form" *ngIf="!newsletterSuccess(); else subscribedTpl">
+        <span class="lq-alert" *ngIf="newsletterError()">{{ newsletterError() }}</span>
+        <form (ngSubmit)="subscribeNewsletter()">
+          <div class="lq-field">
+            <label for="newsletter-name">Nom (optionnel)</label>
+            <input id="newsletter-name" class="lq-input" type="text" [(ngModel)]="newsletterForm.name"
+              name="newsletterName" placeholder="Jean Dupont" />
+          </div>
+          <div class="lq-field">
+            <label for="newsletter-email">Adresse e-mail</label>
+            <input id="newsletter-email" class="lq-input" type="email" [(ngModel)]="newsletterForm.email"
+              name="newsletterEmail" placeholder="jean@example.com" />
+          </div>
+          <button class="btn lq-btn--glow lq-btn--block" type="submit" [disabled]="newsletterSubmitting()">
+            {{ newsletterSubmitting() ? 'Inscription…' : 'S\'inscrire' }}
+          </button>
+        </form>
+      </div>
+
+      <ng-template #subscribedTpl>
+        <div class="lq-cta__success">
+          <span class="lq-cta__success-icon"><i class="fa-solid fa-circle-check"></i></span>
+          <p>{{ newsletterSuccess() }}</p>
+        </div>
+      </ng-template>
+    </div>
+  </section>
+</div>

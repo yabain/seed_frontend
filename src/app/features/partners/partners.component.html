@@ -1,0 +1,44 @@
+<section class="page-hero">
+  <div class="container">
+    <span class="eyebrow">Partenaires</span>
+    <h1>Nos partenaires</h1>
+    <p>Les institutions et entreprises qui soutiennent nos missions au quotidien.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="grid grid--4" *ngIf="partners().length; else empty">
+      <article class="partner-card card card--hover" *ngFor="let partner of partners()">
+        <div class="partner-logo">
+          <img *ngIf="partner.logo" [src]="partner.logo" [alt]="partner.name" />
+          <span *ngIf="!partner.logo">{{ partner.name.charAt(0) }}</span>
+        </div>
+        <h3>{{ partner.name }}</h3>
+        <p *ngIf="partner.description">{{ partner.description }}</p>
+        <a
+          *ngIf="partner.website"
+          [href]="partner.website"
+          target="_blank"
+          rel="noopener"
+          class="btn btn--sm btn--ghost"
+        >Visiter le site <i class="fa-solid fa-arrow-right"></i></a>
+      </article>
+    </div>
+
+    <ng-template #empty>
+      <p class="empty-state" *ngIf="!loading()">La liste des partenaires sera bientôt disponible.</p>
+    </ng-template>
+  </div>
+</section>
+
+<section class="section section--tinted">
+  <div class="container text-center">
+    <div class="section-header">
+      <span class="eyebrow">Devenir partenaire</span>
+      <h2>Construisons ensemble</h2>
+      <p>Votre organisation souhaite soutenir nos programmes ? Parlons-en.</p>
+    </div>
+    <a routerLink="/contact" class="btn btn--primary">Devenir partenaire</a>
+  </div>
+</section>

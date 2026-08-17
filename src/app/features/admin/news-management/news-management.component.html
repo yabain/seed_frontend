@@ -1,0 +1,85 @@
+<div class="admin-page">
+  <header class="page-head page-head--between">
+    <div class="page-head__text">
+      <h1><i class="ti ti-article"></i> Gestion des actualités</h1>
+      <p class="text-muted">Créez, modifiez ou supprimez les publications du site.</p>
+    </div>
+    <app-segment-visibility segment="news" />
+  </header>
+
+  <div class="toolbar">
+    <input
+      class="form-control search"
+      type="search"
+      [(ngModel)]="search"
+      placeholder="Rechercher…"
+      (keyup.enter)="onSearch()"
+    />
+    <button class="btn btn--primary" (click)="onSearch()">Rechercher</button>
+    <a class="btn btn--outline" routerLink="/admin/news/categories">Gérer les catégories</a>
+    <a class="btn btn--outline" routerLink="/admin/news/new">+ Nouvelle actualité</a>
+  </div>
+
+  <!-- Liste -->
+  <div class="card mt-2 table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Titre</th>
+          <th>Statut</th>
+          <th>Date</th>
+          <th class="text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of result().items">
+          <td class="news-thumb">
+            <img *ngIf="item.image" [src]="item.image" [alt]="item.title" />
+            <span *ngIf="!item.image" class="news-thumb__empty">
+              <i class="fa-regular fa-image"></i>
+            </span>
+          </td>
+          <td class="font-bold">{{ item.title }}</td>
+          <td>
+            <span class="badge" [class.badge--green]="item.status === 'published'" [class.badge--amber]="item.status === 'draft'">
+              {{ item.status === 'published' ? 'Publié' : 'Brouillon' }}
+            </span>
+          </td>
+          <td>{{ formatDate(item.publishedAt || item.createdAt) }}</td>
+          <td>
+            <div class="row-actions">
+              <button
+                class="btn btn--sm btn--primary"
+                *ngIf="item.status === 'draft'"
+                (click)="toggleStatus(item)"
+              >
+                Publier
+              </button>
+              <button
+                class="btn btn--sm btn--outline"
+                *ngIf="item.status === 'published'"
+                (click)="toggleStatus(item)"
+              >
+                Désactiver
+              </button>
+              <a class="btn btn--sm btn--ghost" [routerLink]="['/admin/news', item._id, 'edit']">Modifier</a>
+              <button class="btn btn--sm btn--danger" (click)="remove(item)">Supprimer</button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="!result().items.length">
+          <td colspan="5"><p class="empty-state">Aucune actualité.</p></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination" *ngIf="result().total > result().limit">
+    <button
+      *ngFor="let page of pages()"
+      [class.active]="page === result().page"
+      (click)="loadPage(page)"
+    >{{ page }}</button>
+  </div>
+</div>

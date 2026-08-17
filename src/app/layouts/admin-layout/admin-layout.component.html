@@ -1,0 +1,175 @@
+<!-- ========== Header Berry ========== -->
+<header class="pc-header coded-header">
+  <div class="m-header">
+    <a routerLink="/admin/dashboard" class="b-brand">
+      <img
+        *ngIf="siteConfig()?.logo"
+        [src]="siteConfig()?.logo"
+        alt="Logo"
+        class="brand-emblem brand-emblem--img"
+      />
+      <span class="brand-emblem" *ngIf="!siteConfig()?.logo">{{ (siteConfig()?.orgName || 'S').charAt(0) }}</span>
+      <span class="brand-name" *ngIf="!siteConfig()?.logo">
+        {{ siteConfig()?.orgName || 'SEED' }}
+        <small>Back-office</small>
+      </span>
+    </a>
+    <div class="pc-h-item">
+      <a
+        href="javascript:void(0)"
+        class="pc-head-link head-link-secondary m-0 mobile-menu"
+        (click)="toggleCollapsed()"
+        title="Réduire le menu"
+      >
+        <i class="ti ti-menu-2"></i>
+      </a>
+    </div>
+  </div>
+  <div class="header-wrapper">
+    <div class="me-auto pc-mob-drp">
+      <ul class="list-unstyled">
+        <li class="pc-h-item header-mobile-collapse">
+          <a
+            href="javascript:void(0)"
+            class="pc-head-link head-link-secondary ms-0 mobile-menu"
+            (click)="toggleCollapsed()"
+          >
+            <i class="ti ti-menu-2"></i>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="ms-auto">
+      <ul class="list-unstyled">
+        <li class="pc-h-item d-inline-flex">
+          <a routerLink="/" class="pc-head-link head-link-primary arrow-none me-0" title="Voir le site public" aria-label="Voir le site public">
+            <i class="ti ti-world"></i>
+          </a>
+        </li>
+        <li class="header-user-profile">
+          <div class="pc-h-item dropdown" [class.show]="profileMenuOpen">
+            <a
+              href="javascript:void(0)"
+              class="pc-head-link head-link-primary arrow-none me-0"
+              (click)="toggleProfile($event)"
+            >
+              <span class="user-avtar d-flex align-items-center justify-content-center bg-light-primary">
+                <i class="ti ti-user text-primary"></i>
+              </span>
+              <span><i class="ti ti-chevron-down"></i></span>
+            </a>
+            <div
+              class="dropdown-user-profile dropdown-menu-end pc-h-dropdown dropdown-menu"
+              [class.show]="profileMenuOpen"
+            >
+              <div class="dropdown-header">
+                <h4 class="m-0">
+                  <small class="text-muted">Administrateur</small>
+                </h4>
+                <p class="text-muted mb-2">Panneau de gestion SEEDS</p>
+                <hr />
+                <a href="javascript:void(0)" class="dropdown-item" routerLink="/" (click)="profileMenuOpen = false">
+                  <i class="ti ti-world"></i>
+                  <span>Voir le site public</span>
+                </a>
+                <a href="javascript:void(0)" class="dropdown-item" (click)="logout()">
+                  <i class="ti ti-logout"></i>
+                  <span>Se déconnecter</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<!-- ========== Sidebar Berry ========== -->
+<aside class="coded-navbar pc-sidebar" [class.navbar-collapsed]="collapsed" [class.mob-open]="mobileOpen">
+  <nav class="d-flex flex-column ps-0">
+    <div class="navbar-wrapper">
+      <div class="m-header">
+        <a routerLink="/admin/dashboard" class="b-brand">
+          <img
+            *ngIf="siteConfig()?.logo"
+            [src]="siteConfig()?.logo"
+            alt="Logo"
+            class="brand-emblem brand-emblem--img"
+          />
+          <span class="brand-emblem" *ngIf="!siteConfig()?.logo">{{ (siteConfig()?.orgName || 'S').charAt(0) }}</span>
+          <span class="brand-name" *ngIf="!siteConfig()?.logo">
+            {{ siteConfig()?.orgName || 'SEED' }}
+            <small>Back-office</small>
+          </span>
+        </a>
+      </div>
+      <div class="pc-navbar-scroll">
+        <div class="navbar-content">
+          <ul class="nav coded-inner-navbar" (click)="onMenuClick()">
+            <ng-container *ngFor="let group of navGroups">
+              <app-nav-group>
+                <li class="nav-item coded-menu-caption">
+                  <label>{{ group.caption }}</label>
+                </li>
+                <app-nav-item *ngFor="let item of group.items">
+                  <li
+                    class="nav-item"
+                    [routerLinkActive]="['active']"
+                    [routerLinkActiveOptions]="{ exact: !!item.exact }"
+                  >
+                    <a class="nav-link" [routerLink]="[item.path]">
+                      <span class="coded-micon"><i [class]="item.icon"></i></span>
+                      <span class="coded-mtext">{{ item.label }}</span>
+                    </a>
+                  </li>
+                </app-nav-item>
+              </app-nav-group>
+            </ng-container>
+          </ul>
+          <div class="pc-navbar-card bg-primary rounded">
+            <h4 class="text-white">SEEDS Platform</h4>
+            <p class="text-white">Développé par Yaba-In SARL</p>
+            <a routerLink="/" class="btn btn-light text-primary">Voir le site</a>
+          </div>
+          <div class="version">
+            <label class="pe-auto">v1.0.0</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</aside>
+
+<!-- ========== Contenu Berry ========== -->
+<div class="pc-container" (click)="mobileOpen = false">
+  <div class="coded-wrapper">
+    <div class="coded-content">
+      <div class="coded-inner-content">
+        <div class="main-body">
+          <div class="page-wrapper">
+            <router-outlet />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pc-menu-overlay" (click)="onBackdropClick($event)"></div>
+</div>
+
+<!-- ========== Footer Berry ========== -->
+<footer class="pc-footer">
+  <div class="footer-wrapper container-fluid">
+    <div class="row align-items-center">
+      <div class="col my-1">
+        <p class="m-0">
+          Copyright &copy; {{ year }} <strong>SEEDS</strong> — Plateforme institutionnelle
+        </p>
+      </div>
+      <div class="col-auto my-1">
+        <p class="m-0 text-muted">Développé par Yaba-In SARL</p>
+      </div>
+    </div>
+  </div>
+</footer>
+

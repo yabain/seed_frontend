@@ -1,0 +1,103 @@
+<div class="admin-page">
+  <header class="page-head page-head--between">
+    <div class="page-head__text">
+      <h1><i class="ti ti-plant-2"></i> Gestion des programmes</h1>
+      <p class="text-muted">Gérez les programmes et domaines d’intervention affichés sur le site.</p>
+    </div>
+    <app-segment-visibility segment="programs" />
+  </header>
+
+  <div class="toolbar">
+    <div class="spacer"></div>
+    <button class="btn btn--outline" (click)="startCreate()">+ Nouveau programme</button>
+  </div>
+
+  <!-- Formulaire -->
+  <section class="card mt-2" *ngIf="showForm()">
+    <h2>{{ editing() ? 'Modifier le programme' : 'Nouveau programme' }}</h2>
+
+    <div class="form-grid">
+      <div class="form-field">
+        <label>Titre *</label>
+        <input class="form-control" type="text" [(ngModel)]="form.title" />
+      </div>
+
+      <div class="form-field">
+        <label>Icône</label>
+        <select class="form-control" [(ngModel)]="form.icon">
+          <option *ngFor="let icon of iconOptions" [value]="icon.value">{{ icon.label }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label>Résumé (sous-titre)</label>
+      <input class="form-control" type="text" [(ngModel)]="form.excerpt" />
+    </div>
+
+    <div class="form-field">
+      <label>Description</label>
+      <textarea class="form-control" rows="5" [(ngModel)]="form.description"></textarea>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-field">
+        <label>Ordre d’affichage</label>
+        <input class="form-control" type="number" [(ngModel)]="form.order" min="0" />
+      </div>
+
+      <div class="form-field">
+        <label>
+          <input type="checkbox" [(ngModel)]="form.isActive" /> Visible sur le site
+        </label>
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label>Visuel (image)</label>
+      <input class="form-control" type="file" accept="image/*" (change)="onVisualChange($event)" />
+      <img *ngIf="form.visual" [src]="form.visual" class="file-preview" alt="Aperçu" />
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn--primary" (click)="save()" [disabled]="saving()">
+        {{ saving() ? 'Enregistrement…' : 'Enregistrer' }}
+      </button>
+      <button class="btn btn--ghost" (click)="cancel()">Annuler</button>
+    </div>
+  </section>
+
+  <!-- Liste -->
+  <div class="card mt-2 table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Ordre</th>
+          <th>Titre</th>
+          <th>Statut</th>
+          <th class="text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of items()">
+          <td>{{ item.order }}</td>
+          <td class="font-bold">{{ item.title }}</td>
+          <td>
+            <span class="badge" [class.badge--green]="item.isActive" [class.badge--gray]="!item.isActive">
+              {{ item.isActive ? 'Actif' : 'Masqué' }}
+            </span>
+          </td>
+          <td>
+            <div class="row-actions">
+              <button class="btn btn--sm btn--ghost" (click)="startEdit(item)">Modifier</button>
+              <button class="btn btn--sm btn--danger" (click)="remove(item)">Supprimer</button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="!items().length">
+          <td colspan="4"><p class="empty-state">Aucun programme.</p></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

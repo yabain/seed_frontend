@@ -1,0 +1,55 @@
+<section class="page-hero">
+  <div class="container">
+    <span class="eyebrow">Ressources</span>
+    <h1>Centre de ressources</h1>
+    <p>Téléchargez nos rapports, guides et documents institutionnels.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="filter-bar mb-3" *ngIf="categories().length">
+      <button
+        class="filter-chip"
+        [class.active]="selectedCategory === ''"
+        (click)="selectCategory('')"
+      >Toutes</button>
+      <button
+        class="filter-chip"
+        *ngFor="let category of categories()"
+        [class.active]="selectedCategory === category"
+        (click)="selectCategory(category)"
+      >{{ category }}</button>
+    </div>
+
+    <div class="grid grid--4" *ngIf="result().items.length; else empty">
+      <article class="resource-card card card--hover" *ngFor="let resource of result().items">
+        <div class="resource-icon"><i class="fa-solid fa-file-lines"></i></div>
+        <h3>{{ resource.title }}</h3>
+        <p *ngIf="resource.description">{{ resource.description }}</p>
+        <span class="badge badge--gray">{{ resource.category || 'Document' }} · {{ formatSize(resource.fileSize) }}</span>
+        <a
+          *ngIf="resource.fileUrl"
+          [href]="resource.fileUrl"
+          [download]="resource.fileName"
+          target="_blank"
+          rel="noopener"
+          class="btn btn--sm btn--outline mt-2"
+        >Télécharger <i class="fa-solid fa-download"></i></a>
+        <span *ngIf="!resource.fileUrl" class="text-muted text-sm mt-2">Document bientôt disponible</span>
+      </article>
+    </div>
+
+    <ng-template #empty>
+      <p class="empty-state" *ngIf="!loading()">Aucune ressource disponible dans cette catégorie.</p>
+    </ng-template>
+
+    <div class="pagination" *ngIf="result().total > result().limit">
+      <button
+        *ngFor="let page of pages()"
+        [class.active]="page === result().page"
+        (click)="loadPage(page)"
+      >{{ page }}</button>
+    </div>
+  </div>
+</section>

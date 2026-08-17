@@ -1,0 +1,75 @@
+import { Injectable, signal, computed } from '@angular/core';
+import { Observable, tap } from 'rxjs';
+import { ApiGatewayService } from './api-gateway.service';
+import type {
+  Admin,
+  LoginResponse,
+  RequiresTwoFactorResponse,
+  TwoFactorVerifyResponse,
+  SendTwoFactorCodeResponse,
+} from '../models/models';
+
+const TOKEN_KEY = 'seed_token';
+const ADMIN_KEY = 'seed_admin';
+
+@Injectable({ providedIn: 'root' })
+export class AuthService {
+  private readonly tokenSignal = signal<string | null>(null);
+  private readonly adminSignal = signal<Admin | null>(null);
+
+  readonly token = this.tokenSignal.asReadonly();
+  readonly admin = this.adminSignal.asReadonly();
+  readonly isAuthenticated = computed(() => !!this.tokenSignal());
+
+  constructor(private readonly api: ApiGatewayService) {
+    const storedToken = localStorage.getItem(TOKEN_KEY);
+    if (storedToken) {
+      this.tokenSignal.set(storedToken);
+    }
+    const storedAdmin = localStorage.getItem(ADMIN_KEY);
+    if (storedAdmin) {
+      try {
+        this.adminSignal.set(JSON.parse(storedAdmin) as Admin);
+      } catch {
+        localStorage.removeItem(ADMIN_KEY);
+      }
+    }
+  }
+
+  login(email: string, password: string): Observable<LoginResponse | RequiresTwoFactorResponse> {
+    return this.api.post<LoginResponse | RequiresTwoFactorResponse>('/admin/auth/login', { email, password }).pipe(
+      tap((response) => {
+        if ('requiresTwoFactor' in response && response.requiresTwoFactor) {
+          return;
+        }
+        const loginResponse = response as LoginResponse;
+        this.tokenSignal.set(loginResponse.accessToken);
+        this.adminSignal.set(loginResponse.admin);
+        localStorage.setItem(TOKEN_KEY, loginResponse.accessToken);
+        localStorage.setItem(ADMIN_KEY, JSON.stringify(loginResponse.admin));
+      }),
+    );
+  }
+
+  sendTwoFactorCode(email: string): Observable<SendTwoFactorCodeResponse> {
+    return this.api.post<SendTwoFactorCodeResponse>('/admin/auth/2fa/send-code', { email });
+  }
+
+  verifyTwoFactor(email: string, code: string): Observable<TwoFactorVerifyResponse> {
+    return this.api.post<TwoFactorVerifyResponse>('/admin/auth/2fa/verify', { email, code }).pipe(
+      tap((response) => {
+        this.tokenSignal.set(response.accessToken);
+        this.adminSignal.set(response.admin);
+        localStorage.setItem(TOKEN_KEY, response.accessToken);
+        localStorage.setItem(ADMIN_KEY, JSON.stringify(response.admin));
+      }),
+    );
+  }
+
+  logout(): void {
+    this.tokenSignal.set(null);
+    this.adminSignal.set(null);
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(ADMIN_KEY);
+  }
+}

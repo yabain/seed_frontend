@@ -1,0 +1,199 @@
+<div class="admin-page">
+  <header class="page-head">
+    <h1><i class="ti ti-send"></i> Paramètres e-mail</h1>
+    <p class="text-muted">Configurez le serveur SMTP, envoyez des e-mails de test et consultez les statistiques.</p>
+  </header>
+
+  <div class="settings-row" *ngIf="!loading()">
+    <div class="settings-col">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-heading">
+            <button
+              class="collapse-toggle"
+              type="button"
+              (click)="toggleSmtp()"
+              [attr.aria-expanded]="smtpExpanded()"
+              aria-label="Afficher ou masquer la configuration SMTP"
+            >
+              <span class="chevron" [class.chevron--open]="smtpExpanded()"></span>
+            </button>
+            <h2>Configuration SMTP</h2>
+          </div>
+          <div class="card-actions" *ngIf="!edition() && smtpExpanded()">
+            <button class="btn btn--outline btn--sm" (click)="smtpExpanded.set(true); edition.set(true)">Modifier</button>
+            <button class="btn btn--ghost btn--sm" (click)="resetSmtp()">Réinitialiser</button>
+          </div>
+        </div>
+
+        <div class="card-body" *ngIf="smtpExpanded()">
+          <div class="form-grid">
+            <div class="form-field">
+              <label>Serveur SMTP</label>
+              <input class="form-control" type="text" [(ngModel)]="smtp.smtpHost" [disabled]="!edition()" placeholder="smtp.gmail.com" />
+            </div>
+
+            <div class="form-field">
+              <label>Port</label>
+              <input class="form-control" type="number" [(ngModel)]="smtp.smtpPort" [disabled]="!edition()" placeholder="465" />
+            </div>
+
+            <div class="form-field">
+              <label>Utilisateur</label>
+              <input class="form-control" type="text" [(ngModel)]="smtp.smtpUser" [disabled]="!edition()" />
+            </div>
+
+            <div class="form-field">
+              <label>Mot de passe</label>
+              <input class="form-control" type="password" [(ngModel)]="smtp.smtpPassword" [disabled]="!edition()" />
+            </div>
+
+            <div class="form-field">
+              <label>Sécurisé</label>
+              <select class="form-control" [(ngModel)]="smtp.smtpSecure" [disabled]="!edition()">
+                <option [value]="true">Activé</option>
+                <option [value]="false">Désactivé</option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label>Chiffrement</label>
+              <select class="form-control" [(ngModel)]="smtp.smtpEncryption" [disabled]="!edition()">
+                <option *ngFor="let opt of encryptionOptions" [value]="opt">{{ opt }}</option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label>E-mail pour alertes</label>
+              <input class="form-control" type="text" [(ngModel)]="smtp.emailForAlert" [disabled]="!edition()" placeholder="admin@seeds.org" />
+            </div>
+          </div>
+
+          <div class="form-actions mt-2" *ngIf="edition()">
+            <button class="btn btn--primary" (click)="save()" [disabled]="saving()">
+              {{ saving() ? 'Enregistrement…' : 'Enregistrer' }}
+            </button>
+            <button class="btn btn--ghost" (click)="edition.set(false)">Annuler</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-2">
+        <h2>Envoyer un e-mail test</h2>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-field">
+              <label>Destinataire</label>
+              <input class="form-control" type="email" [(ngModel)]="testEmail.to" placeholder="test@seeds.org" />
+            </div>
+
+            <div class="form-field">
+              <label>Sujet</label>
+              <input class="form-control" type="text" [(ngModel)]="testEmail.subject" />
+            </div>
+          </div>
+
+          <div class="form-field mt-2">
+            <label>Message</label>
+            <textarea class="form-control" rows="3" [(ngModel)]="testEmail.message"></textarea>
+          </div>
+
+          <div class="form-actions mt-2">
+            <button class="btn btn--primary" (click)="sendTest()" [disabled]="sending()">
+              {{ sending() ? 'Envoi…' : 'Envoyer le test' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-col">
+      <div class="card">
+        <h2>Statistiques</h2>
+        <div class="card-body">
+      <div class="stats-summary" *ngIf="stats().length">
+        <div class="stat-badge stat-badge--success">
+          <span class="stat-badge__value">{{ totalSuccess() }}</span>
+          <span class="stat-badge__label">Envoyés</span>
+        </div>
+        <div class="stat-badge stat-badge--danger">
+          <span class="stat-badge__value">{{ totalFailed() }}</span>
+          <span class="stat-badge__label">Échoués</span>
+        </div>
+        <div class="stat-badge stat-badge--info">
+          <span class="stat-badge__value">{{ stats().length }}</span>
+          <span class="stat-badge__label">Mois</span>
+        </div>
+      </div>
+
+          <div class="chart-container" *ngIf="stats().length">
+            <apx-chart
+              [series]="chartSeries"
+              [chart]="chartOptions.chart"
+              [colors]="chartOptions.colors"
+              [plotOptions]="chartOptions.plotOptions"
+              [dataLabels]="chartOptions.dataLabels"
+              [xaxis]="chartOptions.xaxis"
+              [yaxis]="chartOptions.yaxis"
+              [grid]="chartOptions.grid"
+            ></apx-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mt-2">
+    <h2>E-mails sortants</h2>
+    <div class="toolbar">
+      <input
+        class="form-control search"
+        type="search"
+        placeholder="Rechercher par destinataire ou sujet..."
+        (input)="onEmailSearch($any($event.target).value)"
+        [value]="emailKeyword()"
+      />
+    </div>
+
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Destinataire</th>
+            <th>Sujet</th>
+            <th>Date</th>
+            <th>Statut</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let email of emailList()">
+            <td>{{ email.to }}</td>
+            <td>{{ getFirst60Chars(email.subject) }}</td>
+            <td>{{ email.createdAt | date:'dd-MM-yyyy HH:mm' }}</td>
+            <td>
+              <span class="badge" [class.badge--green]="email.status" [class.badge--red]="!email.status">
+                {{ getStatusLabel(email.status) }}
+              </span>
+            </td>
+          </tr>
+          <tr *ngIf="!emailList().length && !gettingOutput()">
+            <td colspan="4"><p class="empty-state">Aucun e-mail.</p></td>
+          </tr>
+          <tr *ngIf="gettingOutput()">
+            <td colspan="4"><p class="empty-state">Chargement...</p></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination" *ngIf="emailMeta() && !gettingOutput()">
+      <button class="btn btn--ghost btn--sm" (click)="previousEmailPage()" [disabled]="!emailMeta()?.hasPrevPage">
+        <i class="fa-solid fa-arrow-left"></i> Précédent
+      </button>
+      <span class="pagination__info">Page {{ emailMeta()?.currentPage }} / {{ emailMeta()?.totalPages }} ({{ emailMeta()?.totalItems }} e-mails)</span>
+      <button class="btn btn--ghost btn--sm" (click)="nextEmailPage()" [disabled]="!emailMeta()?.hasNextPage">
+        Suivant <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+</div>

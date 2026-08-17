@@ -1,0 +1,35 @@
+<div class="container detail" *ngIf="news() as item; else notFoundBlock">
+  <div class="back">
+    <a routerLink="/news" class="btn btn--sm btn--ghost"><i class="fa-solid fa-arrow-left"></i> Retour aux actualités</a>
+  </div>
+
+  <header class="detail-header">
+    <span class="badge badge--green">{{ formatDate(item.publishedAt || item.createdAt) }}</span>
+    <h1>{{ item.title }}</h1>
+    <div class="detail-meta">
+      <span *ngIf="item.author">Par <strong>{{ item.author }}</strong></span>
+      <span class="badge badge--gray" *ngFor="let tag of item.tags">{{ tag }}</span>
+    </div>
+  </header>
+
+  <div class="detail-cover" *ngIf="item.image">
+    <img [src]="item.image" [alt]="item.title" />
+  </div>
+
+  <article class="detail-content">
+    <p *ngIf="item.excerpt" class="lead">{{ item.excerpt }}</p>
+    <p *ngFor="let paragraph of paragraphs()">{{ paragraph }}</p>
+  </article>
+
+  <div class="detail-actions">
+    <a routerLink="/contact" class="btn btn--primary">Une question ? Contactez-nous</a>
+  </div>
+</div>
+
+<ng-template #notFoundBlock>
+  <div class="container empty-state" *ngIf="notFound()">
+    <h2>Actualité introuvable</h2>
+    <p>Cette actualité n’existe pas ou n’est plus disponible.</p>
+    <a routerLink="/news" class="btn btn--outline">Voir toutes les actualités</a>
+  </div>
+</ng-template>

@@ -1,0 +1,130 @@
+.admin-image-field {
+  position: relative;
+  display: block;
+  max-width: 520px;
+}
+
+.admin-image-field__area {
+  position: relative;
+  display: block;
+}
+
+.admin-image-field__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+
+  &:disabled {
+    cursor: default;
+  }
+}
+
+.admin-image-field__preview {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 14px;
+  border: 1px dashed var(--color-gray-300);
+  background: var(--color-gray-50);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+
+  img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.admin-image-field.is-square .admin-image-field__preview {
+  aspect-ratio: 1 / 1;
+}
+
+.admin-image-field__area.dragging .admin-image-field__preview {
+  border-color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 12%, var(--color-gray-50));
+  box-shadow: 0 8px 22px rgba(13, 148, 136, 0.18);
+}
+
+.admin-image-field__placeholder,
+.admin-image-field__spinner {
+  display: grid;
+  place-items: center;
+  gap: 0.35rem;
+  flex-direction: column;
+  color: var(--color-gray-400);
+
+  i {
+    font-size: 2rem;
+  }
+
+  small {
+    font-size: 0.82rem;
+  }
+}
+
+.admin-image-field__spinner i {
+  animation: adminImageSpin 1s linear infinite;
+}
+
+@keyframes adminImageSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.admin-image-field__camera,
+.admin-image-field__remove {
+  position: absolute;
+  bottom: 0.6rem;
+  right: 0.6rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-size: 1.15rem;
+  box-shadow: 0 6px 16px rgba(2, 20, 18, 0.25);
+}
+
+.admin-image-field__camera {
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(135deg, #0d9488, #115e59);
+  color: #ffffff;
+}
+
+.admin-image-field__remove {
+  top: 0.6rem;
+  right: 0.6rem;
+  z-index: 3;
+  border: none;
+  background: rgba(2, 20, 18, 0.62);
+  color: #ffffff;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+
+  &:hover {
+    background: rgba(185, 28, 28, 0.85);
+    transform: translateY(-2px);
+  }
+}
+
+.form-hint {
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}

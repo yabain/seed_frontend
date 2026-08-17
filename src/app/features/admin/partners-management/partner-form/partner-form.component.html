@@ -1,0 +1,89 @@
+<div class="admin-page">
+  <header class="page-head">
+    <h1><i class="ti ti-users-group"></i> {{ editing() ? 'Modifier le partenaire' : 'Nouveau partenaire' }}</h1>
+    <div class="page-head__actions">
+      <button type="button" class="btn btn--ghost" (click)="cancel()">
+        <i class="ti ti-arrow-left"></i> Retour à la liste
+      </button>
+    </div>
+  </header>
+
+  <div class="card mt-2" *ngIf="loading()">
+    <p class="empty-state">Chargement du partenaire…</p>
+  </div>
+
+  <div class="card mt-2" *ngIf="!loading()">
+    <div class="partner-form">
+      <aside class="partner-form__side">
+        <label class="partner-form__side-title">Logo</label>
+        <p class="text-muted partner-form__side-hint">
+          Converti en WebP puis importé dans « uploads ».
+        </p>
+        <app-admin-image-field
+          [image]="form.logo"
+          (imageChange)="setLogo($event)"
+          variant="square"
+          [maxWidth]="800"
+          [maxHeight]="800"
+          alt="Aperçu logo"
+        />
+      </aside>
+
+      <div class="partner-form__fields">
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Nom *</label>
+            <input class="form-control" type="text" [(ngModel)]="form.name" />
+          </div>
+
+          <div class="form-field">
+            <label>Site web</label>
+            <input class="form-control" type="url" [(ngModel)]="form.website" placeholder="https://…" />
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label>E-mail</label>
+            <input class="form-control" type="email" [(ngModel)]="form.email" placeholder="contact@exemple.org" />
+          </div>
+
+          <div class="form-field">
+            <label>Téléphone n° 1</label>
+            <input class="form-control" type="tel" [(ngModel)]="form.phone1" placeholder="+237 …" />
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Téléphone n° 2</label>
+            <input class="form-control" type="tel" [(ngModel)]="form.phone2" placeholder="+237 …" />
+          </div>
+
+          <div class="form-field">
+            <label>Ordre d’affichage</label>
+            <input class="form-control" type="number" [(ngModel)]="form.order" min="0" />
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label>
+            <input type="checkbox" [(ngModel)]="form.isActive" /> Visible sur le site
+          </label>
+        </div>
+
+        <div class="form-field">
+          <label>Description</label>
+          <textarea class="form-control" rows="4" [(ngModel)]="form.description"></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn--primary" (click)="save()" [disabled]="saving()">
+            {{ saving() ? 'Enregistrement…' : 'Enregistrer' }}
+          </button>
+          <button class="btn btn--ghost" type="button" (click)="cancel()">Annuler</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+.partner-form {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.partner-form__side {
+  position: sticky;
+  top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding-right: 1.5rem;
+  border-right: 1px solid var(--color-gray-200);
+}
+
+.partner-form__side-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.partner-form__side-hint {
+  font-size: 0.82rem;
+  margin-bottom: 0.75rem;
+}
+
+.partner-form__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .partner-form {
+    grid-template-columns: 1fr;
+  }
+
+  .partner-form__side {
+    position: static;
+    border-right: none;
+    padding-right: 0;
+  }
+}

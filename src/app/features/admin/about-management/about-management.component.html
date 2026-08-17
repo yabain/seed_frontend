@@ -1,0 +1,150 @@
+<div class="admin-page">
+  <header class="page-head">
+    <h1><i class="ti ti-info-circle"></i> À propos</h1>
+    <p class="text-muted">
+      Gérez le logo, l’identité, les coordonnées, les réseaux sociaux ainsi que les
+      contenus de la section « À propos » de la page d’accueil (mission, vision et valeurs).
+    </p>
+  </header>
+
+  <section class="card mt-2" *ngIf="loaded()">
+    <h2>Identité</h2>
+
+    <div class="identity-grid">
+      <aside class="identity-grid__side">
+        <label class="identity-grid__side-title">Logo</label>
+        <p class="text-muted identity-grid__side-hint">
+          PNG, JPG ou WebP — max 5 Mo. Enregistré automatiquement.
+        </p>
+        <app-admin-image-field
+          [image]="config.logo"
+          (imageChange)="setLogo($event)"
+          variant="square"
+          [maxWidth]="800"
+          [maxHeight]="800"
+          alt="Aperçu logo"
+        />
+        <p class="form-hint text-muted">{{ savingLogo() ? 'Enregistrement du logo…' : '' }}</p>
+      </aside>
+
+      <div class="identity-grid__fields">
+        <div class="form-field">
+          <label>Nom de l’organisation</label>
+          <input class="form-control" type="text" [(ngModel)]="config.orgName" />
+        </div>
+
+        <div class="form-field">
+          <label>Slogan</label>
+          <input class="form-control" type="text" [(ngModel)]="config.tagline" />
+        </div>
+
+        <div class="form-field">
+          <label>Description</label>
+          <textarea class="form-control" rows="4" [(ngModel)]="config.description"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <h2>Coordonnées</h2>
+    <div class="form-grid">
+      <div class="form-field">
+        <label>Adresse</label>
+        <input class="form-control" type="text" [(ngModel)]="config.address" />
+      </div>
+
+      <div class="form-field">
+        <label>E-mail de contact</label>
+        <input class="form-control" type="email" [(ngModel)]="config.email" />
+      </div>
+
+      <div class="form-field">
+        <label>Téléphone 1</label>
+        <input class="form-control" type="text" [(ngModel)]="config.phone" placeholder="+237 …" />
+      </div>
+
+      <div class="form-field">
+        <label>Téléphone 2</label>
+        <input class="form-control" type="text" [(ngModel)]="config.phone2" placeholder="+237 …" />
+      </div>
+    </div>
+
+    <h2>Réseaux sociaux</h2>
+    <div class="form-grid">
+      <div class="form-field">
+        <label>Facebook</label>
+        <input class="form-control" type="url" [(ngModel)]="config.social!.facebook" placeholder="https://facebook.com/…" />
+      </div>
+
+      <div class="form-field">
+        <label>Instagram</label>
+        <input class="form-control" type="url" [(ngModel)]="config.social!.instagram" placeholder="https://instagram.com/…" />
+      </div>
+
+      <div class="form-field">
+        <label>LinkedIn</label>
+        <input class="form-control" type="url" [(ngModel)]="config.social!.linkedin" placeholder="https://linkedin.com/…" />
+      </div>
+
+      <div class="form-field">
+        <label>X (Twitter)</label>
+        <input class="form-control" type="url" [(ngModel)]="config.social!.twitter" placeholder="https://x.com/…" />
+      </div>
+
+      <div class="form-field">
+        <label>YouTube</label>
+        <input class="form-control" type="url" [(ngModel)]="config.social!.youtube" placeholder="https://youtube.com/…" />
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn--primary" (click)="saveTexts()" [disabled]="savingTexts()">
+        {{ savingTexts() ? 'Enregistrement…' : 'Enregistrer les textes et réseaux' }}
+      </button>
+    </div>
+  </section>
+
+  <section class="card mt-2" *ngIf="loaded()">
+    <h2>Contenu « À propos »</h2>
+    <div class="form-field">
+      <label>Notre mission</label>
+      <textarea
+        class="form-control"
+        rows="4"
+        [(ngModel)]="form.mission"
+        name="about-mission"
+        maxlength="1000"
+        placeholder="Renforcer les communautés par l’éducation, l’emploi et un environnement protégé…"
+      ></textarea>
+    </div>
+
+    <div class="form-field">
+      <label>Notre vision</label>
+      <textarea
+        class="form-control"
+        rows="4"
+        [(ngModel)]="form.vision"
+        name="about-vision"
+        maxlength="1000"
+        placeholder="Un monde où chaque communauté dispose des moyens d’un avenir prospère…"
+      ></textarea>
+    </div>
+
+    <div class="form-field" *ngFor="let value of form.values; let i = index">
+      <label>Valeur {{ i + 1 }}</label>
+      <input
+        class="form-control"
+        type="text"
+        [(ngModel)]="form.values[i]"
+        name="about-value-{{ i }}"
+        maxlength="200"
+        placeholder="Solidarité et inclusivité"
+      />
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn--primary" (click)="save()" [disabled]="saving()">
+        {{ saving() ? 'Enregistrement…' : 'Enregistrer les modifications' }}
+      </button>
+    </div>
+  </section>
+</div>

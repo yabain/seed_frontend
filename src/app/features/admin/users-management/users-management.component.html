@@ -1,0 +1,98 @@
+<div class="admin-page">
+  <header class="page-head">
+    <h1><i class="ti ti-user-cog"></i> Gestion des comptes</h1>
+    <p class="text-muted">
+      Gérez les comptes et leurs rôles : utilisateur, consultant, administrateur, super admin.
+      Les comptes ayant « Notifier contact » actif reçoivent les messages du formulaire de contact.
+    </p>
+  </header>
+
+  <div class="stats-row">
+    <div class="stat-card" *ngFor="let stat of statItems()" [class.stat-card--active]="stat.active" (click)="setFilter(stat.key)">
+      <div class="stat-card__icon"><i [class]="stat.icon"></i></div>
+      <div class="stat-card__content">
+        <span class="stat-card__value">{{ stat.value }}</span>
+        <span class="stat-card__label">{{ stat.label }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <input
+      class="form-control search"
+      type="search"
+      placeholder="Rechercher par nom ou e-mail..."
+      (input)="onSearch($any($event.target).value)"
+      [value]="searchQuery()"
+    />
+    <div class="spacer"></div>
+    <select class="form-control" [value]="limit" (change)="onLimitChange($any($event.target).value)">
+      <option [value]="10">10 / page</option>
+      <option [value]="25">25 / page</option>
+      <option [value]="50">50 / page</option>
+    </select>
+  </div>
+
+  <div class="card mt-2 table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>E-mail</th>
+          <th>Rôle</th>
+          <th>Notifications</th>
+          <th>Statut</th>
+          <th>Dernière connexion</th>
+          <th class="text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of items()">
+          <td class="font-bold">
+            <a class="link" (click)="goToDetail(user)">{{ user.name }} <span *ngIf="isSelf(user)" class="text-muted text-sm">(vous)</span></a>
+          </td>
+          <td>{{ user.email }}</td>
+          <td>
+            <span class="badge"
+              [class.badge--green]="user.role === 'superadmin'"
+              [class.badge--amber]="user.role === 'admin'"
+              [class.badge--gray]="user.role === 'user' || user.role === 'consultant'"
+            >{{ roleLabels[user.role] }}</span>
+          </td>
+          <td>
+            <span class="badge" [class.badge--green]="user.notifyContact" [class.badge--gray]="!user.notifyContact">
+              {{ user.notifyContact ? 'Oui' : 'Non' }}
+            </span>
+          </td>
+          <td>
+            <span class="badge" [class.badge--green]="user.isActive" [class.badge--red]="!user.isActive">
+              {{ user.isActive ? 'Actif' : 'Inactif' }}
+            </span>
+          </td>
+          <td>{{ formatDate(user.lastLoginAt) }}</td>
+          <td>
+            <div class="row-actions">
+              <button class="btn btn--sm btn--ghost" (click)="goToDetail(user)">Détails</button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="!items().length && !loading()">
+          <td colspan="7"><p class="empty-state">Aucun compte.</p></td>
+        </tr>
+        <tr *ngIf="loading()">
+          <td colspan="7"><p class="empty-state">Chargement...</p></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination" *ngIf="meta() && !loading()">
+    <button class="btn btn--ghost btn--sm" (click)="previousPage()" [disabled]="!meta()?.hasPrevPage">
+      <i class="fa-solid fa-arrow-left"></i> Précédent
+    </button>
+    <span class="pagination__info">Page {{ meta()?.currentPage }} / {{ meta()?.totalPages }} ({{ meta()?.totalItems }} comptes)</span>
+    <button class="btn btn--ghost btn--sm" (click)="nextPage()" [disabled]="!meta()?.hasNextPage">
+      Suivant <i class="fa-solid fa-arrow-right"></i>
+    </button>
+  </div>
+</div>

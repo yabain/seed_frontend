@@ -1,0 +1,133 @@
+<section class="page-hero">
+  <div class="container">
+    <span class="eyebrow">Contact</span>
+    <h1>Contactez-nous</h1>
+    <p>Une question, un partenariat, une collaboration ? Écrivez-nous.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container contact-grid">
+    <div class="contact-info">
+      <div class="section-header section-header--left">
+        <span class="eyebrow">Nous trouver</span>
+        <h2>Coordonnées</h2>
+      </div>
+
+      <div class="info-card" *ngIf="siteConfig()?.address">
+        <span class="info-icon"><i class="fa-solid fa-location-dot"></i></span>
+        <div>
+          <strong>Adresse</strong>
+          <p>{{ siteConfig()?.address }}</p>
+        </div>
+      </div>
+
+      <div class="info-card" *ngIf="siteConfig()?.phone">
+        <span class="info-icon"><i class="fa-solid fa-phone"></i></span>
+        <div>
+          <strong>Téléphone</strong>
+          <p><a [href]="'tel:' + siteConfig()?.phone">{{ siteConfig()?.phone }}</a></p>
+        </div>
+      </div>
+
+      <div class="info-card" *ngIf="siteConfig()?.phone2">
+        <span class="info-icon"><i class="fa-solid fa-phone"></i></span>
+        <div>
+          <strong>Téléphone 2</strong>
+          <p><a [href]="'tel:' + siteConfig()?.phone2">{{ siteConfig()?.phone2 }}</a></p>
+        </div>
+      </div>
+
+      <div class="info-card" *ngIf="siteConfig()?.email">
+        <span class="info-icon"><i class="fa-solid fa-envelope"></i></span>
+        <div>
+          <strong>E-mail</strong>
+          <p><a [href]="'mailto:' + siteConfig()?.email">{{ siteConfig()?.email }}</a></p>
+        </div>
+      </div>
+
+      <p class="text-sm text-muted mt-2">
+        Nous vous répondrons dans les plus brefs délais. Merci de votre intérêt pour SEEDS.
+      </p>
+    </div>
+
+    <div class="contact-form-wrap card">
+      <form [formGroup]="contactForm" (ngSubmit)="submit()" *ngIf="!submitted()">
+        <div class="form-field">
+          <label for="name">Nom complet *</label>
+          <input
+            id="name"
+            class="form-control"
+            type="text"
+            formControlName="name"
+            placeholder="Votre nom"
+          />
+          <p class="error-msg" *ngIf="messageFor('name')">{{ messageFor('name') }}</p>
+        </div>
+
+        <div class="form-field">
+          <label for="email">Adresse e-mail *</label>
+          <input
+            id="email"
+            class="form-control"
+            type="email"
+            formControlName="email"
+            placeholder="vous@exemple.com"
+          />
+          <p class="error-msg" *ngIf="messageFor('email')">{{ messageFor('email') }}</p>
+        </div>
+
+        <div class="form-field">
+          <label for="phone">Téléphone <span class="text-muted">(facultatif, avec indicatif)</span></label>
+          <div class="phone-row">
+            <select
+              id="phone-code"
+              class="form-control phone-code"
+              formControlName="phoneCode"
+              aria-label="Indicatif téléphonique"
+            >
+              <option *ngFor="let entry of phoneCodes" [value]="entry.code">{{ entry.code }} · {{ entry.label }}</option>
+            </select>
+            <input
+              id="phone"
+              class="form-control phone-number"
+              type="tel"
+              formControlName="phone"
+              placeholder="0700000000"
+              inputmode="numeric"
+            />
+          </div>
+          <p class="error-msg" *ngIf="messageFor('phone')">{{ messageFor('phone') }}</p>
+        </div>
+
+        <div class="form-field">
+          <label for="subject">Sujet *</label>
+          <input
+            id="subject"
+            class="form-control"
+            type="text"
+            formControlName="subject"
+            placeholder="Objet de votre message"
+          />
+          <p class="error-msg" *ngIf="messageFor('subject')">{{ messageFor('subject') }}</p>
+        </div>
+
+        <div class="form-field">
+          <label for="message">Message *</label>
+          <textarea
+            id="message"
+            class="form-control"
+            formControlName="message"
+            placeholder="Votre message…"
+            rows="5"
+          ></textarea>
+          <p class="error-msg" *ngIf="messageFor('message')">{{ messageFor('message') }}</p>
+        </div>
+
+        <button class="btn btn--primary btn--block" type="submit" [disabled]="submitting()">
+          {{ submitting() ? 'Envoi en cours…' : 'Envoyer le message' }}
+        </button>
+      </form>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,17 @@
+.not-found {
+  .code {
+    font-size: 6rem;
+    font-weight: 800;
+    color: var(--color-primary);
+    margin-bottom: 0;
+  }
+
+  h2 {
+    font-size: 1.6rem;
+  }
+
+  p {
+    color: var(--color-gray-500);
+    margin-bottom: 1.5rem;
+  }
+}

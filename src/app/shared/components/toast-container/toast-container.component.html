@@ -1,0 +1,24 @@
+<div class="toast-container" aria-live="polite" aria-atomic="false">
+  @for (toast of toasts(); track toast.id) {
+    <div
+      class="toast toast--{{ toast.type }}"
+      [class.toast--leaving]="toast.leaving"
+      role="status"
+    >
+      <div class="toast__shine" [style.animation-delay]="shineDelay(toast)"></div>
+      <span class="toast__icon"><i class="fa-solid {{ icon(toast.type) }}"></i></span>
+      <div class="toast__body">
+        <strong class="toast__title" *ngIf="toast.title">{{ toast.title }}</strong>
+        <p class="toast__message">{{ toast.message }}</p>
+      </div>
+      <button
+        class="toast__close"
+        type="button"
+        (click)="dismiss(toast.id)"
+        aria-label="Fermer la notification"
+      >
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+  }
+</div>

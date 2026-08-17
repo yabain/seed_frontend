@@ -1,0 +1,110 @@
+<div class="admin-page">
+  <header class="page-head">
+    <h1><i class="ti ti-article"></i> {{ editing() ? 'Modifier l’actualité' : 'Nouvelle actualité' }}</h1>
+    <div class="page-head__actions">
+      <button type="button" class="btn btn--ghost" (click)="cancel()">
+        <i class="ti ti-arrow-left"></i> Retour à la liste
+      </button>
+    </div>
+  </header>
+
+  <div class="card mt-2" *ngIf="loading()">
+    <p class="empty-state">Chargement de l’actualité…</p>
+  </div>
+
+  <div class="card mt-2" *ngIf="!loading()">
+    <div class="news-form">
+      <aside class="news-form__side">
+        <label class="news-form__side-title">Image de couverture</label>
+        <p class="text-muted news-form__side-hint">
+          Convertie en WebP puis importée dans « uploads ».
+        </p>
+        <app-admin-image-field
+          [image]="form.image"
+          variant="wide"
+          (imageChange)="setImage($event)"
+          alt="Aperçu couverture"
+        />
+      </aside>
+
+      <div class="news-form__fields">
+        <div class="form-field">
+          <label>Titre *</label>
+          <input
+            class="form-control"
+            type="text"
+            [(ngModel)]="form.title"
+            placeholder="Titre de l’actualité"
+          />
+        </div>
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Statut</label>
+            <select class="form-control" [(ngModel)]="form.status">
+              <option value="draft">Brouillon</option>
+              <option value="published">Publié</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label>Auteur</label>
+            <input class="form-control" type="text" [(ngModel)]="form.author" />
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label>Tags (séparés par des virgules)</label>
+          <input class="form-control" type="text" [(ngModel)]="form.tags" placeholder="éducation, climat" />
+        </div>
+
+        <div class="form-field">
+          <label>Catégories</label>
+          <div class="category-picker" *ngIf="categories().length; else noCategories">
+            <button
+              *ngFor="let category of categories()"
+              type="button"
+              class="category-badge"
+              [class.is-selected]="form.categories.includes(category.name)"
+              (click)="toggleCategory(category.name)"
+            >
+              <i
+                class="fa-solid"
+                [class.fa-square-check]="form.categories.includes(category.name)"
+                [class.fa-square-plus]="!form.categories.includes(category.name)"
+              ></i>
+              {{ category.name }}
+            </button>
+          </div>
+          <ng-template #noCategories>
+            <p class="text-muted text-sm">
+              Aucune catégorie. Créez-en via « Gérer les catégories ».
+            </p>
+          </ng-template>
+        </div>
+
+        <div class="form-field">
+          <label>Résumé (extrait)</label>
+          <input class="form-control" type="text" [(ngModel)]="form.excerpt" />
+        </div>
+
+        <div class="form-field">
+          <label>Contenu *</label>
+          <textarea
+            class="form-control"
+            rows="12"
+            [(ngModel)]="form.content"
+            placeholder="Contenu de l’actualité…"
+          ></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn--primary" [disabled]="saving()" (click)="save()">
+            {{ saving() ? 'Enregistrement…' : 'Enregistrer' }}
+          </button>
+          <button class="btn btn--ghost" type="button" (click)="cancel()">Annuler</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

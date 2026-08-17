@@ -1,0 +1,104 @@
+.segment-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.35rem 0.85rem;
+  border: 1px solid var(--color-gray-300, #dee2e6);
+  border-radius: 999px;
+  background: var(--color-white, #fff);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-gray-600, #525b69);
+  transition: all 0.2s ease;
+}
+
+.segment-toggle__switch {
+  position: relative;
+  width: 34px;
+  height: 19px;
+  border-radius: 999px;
+  background: var(--color-gray-300, #dee2e6);
+  transition: background-color 0.2s ease;
+  flex: 0 0 auto;
+}
+
+.segment-toggle__knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--color-white, #fff);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease;
+}
+
+.segment-toggle__state {
+  color: var(--color-gray-500, #6c757d);
+  font-weight: 500;
+}
+
+.segment-toggle:hover {
+  border-color: var(--color-primary, #0d9488);
+}
+
+.segment-toggle__tip {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-4px);
+  width: max-content;
+  max-width: 260px;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm, 6px);
+  background: var(--color-dark, #161c25);
+  color: var(--color-white, #fff);
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.45;
+  text-align: left;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  z-index: 20;
+}
+
+.segment-toggle__tip::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-bottom-color: var(--color-dark, #161c25);
+}
+
+.segment-toggle:hover .segment-toggle__tip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.segment-toggle.is-on {
+  border-color: var(--color-primary, #0d9488);
+  background: var(--color-primary-lighter, #ccfbf1);
+  color: var(--color-primary-darker, #115e59);
+}
+
+.segment-toggle.is-on .segment-toggle__switch {
+  background: var(--color-primary, #0d9488);
+}
+
+.segment-toggle.is-on .segment-toggle__knob {
+  transform: translateX(15px);
+}
+
+.segment-toggle.is-on .segment-toggle__state {
+  color: var(--color-primary-dark, #0f766e);
+}

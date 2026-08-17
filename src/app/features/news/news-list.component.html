@@ -1,0 +1,50 @@
+<section class="page-hero">
+  <div class="container">
+    <span class="eyebrow">Actualités</span>
+    <h1>Nos actualités</h1>
+    <p>Découvrez les dernières nouvelles et réalisations de SEEDS.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="search-bar d-flex gap-1 mb-3">
+      <input
+        class="form-control"
+        type="search"
+        [(ngModel)]="search"
+        placeholder="Rechercher une actualité…"
+        (keyup.enter)="onSearch()"
+      />
+      <button class="btn btn--primary" (click)="onSearch()">Rechercher</button>
+    </div>
+
+    <div class="grid grid--3" *ngIf="result().items.length; else empty">
+      <article class="card card--hover news-card" *ngFor="let item of result().items">
+        <div class="news-thumb">
+          <img *ngIf="item.image" [src]="item.image" [alt]="item.title" />
+          <span *ngIf="!item.image" class="news-thumb-placeholder"><i class="fa-solid fa-newspaper"></i></span>
+          <span class="badge badge--green news-date">{{ formatDate(item.publishedAt || item.createdAt) }}</span>
+        </div>
+        <div class="news-body">
+          <span class="badge badge--gray" *ngFor="let tag of item.tags">{{ tag }}</span>
+          <h3>{{ item.title }}</h3>
+          <p *ngIf="item.excerpt">{{ item.excerpt }}</p>
+          <a routerLink="/news/{{ item.slug || item._id }}" class="btn btn--sm btn--ghost">Lire la suite <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </article>
+    </div>
+
+    <ng-template #empty>
+      <p class="empty-state" *ngIf="!loading()">Aucune actualité trouvée.</p>
+    </ng-template>
+
+    <div class="pagination" *ngIf="result().total > result().limit">
+      <button
+        *ngFor="let page of pages()"
+        [class.active]="page === result().page"
+        (click)="loadPage(page)"
+      >{{ page }}</button>
+    </div>
+  </div>
+</section>

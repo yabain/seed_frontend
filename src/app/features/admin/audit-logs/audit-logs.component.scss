@@ -1,0 +1,44 @@
+@import '../management.scss';
+
+.presets {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.toolbar {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 1.25rem;
+
+  .search {
+    max-width: 320px;
+    flex: 1;
+  }
+
+  .spacer {
+    flex: 1;
+  }
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1rem;
+  gap: 1rem;
+
+  &__info {
+    font-size: 0.85rem;
+    color: var(--color-gray-500, #64748b);
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: var(--color-gray-500, #64748b);
+}

@@ -1,0 +1,51 @@
+<header
+  class="site-header"
+  [class.site-header--fixed]="isHome()"
+  [class.site-header--naked]="isHome() && !scrolled()"
+  [class.site-header--solid]="!isHome() || scrolled()"
+>
+  <div class="container header-inner">
+    <a routerLink="/" class="brand" (click)="closeMenu()">
+      <img
+        *ngIf="siteConfig()?.logo"
+        [src]="siteConfig()?.logo"
+        alt="Logo"
+        class="brand-badge brand-badge--img"
+      />
+      <span class="brand-badge" *ngIf="!siteConfig()?.logo">{{ (siteConfig()?.orgName || 'S').charAt(0) }}</span>
+      <span class="brand-text" *ngIf="!siteConfig()?.logo">
+        <strong>{{ siteConfig()?.orgName || 'SEED' }}</strong>
+        <small>{{ siteConfig()?.tagline || 'Yaba-In SARL' }}</small>
+      </span>
+    </a>
+
+    <nav class="desktop-nav" aria-label="Navigation principale">
+      <a
+        *ngFor="let link of links()"
+        routerLink="{{ link.path }}"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: link.path === '/' }"
+      >{{ link.label }}</a>
+      <a routerLink="/admin" class="btn btn--outline btn--sm nav-admin">Admin</a>
+    </nav>
+
+    <button
+      class="menu-toggle"
+      (click)="toggleMenu()"
+      [attr.aria-expanded]="mobileOpen()"
+      aria-label="Ouvrir le menu"
+    >
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <div class="mobile-nav" [class.open]="mobileOpen()">
+    <a
+      *ngFor="let link of links()"
+      routerLink="{{ link.path }}"
+      routerLinkActive="active"
+      (click)="closeMenu()"
+    >{{ link.label }}</a>
+    <a routerLink="/admin" class="btn btn--outline btn--block" (click)="closeMenu()">Admin</a>
+  </div>
+</header>

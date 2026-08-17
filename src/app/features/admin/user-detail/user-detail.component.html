@@ -1,0 +1,99 @@
+<div class="admin-page" *ngIf="user(); else loadingTpl">
+  <header class="page-head">
+    <div class="page-head__actions">
+      <button class="btn btn--ghost btn--sm" (click)="back()"><i class="fa-solid fa-arrow-left"></i> Retour à la liste</button>
+    </div>
+    <h1 class="mt-2"><i class="ti ti-user-cog"></i> {{ user()!.name }}</h1>
+    <p class="text-muted">{{ user()!.email }}</p>
+  </header>
+
+  <div class="card mt-2">
+    <h2>Informations</h2>
+    <div class="detail-grid">
+      <div class="detail-item">
+        <span class="detail-item__label">Rôle</span>
+        <span class="badge"
+          [class.badge--green]="user()!.role === 'superadmin'"
+          [class.badge--amber]="user()!.role === 'admin'"
+          [class.badge--gray]="user()!.role === 'user' || user()!.role === 'consultant'"
+        >{{ roleLabels[user()!.role] }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-item__label">Statut</span>
+        <span class="badge" [class.badge--green]="user()!.isActive" [class.badge--red]="!user()!.isActive">
+          {{ user()!.isActive ? 'Actif' : 'Inactif' }}
+        </span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-item__label">Notifications</span>
+        <span class="badge" [class.badge--green]="user()!.notifyContact" [class.badge--gray]="!user()!.notifyContact">
+          {{ user()!.notifyContact ? 'Oui' : 'Non' }}
+        </span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-item__label">Téléphone</span>
+        <span>{{ user()!.phone || '—' }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-item__label">Dernière connexion</span>
+        <span>{{ formatDate(user()!.lastLoginAt) }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-item__label">Créé le</span>
+        <span>{{ formatDate(user()!.createdAt) }}</span>
+      </div>
+    </div>
+
+    <div class="form-actions mt-2" *ngIf="!isSelf()">
+      <button class="btn btn--primary" (click)="toggleActive()" [disabled]="saving()">
+        {{ saving() ? 'Mise à jour…' : (user()!.isActive ? 'Désactiver' : 'Activer') }}
+      </button>
+    </div>
+  </div>
+
+  <div class="card mt-2">
+    <h2>Journal d'activité</h2>
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Action</th>
+            <th>IP</th>
+            <th>Navigateur</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let log of logs()">
+            <td>{{ formatLogDate(log.createdAt) }}</td>
+            <td>{{ actionLabel(log.action) }}</td>
+            <td class="code">{{ log.ip || '—' }}</td>
+            <td class="text-muted text-sm">{{ log.userAgent || '—' }}</td>
+          </tr>
+          <tr *ngIf="!logs().length && !logsLoading()">
+            <td colspan="4"><p class="empty-state">Aucune activité enregistrée.</p></td>
+          </tr>
+          <tr *ngIf="logsLoading()">
+            <td colspan="4"><p class="empty-state">Chargement...</p></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination" *ngIf="logsMeta() && !logsLoading()">
+      <button class="btn btn--ghost btn--sm" (click)="previousLogsPage()" [disabled]="!logsMeta()?.hasPrevPage">
+        <i class="fa-solid fa-arrow-left"></i> Précédent
+      </button>
+      <span class="pagination__info">Page {{ logsMeta()?.currentPage }} / {{ logsMeta()?.totalPages }} ({{ logsMeta()?.totalItems }} événements)</span>
+      <button class="btn btn--ghost btn--sm" (click)="nextLogsPage()" [disabled]="!logsMeta()?.hasNextPage">
+        Suivant <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<ng-template #loadingTpl>
+  <div class="admin-page">
+    <p class="empty-state">Chargement...</p>
+  </div>
+</ng-template>

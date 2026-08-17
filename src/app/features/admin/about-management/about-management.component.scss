@@ -1,0 +1,43 @@
+.identity-grid {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 2rem;
+  align-items: start;
+  margin-bottom: 0.5rem;
+}
+
+.identity-grid__side {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding-right: 1.5rem;
+  border-right: 1px solid var(--color-gray-200);
+}
+
+.identity-grid__side-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.identity-grid__side-hint {
+  font-size: 0.82rem;
+  margin-bottom: 0.75rem;
+}
+
+.identity-grid__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .identity-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .identity-grid__side {
+    border-right: none;
+    padding-right: 0;
+  }
+}

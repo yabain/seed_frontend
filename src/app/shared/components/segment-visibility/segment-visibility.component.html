@@ -1,0 +1,15 @@
+<button
+  type="button"
+  class="segment-toggle"
+  [class.is-on]="checked()"
+  (click)="toggle()"
+  [attr.aria-pressed]="checked()"
+  [attr.aria-label]="description()"
+>
+  <span class="segment-toggle__switch">
+    <span class="segment-toggle__knob"></span>
+  </span>
+  <span class="segment-toggle__label">Visibilité</span>
+  <span class="segment-toggle__state">{{ checked() ? 'Visible' : 'Masquée' }}</span>
+  <span class="segment-toggle__tip" role="tooltip">{{ description() }}</span>
+</button>

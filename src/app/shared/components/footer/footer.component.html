@@ -1,0 +1,62 @@
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-col footer-brand">
+      <div class="footer-logo">
+        <img
+          *ngIf="siteConfig()?.logo"
+          [src]="siteConfig()?.logo"
+          alt="Logo"
+          class="brand-badge brand-badge--img"
+        />
+        <span class="brand-badge" *ngIf="!siteConfig()?.logo">{{ (siteConfig()?.orgName || 'S').charAt(0) }}</span>
+        <strong>{{ siteConfig()?.orgName || 'SEEDS' }}</strong>
+      </div>
+      <p>{{ siteConfig()?.description || 'Une organisation engagée pour l’éducation, l’environnement et le développement communautaire.' }}</p>
+
+      <div class="social-row" *ngIf="socialLinks().length">
+        <a
+          *ngFor="let social of socialLinks()"
+          [href]="social.url"
+          target="_blank"
+          rel="noopener"
+          [attr.aria-label]="social.label"
+        >{{ social.icon }}</a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <ul>
+        <li *ngFor="let link of quickLinks">
+          <a routerLink="{{ link.path }}">{{ link.label }}</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Informations légales</h4>
+      <ul>
+        <li><a routerLink="/mentions-legales">Mentions légales</a></li>
+        <li><a routerLink="/politique-confidentialite">Politique de confidentialité</a></li>
+        <li><a routerLink="/admin">Espace administrateur</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <address>
+        <p *ngIf="siteConfig()?.address"><span class="footer-icon"><i class="fa-solid fa-location-dot"></i></span> {{ siteConfig()?.address }}</p>
+        <p *ngIf="siteConfig()?.phone"><span class="footer-icon"><i class="fa-solid fa-phone"></i></span> <a [href]="'tel:' + siteConfig()?.phone">{{ siteConfig()?.phone }}</a></p>
+        <p *ngIf="siteConfig()?.phone2"><span class="footer-icon"><i class="fa-solid fa-phone"></i></span> <a [href]="'tel:' + siteConfig()?.phone2">{{ siteConfig()?.phone2 }}</a></p>
+        <p *ngIf="siteConfig()?.email"><span class="footer-icon"><i class="fa-solid fa-envelope"></i></span> <a [href]="'mailto:' + siteConfig()?.email">{{ siteConfig()?.email }}</a></p>
+      </address>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="container footer-bottom-inner">
+      <p>© {{ currentYear }} {{ siteConfig()?.orgName || 'SEEDS' }}. Tous droits réservés.</p>
+      <p>Développé par <strong>Yaba-In SARL</strong></p>
+    </div>
+  </div>
+</footer>

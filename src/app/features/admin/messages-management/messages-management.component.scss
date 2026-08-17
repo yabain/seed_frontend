@@ -1,0 +1,34 @@
+tr.unread {
+  background: #f0fdfa;
+  cursor: pointer;
+
+  td:first-child {
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--color-primary);
+    }
+  }
+}
+
+.detail-row td {
+  background: var(--color-gray-50);
+}
+
+.message-detail {
+  padding: 0.5rem 0.5rem 0.5rem 2rem;
+
+  .message-body {
+    white-space: pre-wrap;
+    color: var(--color-gray-700);
+    max-width: 760px;
+  }
+}

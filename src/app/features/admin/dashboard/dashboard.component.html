@@ -1,0 +1,75 @@
+<div class="admin-page">
+  <header class="page-head">
+    <h1><i class="ti ti-dashboard"></i> Tableau de bord</h1>
+    <p class="text-muted">Vue d’ensemble de la fréquentation de la plateforme.</p>
+  </header>
+
+  <!-- Métriques -->
+  <div class="metric-grid" *ngIf="summary() as s">
+    <div class="metric-card">
+      <span class="metric-icon"><i class="fa-solid fa-users"></i></span>
+      <div>
+        <strong>{{ s.uniqueVisitors }}</strong>
+        <span>Visiteurs uniques</span>
+      </div>
+    </div>
+    <div class="metric-card">
+      <span class="metric-icon"><i class="fa-solid fa-chart-line"></i></span>
+      <div>
+        <strong>{{ s.totalPageViews }}</strong>
+        <span>Pages vues</span>
+      </div>
+    </div>
+    <div class="metric-card">
+      <span class="metric-icon"><i class="fa-solid fa-fire"></i></span>
+      <div>
+        <strong>{{ s.todayVisitors }}</strong>
+        <span>Aujourd’hui (visiteurs)</span>
+      </div>
+    </div>
+    <div class="metric-card">
+      <span class="metric-icon"><i class="fa-solid fa-bolt"></i></span>
+      <div>
+        <strong>{{ s.todayPageViews }}</strong>
+        <span>Aujourd’hui (pages vues)</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="empty-state" *ngIf="!summary()">Chargement des statistiques…</p>
+
+  <!-- Graphique 14 jours -->
+  <section class="card mt-3">
+    <h2>Fréquentation — 14 derniers jours</h2>
+    <div class="chart" *ngIf="daily().length">
+      <div class="chart-bar" *ngFor="let day of daily()">
+        <span class="bar-fill" [style.height]="barHeight(day)">
+          <b *ngIf="day.pageViews">{{ day.pageViews }}</b>
+        </span>
+        <span class="bar-label">{{ shortLabel(day.date) }}</span>
+      </div>
+    </div>
+    <p class="empty-state" *ngIf="!daily().length">Pas encore de données de fréquentation.</p>
+  </section>
+
+  <!-- Pages les plus visitées -->
+  <section class="card mt-3" *ngIf="topPages().length">
+    <h2>Pages les plus visitées</h2>
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Page</th>
+            <th>Vues</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let page of topPages()">
+            <td><code>{{ page.path }}</code></td>
+            <td>{{ page.count }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
