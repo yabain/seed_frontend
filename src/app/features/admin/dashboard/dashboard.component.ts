@@ -40,7 +40,7 @@ export class DashboardComponent implements OnInit {
   }
 
   barHeight(day: DailyStat): string {
-    const ratio = day.pageViews / this.maxValue();
+    const ratio: number = day.pageViews / this.maxValue();
     return `${Math.max(ratio * 100, 4)}%`;
   }
 

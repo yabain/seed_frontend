@@ -7,7 +7,7 @@
     </p>
   </header>
 
-  <div class="stats-row">
+  <div class="stats-row" *ngIf="!loading()">
     <div class="stat-card" *ngFor="let stat of statItems()" [class.stat-card--active]="stat.active" (click)="setFilter(stat.key)">
       <div class="stat-card__icon"><i [class]="stat.icon"></i></div>
       <div class="stat-card__content">
@@ -15,6 +15,10 @@
         <span class="stat-card__label">{{ stat.label }}</span>
       </div>
     </div>
+  </div>
+
+  <div class="stats-row" *ngIf="loading()">
+    <div class="skeleton skeleton-stat-card" *ngFor="let _ of [].constructor(6)"></div>
   </div>
 
   <div class="toolbar">
@@ -46,43 +50,53 @@
           <th class="text-right">Actions</th>
         </tr>
       </thead>
-      <tbody>
-        <tr *ngFor="let user of items()">
-          <td class="font-bold">
-            <a class="link" (click)="goToDetail(user)">{{ user.name }} <span *ngIf="isSelf(user)" class="text-muted text-sm">(vous)</span></a>
-          </td>
-          <td>{{ user.email }}</td>
-          <td>
-            <span class="badge"
-              [class.badge--green]="user.role === 'superadmin'"
-              [class.badge--amber]="user.role === 'admin'"
-              [class.badge--gray]="user.role === 'user' || user.role === 'consultant'"
-            >{{ roleLabels[user.role] }}</span>
-          </td>
-          <td>
-            <span class="badge" [class.badge--green]="user.notifyContact" [class.badge--gray]="!user.notifyContact">
-              {{ user.notifyContact ? 'Oui' : 'Non' }}
-            </span>
-          </td>
-          <td>
-            <span class="badge" [class.badge--green]="user.isActive" [class.badge--red]="!user.isActive">
-              {{ user.isActive ? 'Actif' : 'Inactif' }}
-            </span>
-          </td>
-          <td>{{ formatDate(user.lastLoginAt) }}</td>
-          <td>
-            <div class="row-actions">
-              <button class="btn btn--sm btn--ghost" (click)="goToDetail(user)">Détails</button>
-            </div>
-          </td>
-        </tr>
-        <tr *ngIf="!items().length && !loading()">
-          <td colspan="7"><p class="empty-state">Aucun compte.</p></td>
-        </tr>
-        <tr *ngIf="loading()">
-          <td colspan="7"><p class="empty-state">Chargement...</p></td>
-        </tr>
-      </tbody>
+        <tbody>
+          <tr *ngFor="let user of items()">
+            <td class="font-bold">
+              <a class="link" (click)="goToDetail(user)">{{ user.name }} <span *ngIf="isSelf(user)" class="text-muted text-sm">(vous)</span></a>
+            </td>
+            <td>{{ user.email }}</td>
+            <td>
+              <span class="badge"
+                [class.badge--green]="user.role === 'superadmin'"
+                [class.badge--amber]="user.role === 'admin'"
+                [class.badge--gray]="user.role === 'user' || user.role === 'consultant'"
+              >{{ roleLabels[user.role] }}</span>
+            </td>
+            <td>
+              <span class="badge" [class.badge--green]="user.notifyContact" [class.badge--gray]="!user.notifyContact">
+                {{ user.notifyContact ? 'Oui' : 'Non' }}
+              </span>
+            </td>
+            <td>
+              <span class="badge" [class.badge--green]="user.isActive" [class.badge--red]="!user.isActive">
+                {{ user.isActive ? 'Actif' : 'Inactif' }}
+              </span>
+            </td>
+            <td>{{ formatDate(user.lastLoginAt) }}</td>
+            <td>
+              <div class="row-actions">
+                <button class="btn btn--sm btn--ghost" (click)="goToDetail(user)">Détails</button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngFor="let _ of loading() ? [1,2,3,4,5] : []" class="skeleton-row">
+            <td><span class="skeleton skeleton-text skeleton-text--long"></span></td>
+            <td><span class="skeleton skeleton-text skeleton-text--medium"></span></td>
+            <td><span class="skeleton skeleton-badge"></span></td>
+            <td><span class="skeleton skeleton-badge"></span></td>
+            <td><span class="skeleton skeleton-badge"></span></td>
+            <td><span class="skeleton skeleton-text"></span></td>
+            <td>
+              <div class="row-actions">
+                <span class="skeleton skeleton-btn"></span>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="!items().length && !loading()">
+            <td colspan="7"><p class="empty-state">Aucun compte.</p></td>
+          </tr>
+        </tbody>
     </table>
   </div>
 

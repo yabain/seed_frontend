@@ -24,6 +24,7 @@ const ICON_OPTIONS = [
 export class ProgramsManagementComponent implements OnInit {
   readonly iconOptions = ICON_OPTIONS;
   readonly items = signal<Program[]>([]);
+  readonly loading = signal(true);
   readonly showForm = signal(false);
   readonly editing = signal<Program | null>(null);
   readonly saving = signal(false);
@@ -49,9 +50,11 @@ export class ProgramsManagementComponent implements OnInit {
   }
 
   load(): void {
+    this.loading.set(true);
     this.programsService.getAll().subscribe({
       next: (items) => this.items.set(items),
       error: () => this.toastService.error('Impossible de charger les programmes.'),
+      complete: () => this.loading.set(false),
     });
   }
 

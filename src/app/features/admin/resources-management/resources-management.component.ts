@@ -16,6 +16,7 @@ import type { Resource } from '../../../core/models/models';
 })
 export class ResourcesManagementComponent implements OnInit {
   readonly items = signal<Resource[]>([]);
+  readonly loading = signal(true);
   readonly showForm = signal(false);
   readonly editing = signal<Resource | null>(null);
   readonly saving = signal(false);
@@ -41,9 +42,11 @@ export class ResourcesManagementComponent implements OnInit {
   }
 
   load(): void {
+    this.loading.set(true);
     this.resourcesService.getAll().subscribe({
       next: (data) => this.items.set(data.items),
       error: () => this.toastService.error('Impossible de charger les ressources.'),
+      complete: () => this.loading.set(false),
     });
   }
 

@@ -1,4 +1,4 @@
-<div class="admin-page" *ngIf="user(); else loadingTpl">
+<div class="admin-page" *ngIf="!loading() || user(); else loadingTpl">
   <header class="page-head">
     <div class="page-head__actions">
       <button class="btn btn--ghost btn--sm" (click)="back()"><i class="fa-solid fa-arrow-left"></i> Retour à la liste</button>
@@ -84,7 +84,7 @@
       <button class="btn btn--ghost btn--sm" (click)="previousLogsPage()" [disabled]="!logsMeta()?.hasPrevPage">
         <i class="fa-solid fa-arrow-left"></i> Précédent
       </button>
-      <span class="pagination__info">Page {{ logsMeta()?.currentPage }} / {{ logsMeta()?.totalPages }} ({{ logsMeta()?.totalItems }} événements)</span>
+      <span class="pagination__info">Page {{ logsMeta()?.page }} / {{ logsMeta()?.totalPages }} ({{ logsMeta()?.total }} événements)</span>
       <button class="btn btn--ghost btn--sm" (click)="nextLogsPage()" [disabled]="!logsMeta()?.hasNextPage">
         Suivant <i class="fa-solid fa-arrow-right"></i>
       </button>
@@ -94,6 +94,52 @@
 
 <ng-template #loadingTpl>
   <div class="admin-page">
-    <p class="empty-state">Chargement...</p>
+    <header class="page-head">
+      <div class="page-head__actions">
+        <span class="skeleton skeleton-btn"></span>
+      </div>
+      <div class="mt-2">
+        <span class="skeleton skeleton-text skeleton-text--short"></span>
+      </div>
+      <div>
+        <span class="skeleton skeleton-text skeleton-text--long"></span>
+      </div>
+    </header>
+
+    <div class="card mt-2">
+      <h2>Informations</h2>
+      <div class="detail-grid">
+        <div class="detail-item"><span class="skeleton skeleton-text skeleton-text--short"></span></div>
+        <div class="detail-item"><span class="skeleton skeleton-badge"></span></div>
+        <div class="detail-item"><span class="skeleton skeleton-badge"></span></div>
+        <div class="detail-item"><span class="skeleton skeleton-text"></span></div>
+        <div class="detail-item"><span class="skeleton skeleton-text"></span></div>
+        <div class="detail-item"><span class="skeleton skeleton-text"></span></div>
+      </div>
+    </div>
+
+    <div class="card mt-2">
+      <h2>Journal d'activité</h2>
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Action</th>
+              <th>IP</th>
+              <th>Navigateur</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let _ of [].constructor(3)" class="skeleton-row">
+              <td><span class="skeleton skeleton-text"></span></td>
+              <td><span class="skeleton skeleton-badge"></span></td>
+              <td><span class="skeleton skeleton-text"></span></td>
+              <td><span class="skeleton skeleton-text skeleton-text--long"></span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </ng-template>

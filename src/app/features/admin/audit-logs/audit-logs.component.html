@@ -45,32 +45,39 @@
           <th>IP</th>
         </tr>
       </thead>
-      <tbody>
-        <tr *ngFor="let log of logs()">
-          <td>{{ formatDate(log.createdAt) }}</td>
-          <td>
-            <span class="badge" [style.background]="getActionCategory(log.action).bg" [style.color]="getActionCategory(log.action).color">
-              {{ getActionCategory(log.action).label }}
-            </span>
-          </td>
-          <td class="code">{{ truncate(log.action) }}</td>
-          <td>{{ log.actorEmail || '—' }}</td>
-          <td>{{ log.method || '—' }}</td>
-          <td>{{ truncate(log.resourceLabel || log.resourceId || '—') }}</td>
-          <td>
-            <span class="badge" [class.badge--green]="(log.statusCode || 0) < 400" [class.badge--red]="(log.statusCode || 0) >= 400">
-              {{ log.statusCode || '—' }}
-            </span>
-          </td>
-          <td class="code">{{ log.ip || '—' }}</td>
-        </tr>
-        <tr *ngIf="!logs().length && !loading()">
-          <td colspan="8"><p class="empty-state">Aucun événement enregistré.</p></td>
-        </tr>
-        <tr *ngIf="loading()">
-          <td colspan="8"><p class="empty-state">Chargement...</p></td>
-        </tr>
-      </tbody>
+        <tbody>
+          <tr *ngFor="let log of logs()">
+            <td>{{ formatDate(log.createdAt) }}</td>
+            <td>
+              <span class="badge" [style.background]="getActionCategory(log.action).bg" [style.color]="getActionCategory(log.action).color">
+                {{ getActionCategory(log.action).label }}
+              </span>
+            </td>
+            <td class="code">{{ truncate(log.action) }}</td>
+            <td>{{ log.actorEmail || '—' }}</td>
+            <td>{{ log.method || '—' }}</td>
+            <td>{{ truncate(log.resourceLabel || log.resourceId || '—') }}</td>
+            <td>
+              <span class="badge" [class.badge--green]="(log.statusCode || 0) < 400" [class.badge--red]="(log.statusCode || 0) >= 400">
+                {{ log.statusCode || '—' }}
+              </span>
+            </td>
+            <td class="code">{{ log.ip || '—' }}</td>
+          </tr>
+          <tr *ngFor="let _ of loading() ? [1,2,3,4,5] : []" class="skeleton-row">
+            <td><span class="skeleton skeleton-text"></span></td>
+            <td><span class="skeleton skeleton-badge"></span></td>
+            <td><span class="skeleton skeleton-text skeleton-text--long"></span></td>
+            <td><span class="skeleton skeleton-text"></span></td>
+            <td><span class="skeleton skeleton-text"></span></td>
+            <td><span class="skeleton skeleton-text skeleton-text--long"></span></td>
+            <td><span class="skeleton skeleton-badge"></span></td>
+            <td><span class="skeleton skeleton-text"></span></td>
+          </tr>
+          <tr *ngIf="!logs().length && !loading()">
+            <td colspan="8"><p class="empty-state">Aucun événement enregistré.</p></td>
+          </tr>
+        </tbody>
     </table>
   </div>
 

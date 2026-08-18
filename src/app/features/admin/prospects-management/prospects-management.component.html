@@ -24,20 +24,23 @@
           <th>Date d'inscription</th>
         </tr>
       </thead>
-      <tbody>
-        <tr *ngFor="let prospect of items()">
-          <td>{{ prospect.name || '—' }}</td>
-          <td>{{ prospect.email }}</td>
-          <td>{{ prospect.phone || '—' }}</td>
-          <td>{{ formatDate(prospect.createdAt) }}</td>
-        </tr>
-        <tr *ngIf="!items().length && !loading()">
-          <td colspan="4"><p class="empty-state">Aucun prospect.</p></td>
-        </tr>
-        <tr *ngIf="loading()">
-          <td colspan="4"><p class="empty-state">Chargement...</p></td>
-        </tr>
-      </tbody>
+        <tbody>
+          <tr *ngFor="let prospect of items()">
+            <td>{{ prospect.name || '—' }}</td>
+            <td>{{ prospect.email }}</td>
+            <td>{{ prospect.phone || '—' }}</td>
+            <td>{{ formatDate(prospect.createdAt) }}</td>
+          </tr>
+          <tr *ngFor="let _ of loading() ? [1,2,3,4,5] : []" class="skeleton-row">
+            <td><span class="skeleton skeleton-text skeleton-text--long"></span></td>
+            <td><span class="skeleton skeleton-text skeleton-text--medium"></span></td>
+            <td><span class="skeleton skeleton-text"></span></td>
+            <td><span class="skeleton skeleton-text"></span></td>
+          </tr>
+          <tr *ngIf="!items().length && !loading()">
+            <td colspan="4"><p class="empty-state">Aucun prospect.</p></td>
+          </tr>
+        </tbody>
     </table>
   </div>
 

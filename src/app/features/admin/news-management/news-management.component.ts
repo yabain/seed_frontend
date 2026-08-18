@@ -17,6 +17,7 @@ import type { News, Paginated } from '../../../core/models/models';
 })
 export class NewsManagementComponent implements OnInit {
   readonly result = signal<Paginated<News>>({ items: [], total: 0, page: 1, limit: 10 });
+  readonly loading = signal(true);
   search = '';
 
   constructor(
@@ -29,9 +30,11 @@ export class NewsManagementComponent implements OnInit {
   }
 
   loadPage(page: number): void {
+    this.loading.set(true);
     this.newsService.getAll({ page, limit: 10, search: this.search }).subscribe({
       next: (data) => this.result.set(data),
       error: () => this.toastService.error('Impossible de charger les actualités.'),
+      complete: () => this.loading.set(false),
     });
   }
 

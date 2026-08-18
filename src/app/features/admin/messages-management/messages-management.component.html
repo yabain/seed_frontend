@@ -18,6 +18,18 @@
         </tr>
       </thead>
       <tbody *ngIf="result() as data">
+        <tr *ngFor="let _ of loading() ? [1,2,3,4,5] : []" class="skeleton-row">
+          <td><span class="skeleton skeleton-text"></span></td>
+          <td><span class="skeleton skeleton-text skeleton-text--medium"></span></td>
+          <td><span class="skeleton skeleton-text skeleton-text--long"></span></td>
+          <td><span class="skeleton skeleton-badge"></span></td>
+          <td>
+            <div class="row-actions">
+              <span class="skeleton skeleton-btn"></span>
+              <span class="skeleton skeleton-btn"></span>
+            </div>
+          </td>
+        </tr>
         <ng-container *ngFor="let message of data.items">
           <tr [class.unread]="!message.isRead" (click)="toggleDetails(message._id)">
             <td>{{ formatDate(message.createdAt) }}</td>

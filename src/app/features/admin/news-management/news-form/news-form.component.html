@@ -9,7 +9,27 @@
   </header>
 
   <div class="card mt-2" *ngIf="loading()">
-    <p class="empty-state">Chargement de l’actualité…</p>
+    <div class="news-form">
+      <aside class="news-form__side">
+        <label class="news-form__side-title">Image de couverture</label>
+        <span class="skeleton skeleton-thumb"></span>
+      </aside>
+      <div class="news-form__fields">
+        <div class="form-field"><span class="skeleton skeleton-text skeleton-text--long"></span></div>
+        <div class="form-grid">
+          <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+          <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+        </div>
+        <div class="form-field"><span class="skeleton skeleton-text skeleton-text--long"></span></div>
+        <div class="form-field"><span class="skeleton skeleton-text skeleton-text--long"></span></div>
+        <div class="form-field"><span class="skeleton skeleton-text skeleton-text--long"></span></div>
+        <div class="form-field"><span class="skeleton skeleton-text skeleton-text--long"></span></div>
+        <div class="form-actions">
+          <span class="skeleton skeleton-btn"></span>
+          <span class="skeleton skeleton-btn"></span>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="card mt-2" *ngIf="!loading()">
@@ -17,7 +37,8 @@
       <aside class="news-form__side">
         <label class="news-form__side-title">Image de couverture</label>
         <p class="text-muted news-form__side-hint">
-          Convertie en WebP puis importée dans « uploads ».
+          <!-- Convertie en WebP puis importée dans « uploads ». -->
+          Cliquez ou Drag and Drop pour importer une image (max 5 Mo)
         </p>
         <app-admin-image-field
           [image]="form.image"

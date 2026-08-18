@@ -67,6 +67,67 @@
   font-size: 0.85rem;
 }
 
+.skeleton {
+  display: inline-block;
+  background: linear-gradient(90deg, var(--color-gray-100) 25%, var(--color-gray-200) 50%, var(--color-gray-100) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeleton-text {
+  height: 0.85rem;
+  display: block;
+  width: 100%;
+}
+
+.skeleton-text--short { width: 50%; }
+.skeleton-text--medium { width: 75%; }
+.skeleton-text--long { width: 90%; }
+
+.skeleton-badge {
+  width: 4.5rem;
+  height: 1.4rem;
+  display: inline-block;
+}
+
+.skeleton-thumb {
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  display: block;
+}
+
+.skeleton-btn {
+  width: 5.5rem;
+  height: 2.2rem;
+  display: inline-block;
+}
+
+.skeleton-stat-card {
+  height: 4rem;
+  border-radius: var(--radius-md);
+  display: block;
+}
+
+.skeleton-metric-card {
+  height: 5rem;
+  border-radius: var(--radius-md);
+  display: block;
+}
+
+.skeleton-chart {
+  height: 320px;
+  border-radius: var(--radius-md);
+  display: block;
+}
+
 @media (max-width: 720px) {
   .form-grid {
     grid-template-columns: 1fr;

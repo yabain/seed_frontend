@@ -78,8 +78,19 @@
           <th class="text-right">Actions</th>
         </tr>
       </thead>
-      <tbody>
-        <tr *ngFor="let item of items()">
+        <tbody>
+          <tr *ngFor="let _ of loading() ? [1,2,3,4] : []" class="skeleton-row">
+            <td><span class="skeleton skeleton-text"></span></td>
+            <td><span class="skeleton skeleton-text skeleton-text--long"></span></td>
+            <td><span class="skeleton skeleton-badge"></span></td>
+            <td>
+              <div class="row-actions">
+                <span class="skeleton skeleton-btn"></span>
+                <span class="skeleton skeleton-btn"></span>
+              </div>
+            </td>
+          </tr>
+          <tr *ngFor="let item of items()">
           <td>{{ item.order }}</td>
           <td class="font-bold">{{ item.title }}</td>
           <td>

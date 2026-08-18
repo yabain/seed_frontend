@@ -25,6 +25,12 @@
     </button>
   </div>
 
+  <div class="showcase-tabs" *ngIf="!loaded()">
+    <span class="skeleton skeleton-text skeleton-text--short"></span>
+    <span class="skeleton skeleton-text skeleton-text--short"></span>
+    <span class="skeleton skeleton-text skeleton-text--short"></span>
+  </div>
+
   <!-- Édition du slide actif -->
   <section class="card mt-2" *ngIf="loaded()">
     <h2>Slide {{ activeTab() + 1 }}</h2>
@@ -83,6 +89,29 @@
       >
         {{ saving() ? 'Enregistrement…' : 'Enregistrer le slide' }}
       </button>
+    </div>
+  </section>
+
+  <section class="card mt-2" *ngIf="!loaded()">
+    <h2>Slide 1</h2>
+    <div class="form-field">
+      <label>Image de bannière (convertie en WebP puis importée dans « uploads »)</label>
+      <span class="skeleton skeleton-text skeleton-text--long"></span>
+    </div>
+    <div class="form-field">
+      <label>Texte du badge supérieur</label>
+      <span class="skeleton skeleton-text skeleton-text--long"></span>
+    </div>
+    <div class="form-field">
+      <label>Texte en gras (titre principal)</label>
+      <span class="skeleton skeleton-text skeleton-text--long"></span>
+    </div>
+    <div class="form-field">
+      <label>Texte en dessous (sous-titre)</label>
+      <span class="skeleton skeleton-text skeleton-text--long"></span>
+    </div>
+    <div class="form-actions">
+      <span class="skeleton skeleton-btn"></span>
     </div>
   </section>
 

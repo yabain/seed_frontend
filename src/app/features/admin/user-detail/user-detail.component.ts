@@ -5,7 +5,9 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { UsersService } from '../../../core/services/users.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { AuthService } from '../../../core/services/auth.service';
-import type { AdminUser, UserLogEntry, UsersListMeta } from '../../../core/models/models';
+import { AuditLogService } from '../../../core/services/audit-log.service';
+import type { AdminUser, UserLogEntry } from '../../../core/models/models';
+import type { AuditLogsResult } from '../../../core/models/models';
 
 @Component({
   selector: 'app-user-detail',
@@ -19,7 +21,7 @@ export class UserDetailComponent implements OnInit {
   readonly saving = signal(false);
   readonly user = signal<AdminUser | null>(null);
   readonly logs = signal<UserLogEntry[]>([]);
-  readonly logsMeta = signal<UsersListMeta | null>(null);
+  readonly logsMeta = signal<AuditLogsResult['meta'] | null>(null);
   readonly logsLoading = signal(false);
   readonly logsPage = signal(1);
   readonly logsLimit = 20;
@@ -37,6 +39,7 @@ export class UserDetailComponent implements OnInit {
     private readonly usersService: UsersService,
     private readonly authService: AuthService,
     private readonly toastService: ToastService,
+    private readonly auditLogService: AuditLogService,
   ) {}
 
   ngOnInit(): void {
@@ -65,14 +68,15 @@ export class UserDetailComponent implements OnInit {
   loadLogs(id: string, page = this.logsPage()): void {
     this.logsLoading.set(true);
 
-    this.usersService.getUserLogs(id, page, this.logsLimit).subscribe({
+    this.auditLogService.list(page, this.logsLimit, { actorId: id }).subscribe({
       next: (result) => {
-        this.logs.set(result.data);
+        this.logs.set(result.data as unknown as UserLogEntry[]);
         this.logsMeta.set(result.meta);
         this.logsLoading.set(false);
       },
       error: () => {
         this.logs.set([]);
+        this.logsMeta.set(null);
         this.logsLoading.set(false);
       },
     });

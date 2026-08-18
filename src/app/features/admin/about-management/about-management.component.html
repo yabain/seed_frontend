@@ -103,6 +103,40 @@
     </div>
   </section>
 
+  <section class="card mt-2" *ngIf="!loaded()">
+    <h2>Identité</h2>
+    <div class="identity-grid">
+      <aside class="identity-grid__side">
+        <label class="identity-grid__side-title">Logo</label>
+        <span class="skeleton skeleton-thumb"></span>
+      </aside>
+      <div class="identity-grid__fields">
+        <div class="form-field"><span class="skeleton skeleton-text skeleton-text--long"></span></div>
+        <div class="form-field"><span class="skeleton skeleton-text skeleton-text--long"></span></div>
+        <div class="form-field"><span class="skeleton skeleton-text skeleton-text--long"></span></div>
+        <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+        <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+        <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+      </div>
+    </div>
+    <div class="form-grid">
+      <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+      <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+      <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+      <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+    </div>
+    <div class="form-grid">
+      <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+      <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+      <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+      <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+      <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+    </div>
+    <div class="form-actions">
+      <span class="skeleton skeleton-btn"></span>
+    </div>
+  </section>
+
   <section class="card mt-2" *ngIf="loaded()">
     <h2>Contenu « À propos »</h2>
     <div class="form-field">

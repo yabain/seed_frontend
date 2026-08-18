@@ -13,6 +13,7 @@ import type { ContactMessagesResult } from '../../../core/models/models';
 })
 export class MessagesManagementComponent implements OnInit {
   readonly result = signal<ContactMessagesResult | null>(null);
+  readonly loading = signal(true);
   readonly selected = signal<string | null>(null);
 
   constructor(
@@ -25,9 +26,11 @@ export class MessagesManagementComponent implements OnInit {
   }
 
   load(page: number, read?: string): void {
+    this.loading.set(true);
     this.contactService.getMessages({ page, limit: 20, read }).subscribe({
       next: (data) => this.result.set(data),
       error: () => this.toastService.error('Impossible de charger les messages.'),
+      complete: () => this.loading.set(false),
     });
   }
 

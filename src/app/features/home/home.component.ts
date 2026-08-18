@@ -80,7 +80,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly latestNews = signal<News[]>([]);
   readonly newsCanPrev = signal(false);
   readonly newsCanNext = signal(false);
-  readonly newsInset = signal('');
   readonly programs = signal<Program[]>([]);
   readonly partners = signal<Partner[]>([]);
   readonly banner = signal<Banner | null>(null);
@@ -134,6 +133,26 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     typeof window !== 'undefined' &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+
+  phrases: string[] = [
+    'Effective Support',
+    'Standardization',
+    'Compatibility',
+    'Easy Customizability',
+  ];
+
+  currentStep = signal(0);
+  isTransitioning = signal(true);
+  private timer2: any;
+
+  get totalSteps(): number {
+    return this.phrases.length;
+  }
+
+  trackHeight(): number {
+    return this.phrases.length * 2;
+  }
+
   constructor(
     private readonly newsService: NewsService,
     private readonly programsService: ProgramsService,
@@ -143,9 +162,14 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly siteConfigService: SiteConfigService,
     private readonly prospectsService: ProspectsService,
     private readonly elementRef: ElementRef,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
+    // Fait défiler le texte toutes les 2.5 secondes
+    this.timer2 = setInterval(() => {
+      this.nextGroup();
+    }, 5000);
+
     this.bannerService.getPublic().subscribe({
       next: (banner) => this.banner.set(banner),
       error: () => this.banner.set(null),
@@ -162,7 +186,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.latestNews.set(items);
         requestAnimationFrame(() => {
           this.setupReveal();
-          this.measureNewsGutter();
           this.resetNewsScroll();
           this.updateNewsArrows();
         });
@@ -197,16 +220,27 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  nextGroup(): void {
+    this.isTransitioning.set(true);
+    this.currentStep.update((prev) => prev + 1);
+
+    // Quand on dépasse le dernier groupe, reset instantané vers le premier
+    if (this.currentStep() === this.totalSteps) {
+      setTimeout(() => {
+        this.isTransitioning.set(false); // Coupe la transition CSS
+        this.currentStep.set(0);          // Reviens au groupe 0
+      }, 600); // Durée alignée sur la transition CSS
+    }
+  }
+
   ngAfterViewInit(): void {
     this.setupReveal();
     this.parallaxEls = Array.from(
       (this.elementRef.nativeElement as Element).querySelectorAll<HTMLElement>('.parallax'),
     );
-    this.measureNewsGutter();
     this.resetNewsScroll();
     this.updateNewsArrows();
     setTimeout(() => {
-      this.measureNewsGutter();
       this.updateNewsArrows();
     }, 300);
   }
@@ -217,6 +251,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     if (this.raf) {
       cancelAnimationFrame(this.raf);
+    }
+    if (this.timer2) {
+      clearInterval(this.timer2);
     }
   }
 
@@ -277,7 +314,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @HostListener('window:resize')
   onResize(): void {
-    this.measureNewsGutter();
     this.updateNewsArrows();
   }
 
@@ -308,17 +344,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     const max = viewport.scrollWidth - viewport.clientWidth;
     this.newsCanPrev.set(viewport.scrollLeft > 8);
     this.newsCanNext.set(viewport.scrollLeft < max - 8);
-  }
-
-  measureNewsGutter(): void {
-    const host = this.elementRef.nativeElement as Element;
-    const head = host.querySelector<HTMLElement>('.lq-newsx__head');
-    const viewport = host.querySelector<HTMLElement>('.lq-newsx__viewport');
-    if (!head || !viewport) {
-      return;
-    }
-    const inset = head.getBoundingClientRect().left - viewport.getBoundingClientRect().left;
-    this.newsInset.set(`${Math.max(0, inset)}px`);
   }
 
   resetNewsScroll(): void {
@@ -402,7 +427,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     return new Date(iso).toLocaleDateString('fr-FR', {
       day: 'numeric',
-      month: 'short',
+      month: 'long',
+      year: 'numeric',
     });
   }
 

@@ -19,7 +19,8 @@
       <img *ngIf="preview()" [src]="preview()" [alt]="alt" />
       <span *ngIf="!preview() && !uploading()" class="admin-image-field__placeholder">
         <i class="ti ti-photo-plus"></i>
-        <small>Cliquez pour importer une image (max 5 Mo)</small>
+        <small>Cliquez ou Drag and Drop pour importer une image (max 5 Mo)
+        </small>
       </span>
       <span *ngIf="uploading()" class="admin-image-field__spinner">
         <i class="ti ti-loader"></i>

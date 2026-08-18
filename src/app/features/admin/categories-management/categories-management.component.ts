@@ -16,6 +16,7 @@ import type { NewsCategory } from '../../../core/models/models';
 })
 export class CategoriesManagementComponent implements OnInit {
   readonly items = signal<NewsCategory[]>([]);
+  readonly loading = signal(true);
   readonly saving = signal(false);
   readonly editingId = signal<string | null>(null);
   newName = '';
@@ -31,9 +32,11 @@ export class CategoriesManagementComponent implements OnInit {
   }
 
   load(): void {
+    this.loading.set(true);
     this.newsCategoryService.getAll().subscribe({
       next: (items) => this.items.set(items),
       error: () => this.toastService.error('Impossible de charger les catégories.'),
+      complete: () => this.loading.set(false),
     });
   }
 

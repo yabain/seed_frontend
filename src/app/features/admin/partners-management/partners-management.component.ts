@@ -15,6 +15,7 @@ import type { Partner } from '../../../core/models/models';
 })
 export class PartnersManagementComponent implements OnInit {
   readonly items = signal<Partner[]>([]);
+  readonly loading = signal(true);
 
   constructor(
     private readonly router: Router,
@@ -27,9 +28,11 @@ export class PartnersManagementComponent implements OnInit {
   }
 
   load(): void {
+    this.loading.set(true);
     this.partnersService.getAll().subscribe({
       next: (items) => this.items.set(items),
       error: () => this.toastService.error('Impossible de charger les partenaires.'),
+      complete: () => this.loading.set(false),
     });
   }
 

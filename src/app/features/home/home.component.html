@@ -109,6 +109,45 @@
     </div>
   </section>
 
+  <!-- ================= BANNIÈRE AVEC TEXTE ROTATIF ================= -->
+    <div class="banner-wrapper">
+  <div class="banner-card">
+    
+    <!-- Zone Contenu Texte -->
+    <div class="banner-content">
+      <h2 class="fixed-text">Choose Berry for</h2>
+
+      <!-- Masque de défilement accueillant 5 lignes visibles -->
+      <div class="animated-text-container">
+        <div 
+          class="animated-text-track" 
+          [class.no-transition]="!isTransitioning()"
+          [style.transform]="'translateY(-' + ((currentStep() / trackHeight()) * 100) + '%)'"
+        >
+          <!-- Liste globale des phrases -->
+          @for (phrase of phrases; track $index) {
+            <div class="animated-phrase">{{ phrase }}</div>
+          }
+
+          <!-- Duplication des 5 premières phrases pour la boucle fluide sans saut -->
+          @for (phrase of phrases.slice(0, 5); track $index) {
+            <div class="animated-phrase">{{ phrase }}</div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="image-wrapper">
+      <img 
+        src="/assets/img/germe.png" 
+        alt="Main 3D" 
+        class="overflow-image" 
+      />
+    </div>
+
+  </div>
+</div>
+
   <!-- ================= DOMAINES D'INTERVENTION ================= -->
   <section class="lq-section" id="domaines">
     <div class="container">
@@ -165,7 +204,7 @@
       <p class="lq-empty reveal" *ngIf="!latestNews().length">Les actualités arrivent bientôt.</p>
     </div>
 
-    <div class="lq-newsx__viewport reveal" *ngIf="latestNews().length" [style.padding-inline-start]="newsInset()"
+    <div class="lq-newsx__viewport reveal" *ngIf="latestNews().length"
       (scroll)="updateNewsArrows()">
       <div class="lq-newsx__track">
         <article class="lq-newsx__card" *ngFor="let item of latestNews()">

@@ -25,15 +25,27 @@
     <table class="table">
       <thead>
         <tr>
-          <th>Image</th>
           <th>Titre</th>
+          <th></th>
           <th>Statut</th>
           <th>Date</th>
           <th class="text-right">Actions</th>
         </tr>
       </thead>
-      <tbody>
-        <tr *ngFor="let item of result().items">
+        <tbody>
+          <tr *ngFor="let _ of loading() ? [1,2,3,4,5] : []" class="skeleton-row">
+            <td><span class="skeleton skeleton-thumb"></span></td>
+            <td><span class="skeleton skeleton-text skeleton-text--long"></span></td>
+            <td><span class="skeleton skeleton-badge"></span></td>
+            <td><span class="skeleton skeleton-text"></span></td>
+            <td>
+              <div class="row-actions">
+                <span class="skeleton skeleton-btn"></span>
+                <span class="skeleton skeleton-btn"></span>
+              </div>
+            </td>
+          </tr>
+          <tr *ngFor="let item of result().items">
           <td class="news-thumb">
             <img *ngIf="item.image" [src]="item.image" [alt]="item.title" />
             <span *ngIf="!item.image" class="news-thumb__empty">

@@ -143,6 +143,63 @@
     </div>
   </div>
 
+  <div class="settings-row" *ngIf="loading()">
+    <div class="settings-col">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-heading">
+            <span class="skeleton skeleton-text skeleton-text--short"></span>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-field"><span class="skeleton skeleton-text skeleton-text--long"></span></div>
+            <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+            <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+            <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+            <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+            <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+            <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+          </div>
+        </div>
+      </div>
+      <div class="card mt-2">
+        <div class="card-header">
+          <div class="card-heading">
+            <span class="skeleton skeleton-text skeleton-text--short"></span>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+            <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+          </div>
+          <div class="form-field mt-2"><span class="skeleton skeleton-text skeleton-text--long"></span></div>
+          <div class="form-actions mt-2">
+            <span class="skeleton skeleton-btn"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="settings-col">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-heading">
+            <span class="skeleton skeleton-text skeleton-text--short"></span>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="stats-summary">
+            <div class="skeleton skeleton-stat-card"></div>
+            <div class="skeleton skeleton-stat-card"></div>
+            <div class="skeleton skeleton-stat-card"></div>
+          </div>
+          <div class="skeleton skeleton-chart mt-2"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="card mt-2">
     <h2>E-mails sortants</h2>
     <div class="toolbar">
@@ -179,8 +236,11 @@
           <tr *ngIf="!emailList().length && !gettingOutput()">
             <td colspan="4"><p class="empty-state">Aucun e-mail.</p></td>
           </tr>
-          <tr *ngIf="gettingOutput()">
-            <td colspan="4"><p class="empty-state">Chargement...</p></td>
+          <tr *ngFor="let _ of gettingOutput() ? [1,2,3,4,5] : []" class="skeleton-row">
+            <td><span class="skeleton skeleton-text"></span></td>
+            <td><span class="skeleton skeleton-text skeleton-text--long"></span></td>
+            <td><span class="skeleton skeleton-text"></span></td>
+            <td><span class="skeleton skeleton-badge"></span></td>
           </tr>
         </tbody>
       </table>
