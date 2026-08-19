@@ -24,19 +24,21 @@ export class FooterComponent {
 
   constructor(private readonly siteConfigService: SiteConfigService) {}
 
-  socialLinks(): Array<{ label: string; url: string; icon: string }> {
+  socialLinks(): Array<{ label: string; url: string; iconClass: string }> {
     const social = this.siteConfig()?.social ?? {};
-    const entries = [
-      { label: 'Facebook', icon: 'F', url: social.facebook },
-      { label: 'Instagram', icon: 'IG', url: social.instagram },
-      { label: 'LinkedIn', icon: 'in', url: social.linkedin },
-      { label: 'Twitter', icon: 'X', url: social.twitter },
-      { label: 'YouTube', icon: 'YT', url: social.youtube },
-    ] as const;
-    return entries.filter((entry) => !!entry.url) as Array<{
-      label: string;
-      url: string;
-      icon: string;
-    }>;
+    const entries: Array<{ label: string; url?: string; iconClass: string }> = [
+      { label: 'Facebook', url: social.facebook, iconClass: 'fa-brands fa-facebook' },
+      { label: 'Instagram', url: social.instagram, iconClass: 'fa-brands fa-instagram' },
+      { label: 'LinkedIn', url: social.linkedin, iconClass: 'fa-brands fa-linkedin' },
+      { label: 'X (Twitter)', url: social.twitter, iconClass: 'fa-brands fa-x-twitter' },
+      { label: 'YouTube', url: social.youtube, iconClass: 'fa-brands fa-youtube' },
+    ];
+    return entries
+      .filter((entry) => !!entry.url)
+      .map((entry) => ({
+        label: entry.label,
+        url: entry.url as string,
+        iconClass: entry.iconClass,
+      }));
   }
 }

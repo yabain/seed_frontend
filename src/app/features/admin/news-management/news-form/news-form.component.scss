@@ -62,17 +62,17 @@
   }
 
   &:hover {
-    border-color: var(--color-primary, #0d9488);
+    border-color: var(--color-primary, #0bcc9c);
     color: var(--color-primary-dark, #0f766e);
   }
 
   &.is-selected {
     background: var(--color-primary-lighter, #ccfbf1);
-    border-color: var(--color-primary, #0d9488);
+    border-color: var(--color-primary, #0bcc9c);
     color: var(--color-primary-darker, #115e59);
 
     i {
-      color: var(--color-primary, #0d9488);
+      color: var(--color-primary, #0bcc9c);
     }
   }
 }

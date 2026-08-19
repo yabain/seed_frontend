@@ -5,6 +5,7 @@ import {
   HostListener,
   OnDestroy,
   OnInit,
+  ViewChild,
   signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
@@ -39,12 +40,12 @@ interface Slide {
 }
 
 const SLIDE_INTERVAL = 8000;
-const FALLBACK_PARTNERS = [
-  'Yaba-In SARL',
-  'Acteurs locaux',
-  'ONG partenaires',
-  'Écoles associées',
-  'Communautés',
+const FALLBACK_PARTNERS: Partner[] = [
+  { _id: '1', name: 'Yaba-In SARL' },
+  { _id: '2', name: 'Acteurs locaux' },
+  { _id: '3', name: 'ONG partenaires' },
+  { _id: '4', name: 'Écoles associées' },
+  { _id: '5', name: 'Communautés' },
 ];
 const FALLBACK_SLIDES: Slide[] = [
   {
@@ -94,13 +95,18 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   readonly slides = signal<Slide[]>(FALLBACK_SLIDES);
   readonly activeSlide = signal(0);
-  readonly marqueeItems = signal<string[]>(FALLBACK_PARTNERS);
+  readonly marqueeItems = signal<Partner[]>(FALLBACK_PARTNERS);
+
+  @ViewChild('marqueeContainer') marqueeContainer!: ElementRef<HTMLDivElement>;
+
+  private marqueeRaf: number = 0;
+  private marqueePaused = false;
 
   readonly figures: Figure[] = [
-    { value: '10 000+', label: 'Bénéficiaires accompagnés', icon: 'fa-solid fa-users' },
-    { value: '4', label: 'Domaines d’intervention', icon: 'fa-solid fa-layer-group' },
-    { value: '50+', label: 'Partenaires & acteurs engagés', icon: 'fa-solid fa-handshake' },
-    { value: '15', label: 'Projets et programmes actifs', icon: 'fa-solid fa-seedling' },
+    { value: '50+', label: 'Projets soutenus', icon: 'fa-solid fa-layer-group' },
+    { value: '300+', label: 'Emplois crée en Afrique', icon: 'fa-solid fa-users' },
+    { value: '30+', label: 'Mentors expert', icon: 'fa-solid fa-handshake' },
+    { value: '80+', label: 'Fondateurs dévoués', icon: 'fa-solid fa-seedling' },
   ];
 
   readonly features: Feature[] = [
@@ -135,10 +141,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   phrases: string[] = [
-    'Effective Support',
-    'Standardization',
-    'Compatibility',
-    'Easy Customizability',
+    "semons les graines de l'innovation",
+    "révélons le potentiel des entrepreneurs",
+    "connectons les talents",
+    "bâtissons des entreprises durables",
+    "soutenons activement les femmes",
   ];
 
   currentStep = signal(0);
@@ -151,6 +158,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   trackHeight(): number {
     return this.phrases.length * 2;
+  }
+
+  centerPhraseIndex(): number {
+    return this.currentStep() + 2;
   }
 
   constructor(
@@ -202,14 +213,15 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.partnersService.getPublic().subscribe({
       next: (items) => {
         this.partners.set(items);
-        const names = items.map((p) => p.name).filter(Boolean);
-        this.marqueeItems.set(names.length ? [...names, ...names].slice(0, 10) : FALLBACK_PARTNERS);
+        const partners = items.filter((p) => p.isActive ?? true);
+        this.marqueeItems.set(partners.length ? partners : FALLBACK_PARTNERS);
       },
       error: () => this.marqueeItems.set(FALLBACK_PARTNERS),
       complete: () => {
         this.loading.set(false);
         this.setupReveal();
         this.buildSlides();
+        this.startMarqueeAutoScroll();
       },
     });
 
@@ -255,6 +267,34 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.timer2) {
       clearInterval(this.timer2);
     }
+    if (this.marqueeRaf) {
+      cancelAnimationFrame(this.marqueeRaf);
+    }
+  }
+
+  private startMarqueeAutoScroll(): void {
+    const container = this.marqueeContainer?.nativeElement;
+    if (!container) return;
+
+    const step = () => {
+      if (!this.marqueePaused) {
+        container.scrollBy({ left: 1, behavior: 'auto' });
+        if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 1) {
+          container.scrollLeft = 0;
+        }
+      }
+      this.marqueeRaf = requestAnimationFrame(step);
+    };
+
+    this.marqueeRaf = requestAnimationFrame(step);
+  }
+
+  pauseMarquee(): void {
+    this.marqueePaused = true;
+  }
+
+  resumeMarquee(): void {
+    this.marqueePaused = false;
   }
 
   private buildSlides(): void {
@@ -440,4 +480,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       ? `${categories[0]} +${categories.length - 1}`
       : categories[0];
   }
+
+  openNewTab(url?: string): void {
+    if (url) {
+      window.open(url, '_blank');
+    }
+  }
+
 }

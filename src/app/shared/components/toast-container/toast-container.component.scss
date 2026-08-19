@@ -12,7 +12,7 @@
 }
 
 .toast {
-  --toast-color: var(--color-primary, #0d9488);
+  --toast-color: var(--color-primary, #0bcc9c);
   --toast-glow: rgba(13, 148, 136, 0.35);
   position: relative;
   overflow: hidden;
@@ -67,7 +67,7 @@
 }
 
 .toast--info {
-  --toast-color: var(--color-primary, #0d9488);
+  --toast-color: var(--color-primary, #0bcc9c);
   --toast-glow: rgba(13, 148, 136, 0.35);
 }
 

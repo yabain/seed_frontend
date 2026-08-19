@@ -41,3 +41,28 @@
     padding-right: 0;
   }
 }
+
+.form-field--icon {
+  .input-with-icon {
+    position: relative;
+
+    .input-icon {
+      position: absolute;
+      left: 0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.1rem;
+      color: var(--color-gray-500);
+      pointer-events: none;
+    }
+
+    .form-control {
+      padding-left: 2.5rem;
+    }
+  }
+
+  label i {
+    margin-right: 0.4rem;
+    font-size: 1rem;
+  }
+}

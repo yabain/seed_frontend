@@ -43,7 +43,7 @@
 }
 
 .segment-toggle:hover {
-  border-color: var(--color-primary, #0d9488);
+  border-color: var(--color-primary, #0bcc9c);
 }
 
 .segment-toggle__tip {
@@ -86,13 +86,13 @@
 }
 
 .segment-toggle.is-on {
-  border-color: var(--color-primary, #0d9488);
+  border-color: var(--color-primary, #0bcc9c);
   background: var(--color-primary-lighter, #ccfbf1);
   color: var(--color-primary-darker, #115e59);
 }
 
 .segment-toggle.is-on .segment-toggle__switch {
-  background: var(--color-primary, #0d9488);
+  background: var(--color-primary, #0bcc9c);
 }
 
 .segment-toggle.is-on .segment-toggle__knob {

@@ -20,7 +20,9 @@
           target="_blank"
           rel="noopener"
           [attr.aria-label]="social.label"
-        >{{ social.icon }}</a>
+        >
+          <i [class]="social.iconClass"></i>
+        </a>
       </div>
     </div>
 
@@ -56,7 +58,7 @@
   <div class="footer-bottom">
     <div class="container footer-bottom-inner">
       <p>© {{ currentYear }} {{ siteConfig()?.orgName || 'SEEDS' }}. Tous droits réservés.</p>
-      <p>Développé par <strong>Yaba-In SARL</strong></p>
+      <p>Développé par <strong><a href="https://yaba-in.com" target="_blank" rel="noopener">Yaba-In SARL</a></strong></p>
     </div>
   </div>
 </footer>

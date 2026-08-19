@@ -11,7 +11,7 @@
   --ink: #0f2330;
   --ink-soft: rgba(15, 35, 48, 0.74);
   --ink-faint: rgba(15, 35, 48, 0.52);
-  --teal-bright: #0d9488;
+  --teal-bright: #0bcc9c;
   --teal-glow: rgba(13, 148, 136, 0.22);
 
   position: relative;
@@ -189,7 +189,7 @@
 .lq-hero__slide:nth-child(3) .lq-hero__media:not(:has(img)) {
   background:
     radial-gradient(800px 500px at 70% 80%, rgba(94, 234, 212, 0.4), transparent 60%),
-    linear-gradient(135deg, #062c25 0%, #0e6d53 55%, #0d9488 100%);
+    linear-gradient(135deg, #062c25 0%, #0e6d53 55%, #0bcc9c 100%);
 }
 
 .lq-hero__media img {
@@ -254,9 +254,9 @@
   text-transform: uppercase;
   color: var(--teal-bright);
   background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  padding: 0.45rem 1rem;
-  border-radius: var(--radius-full);
+  // border: 1px solid rgba(255, 255, 255, 0.16);
+  padding: 0rem 0rem;
+  // border-radius: var(--radius-full);
   margin-bottom: 1.1rem;
 
   i {
@@ -264,8 +264,8 @@
   }
 
   &--solid {
-    background: linear-gradient(135deg, #0d9488, #115e59);
-    color: #ccfbf1;
+    // background: linear-gradient(135deg, #0cc9ba, #0cc9ba);
+    color: #0bcc9c;
     border-color: transparent;
   }
 }
@@ -337,6 +337,25 @@
   color: #0f766e;
   background: rgba(13, 148, 136, 0.08);
   border: 1px solid rgba(13, 148, 136, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: background 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+
+  &:hover {
+    background: rgba(13, 148, 136, 0.16);
+    border-color: rgba(13, 148, 136, 0.5);
+    color: #0b5e57;
+    transform: translateY(-2px);
+  }
+}
+
+.lq-btn--glass-transparent {
+  padding: 0.8rem 1.6rem;
+  border-radius: 14px;
+  font-weight: 600;
+  color: #0f766e;
+  background: rgba(13, 148, 137, 0);
+  border: 1px solid rgba(13, 148, 137, 0);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   transition: background 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
@@ -452,23 +471,14 @@
   padding: 2.4rem 0;
   border-top: 1px solid rgba(13, 148, 136, 0.12);
   border-bottom: 1px solid rgba(13, 148, 136, 0.12);
-  overflow: hidden;
   background: linear-gradient(180deg, rgba(13, 148, 136, 0.05), rgba(13, 148, 136, 0.02));
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-
-  .lq-partners__label {
-    text-align: center;
-    color: var(--ink-faint);
-    font-size: 0.78rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    margin-bottom: 1.1rem;
-  }
 }
 
 .lq-marquee {
   overflow: hidden;
+  cursor: grab;
   -webkit-mask-image: linear-gradient(
     90deg,
     transparent 0%,
@@ -482,11 +492,6 @@
 .lq-marquee__track {
   display: flex;
   width: max-content;
-  animation: lqMarquee 46s linear infinite;
-
-  &:hover {
-    animation-play-state: paused;
-  }
 }
 
 .lq-marquee__group {
@@ -494,6 +499,7 @@
   align-items: center;
   gap: 1.1rem;
   padding-right: 1.1rem;
+  flex-shrink: 0;
 }
 
 .lq-chip {
@@ -501,16 +507,35 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.6rem 1.2rem;
-  border-radius: var(--radius-full);
-  background: rgba(13, 148, 136, 0.06);
-  border: 1px solid rgba(13, 148, 136, 0.16);
+  // border-radius: var(--radius-full);
+  // background: rgba(13, 148, 136, 0.06);
+  // border: 1px solid rgba(13, 148, 136, 0.16);
   color: var(--ink-soft);
   font-weight: 600;
   font-size: 0.9rem;
   white-space: nowrap;
+  cursor: default;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 
   i {
     color: var(--teal-bright);
+  }
+
+  &--link {
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(13, 148, 136, 0.12);
+      border-color: rgba(13, 148, 136, 0.35);
+      transform: translateY(-2px);
+    }
+  }
+
+  .lq-chip__logo {
+    max-height: 100px;
+    width: auto;
+    object-fit: contain;
+    display: block;
   }
 }
 
@@ -518,13 +543,13 @@
 .lq-section {
   position: relative;
   z-index: 2;
-  padding: 5rem 0;
+  padding: 3rem 0;
 }
 
 .lq-section__head {
   max-width: 720px;
-  margin: 0 auto 3rem;
-  text-align: center;
+  margin: 0 auto 3rem 0;
+  text-align: left;
 
   p {
     color: var(--ink-soft);
@@ -647,8 +672,8 @@
 /* ---------- Actualités ---------- */
 .lq-newsx {
   position: relative;
-  padding-top: 5rem;
-  padding-bottom: 7rem;
+  // padding-top: 5rem;
+  // padding-bottom: 7rem;
   background:
     radial-gradient(640px 400px at 8% 8%, rgba(13, 148, 136, 0.16), transparent 62%),
     radial-gradient(720px 460px at 90% 18%, rgba(13, 148, 136, 0.13), transparent 60%),
@@ -720,7 +745,7 @@
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    padding: clamp(1.5rem, 1vw, 1.5rem) 1.5rem clamp(1.5rem, 2vw, 1.5rem);
+    padding: clamp(1.5rem, 1vw, 1.5rem) 1.5rem clamp(3.5rem, 2vw, 3.5rem);
     padding-inline-start: 0.75rem;
 
     @media (min-width: 576px) {
@@ -939,7 +964,7 @@
   --ink: #0f2330;
   --ink-soft: rgba(15, 35, 48, 0.74);
   --ink-faint: rgba(15, 35, 48, 0.52);
-  --teal-bright: #0d9488;
+  --teal-bright: #0bcc9c;
   --teal-glow: rgba(13, 148, 136, 0.25);
 
   display: grid;
@@ -1056,11 +1081,6 @@
   55%, 100% { left: 130%; }
 }
 
-@keyframes lqMarquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
 @keyframes lqPulse {
   0%, 100% { transform: scale(1); opacity: 0.55; }
   50% { transform: scale(1.12); opacity: 0.85; }
@@ -1106,7 +1126,7 @@
 
 @media (max-width: 640px) {
   .lq-section {
-    padding: 3.5rem 0;
+    padding: 2.5rem 0;
   }
 
   .lq-hero__title {
@@ -1242,6 +1262,14 @@ $visible-lines: 5;
     font-size: 2.2rem;
     font-weight: 800;
     white-space: nowrap;
+
+    &.is-center {
+      color: #facc15;
+      text-shadow:
+        0 0 10px rgba(255, 255, 255, 0.9),
+        0 0 20px rgba(255, 255, 255, 0.6),
+        0 0 40px rgba(255, 255, 255, 0.4);
+    }
   }
 }
 
@@ -1287,6 +1315,14 @@ $visible-lines: 5;
       height: $line-height-md;
       line-height: $line-height-md;
       font-size: 1.6rem;
+
+      &.is-center {
+        color: #facc15;
+        text-shadow:
+          0 0 10px rgba(255, 255, 255, 0.9),
+          0 0 20px rgba(255, 255, 255, 0.6),
+          0 0 40px rgba(255, 255, 255, 0.4);
+      }
     }
   }
 

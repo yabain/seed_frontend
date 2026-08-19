@@ -128,6 +128,12 @@
           {{ submitting() ? 'Envoi en cours…' : 'Envoyer le message' }}
         </button>
       </form>
+
+      <div class="contact-success" *ngIf="submitted()">
+        <span class="contact-success__icon"><i class="fa-solid fa-circle-check"></i></span>
+        <h3>Message envoyé</h3>
+        <p>Merci de nous avoir contacté. Nous vous répondrons dans les plus brefs délais.</p>
+      </div>
     </div>
   </div>
 </section>
