@@ -129,13 +129,12 @@
     <div class="features-container">
 
       <!-- Visual Column -->
-      <div class="features-visual">
-        <img src="../../../assets/img/seed_6.png" alt="DEEDS Img" class="features-img"
-          loading="lazy" />
+      <div class="features-visual reveal reveal--from-left">
+        <img src="../../../assets/img/seed_6.png" alt="DEEDS Img" class="features-img" loading="lazy" />
       </div>
 
       <!-- Content Column -->
-      <div class="features-content">
+      <div class="features-content reveal reveal--from-right">
 
         <header class="features-header">
           <span class="features-subtitle">
@@ -156,7 +155,7 @@
         <!-- Feature List -->
         <ul class="features-list">
 
-          <li class="feature-item">
+          <li class="feature-item reveal reveal--from-right">
             <div class="feature-icon-wrapper">
               <svg class="feature-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -172,7 +171,7 @@
             </div>
           </li>
 
-          <li class="feature-item">
+          <li class="feature-item reveal reveal--from-right">
             <div class="feature-icon-wrapper">
               <svg class="feature-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -188,7 +187,7 @@
             </div>
           </li>
 
-          <li class="feature-item">
+          <li class="feature-item reveal reveal--from-right">
             <div class="feature-icon-wrapper">
               <svg class="feature-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -229,13 +228,16 @@
     </div>
   </section>
 
-  <!-- ================= CHIFFRES CLÉS ================= -->
+  <!-- ================= PAYS ================= -->
   <section class="lq-section lq-stats">
+    <div class="lq-stats__head reveal reveal--from-top">
+      <h1 class="lq-stats__title">4 Countries</h1>
+    </div>
     <div class="container lq-cards lq-cards--4">
-      <div class="lq-glass lq-stat reveal" *ngFor="let figure of figures">
-        <span class="lq-stat__icon"><i [class]="figure.icon"></i></span>
-        <strong>{{ figure.value }}</strong>
-        <small>{{ figure.label }}</small>
+      <div class="lq-glass lq-stat reveal reveal--pop" *ngFor="let country of countries">
+        <img [src]="country.flagUrl" style="margin-bottom: 10px">
+        <strong>{{ country.name }}</strong>
+        <!-- <small>{{ figure.label }}</small> -->
       </div>
     </div>
   </section>
@@ -342,14 +344,21 @@
         <span class="lq-alert" *ngIf="newsletterError()">{{ newsletterError() }}</span>
         <form (ngSubmit)="subscribeNewsletter()">
           <div class="lq-field">
-            <label for="newsletter-name">Nom (optionnel)</label>
+            <label for="newsletter-name">Nom</label>
             <input id="newsletter-name" class="lq-input" type="text" [(ngModel)]="newsletterForm.name"
-              name="newsletterName" placeholder="Jean Dupont" />
+              name="newsletterName" placeholder="Jean Dupont" required />
           </div>
-          <div class="lq-field">
-            <label for="newsletter-email">Adresse e-mail</label>
-            <input id="newsletter-email" class="lq-input" type="email" [(ngModel)]="newsletterForm.email"
-              name="newsletterEmail" placeholder="jean@example.com" />
+          <div class="lq-field-row">
+            <div class="lq-field">
+              <label for="newsletter-email">Adresse e-mail</label>
+              <input id="newsletter-email" class="lq-input" type="email" [(ngModel)]="newsletterForm.email"
+                name="newsletterEmail" placeholder="jean@example.com" required />
+            </div>
+            <div class="lq-field">
+              <label for="newsletter-phone">Téléphone (optionnel)</label>
+              <input id="newsletter-phone" class="lq-input" type="tel" [(ngModel)]="newsletterForm.phone"
+                name="newsletterPhone" placeholder="+225 07 00 00 00 00" />
+            </div>
           </div>
           <button class="btn lq-btn--glow lq-btn--block" type="submit" [disabled]="newsletterSubmitting()">
             {{ newsletterSubmitting() ? 'Inscription…' : 'S\'inscrire' }}
@@ -358,9 +367,16 @@
       </div>
 
       <ng-template #subscribedTpl>
-        <div class="lq-cta__success">
-          <span class="lq-cta__success-icon"><i class="fa-solid fa-circle-check"></i></span>
-          <p>{{ newsletterSuccess() }}</p>
+        <div class="lq-cta__success" role="status" aria-live="polite">
+          <div class="lq-cta__confetti" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <span class="lq-cta__success-icon"><i class="fa-solid fa-check"></i></span>
+          <div class="lq-cta__success-body">
+            <h3 class="lq-cta__success-title">Youhou, c’est fait !</h3>
+            <p class="lq-cta__success-text">{{ newsletterSuccess() }}</p>
+          </div>
         </div>
       </ng-template>
     </div>
@@ -398,4 +414,9 @@
       </div>
     </div>
   </section>
+
+  <button class="scroll-top" type="button" aria-label="Retour en haut de page" [class.is-visible]="showScrollTop()"
+    (click)="scrollTop()">
+    <i class="fa-solid fa-arrow-up"></i>
+  </button>
 </div>

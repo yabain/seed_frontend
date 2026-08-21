@@ -32,6 +32,11 @@ interface Feature {
   icon: string;
 }
 
+interface Countries {
+  name: string;
+  flagUrl: string
+}
+
 interface Slide {
   eyebrow: string;
   title: string;
@@ -91,16 +96,18 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly newsletterSuccess = signal('');
   readonly newsletterError = signal('');
 
-  readonly newsletterForm = { name: '', email: '' };
+  readonly newsletterForm = { name: '', email: '', phone: '' };
 
   readonly slides = signal<Slide[]>(FALLBACK_SLIDES);
   readonly activeSlide = signal(0);
   readonly marqueeItems = signal<Partner[]>(FALLBACK_PARTNERS);
+  readonly showScrollTop = signal(false);
 
   @ViewChild('marqueeContainer') marqueeContainer!: ElementRef<HTMLDivElement>;
 
   private marqueeRaf: number = 0;
   private marqueePaused = false;
+  private heroEl: HTMLElement | null = null;
 
   readonly figures: Figure[] = [
     { value: '50+', label: 'Projets soutenus', icon: 'fa-solid fa-layer-group' },
@@ -129,6 +136,25 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       title: 'Santé et bien-être communautaire',
       text: 'Campagnes de prévention, accès aux soins locaux et soutien aux personnes vulnérables.',
       icon: 'fa-solid fa-heart-pulse',
+    },
+  ];
+
+  readonly countries: Countries[] = [
+    {
+      name: 'Cameroon',
+      flagUrl: '../../../assets/flags/cameroon.avif',
+    },
+    {
+      name: 'Benin',
+      flagUrl: '../../../assets/flags/benin.avif',
+    },
+    {
+      name: 'Gabon',
+      flagUrl: '../../../assets/flags/gabon.avif',
+    },
+    {
+      name: 'togo',
+      flagUrl: '../../../assets/flags/togo.avif',
     },
   ];
 
@@ -246,6 +272,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
+    this.heroEl = (this.elementRef.nativeElement as Element).querySelector<HTMLElement>('.lq-hero');
+    this.updateScrollTop();
     this.setupReveal();
     this.parallaxEls = Array.from(
       (this.elementRef.nativeElement as Element).querySelectorAll<HTMLElement>('.parallax'),
@@ -339,6 +367,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @HostListener('window:scroll')
   onScroll(): void {
+    this.updateScrollTop();
     if (this.reduceMotion || !this.parallaxEls.length || this.raf) {
       return;
     }
@@ -350,6 +379,15 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         el.style.transform = `translate3d(0, ${y * speed}px, 0)`;
       });
     });
+  }
+
+  private updateScrollTop(): void {
+    const threshold = this.heroEl?.offsetHeight ?? window.innerHeight;
+    this.showScrollTop.set(window.scrollY > threshold);
+  }
+
+  scrollTop(): void {
+    window.scrollTo({ top: 0, behavior: this.reduceMotion ? 'auto' : 'smooth' });
   }
 
   @HostListener('window:resize')
@@ -426,6 +464,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.newsletterError.set('');
     this.newsletterSuccess.set('');
 
+    if (!this.newsletterForm.name.trim()) {
+      this.newsletterError.set('Le nom est requis.');
+      return;
+    }
+
     if (!this.newsletterForm.email) {
       this.newsletterError.set('L’adresse e-mail est requise.');
       return;
@@ -436,12 +479,14 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.prospectsService.subscribe({
       name: this.newsletterForm.name || undefined,
       email: this.newsletterForm.email,
+      phone: this.newsletterForm.phone || undefined,
     }).subscribe({
       next: () => {
         this.newsletterSubmitting.set(false);
         this.newsletterSuccess.set('Merci ! Vous êtes inscrit à notre lettre d\'information.');
         this.newsletterForm.name = '';
         this.newsletterForm.email = '';
+        this.newsletterForm.phone = '';
       },
       error: () => {
         this.newsletterSubmitting.set(false);

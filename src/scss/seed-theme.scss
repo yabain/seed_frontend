@@ -871,3 +871,25 @@ textarea.form-control {
     font-size: 0.85rem;
   }
 }
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #0bcc9c transparent;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #0bcc9c;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #0aa886;
+  }
+}
