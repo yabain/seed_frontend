@@ -26,7 +26,8 @@
           <a routerLink="/contact" class="btn lq-btn--glow">
             Nous contacter <i class="fa-solid fa-arrow-right"></i>
           </a>
-          <a routerLink="/programs" class="btn lq-btn--glass">Découvrir nos actions <i class="fa-solid fa-arrow-right"></i></a>
+          <a routerLink="/programs" class="btn lq-btn--glass">Découvrir nos actions <i
+              class="fa-solid fa-arrow-right"></i></a>
         </div>
         <div class="lq-hero__stats">
           <span class="lq-hero__stat" *ngFor="let figure of figures | slice:0:3">
@@ -92,43 +93,122 @@
   </section>
 
   <!-- ================= BANNIÈRE AVEC TEXTE ROTATIF ================= -->
-    <div class="banner-wrapper">
-  <div class="banner-card">
-    
-    <!-- Zone Contenu Texte -->
-    <div class="banner-content">
-      <h2 class="fixed-text">Chez SEEDS, nous</h2>
+  <div class="banner-wrapper">
+    <div class="banner-card">
 
-      <!-- Masque de défilement accueillant 5 lignes visibles -->
-      <div class="animated-text-container">
-        <div 
-          class="animated-text-track" 
-          [class.no-transition]="!isTransitioning()"
-          [style.transform]="'translateY(-' + ((currentStep() / trackHeight()) * 100) + '%)'"
-        >
-          <!-- Liste globale des phrases -->
-          @for (phrase of phrases; track $index) {
+      <!-- Zone Contenu Texte -->
+      <div class="banner-content">
+        <h2 class="fixed-text">Chez SEEDS, nous</h2>
+
+        <!-- Masque de défilement accueillant 5 lignes visibles -->
+        <div class="animated-text-container">
+          <div class="animated-text-track" [class.no-transition]="!isTransitioning()"
+            [style.transform]="'translateY(-' + ((currentStep() / trackHeight()) * 100) + '%)'">
+            <!-- Liste globale des phrases -->
+            @for (phrase of phrases; track $index) {
             <div class="animated-phrase" [class.is-center]="$index === centerPhraseIndex()">{{ phrase }}</div>
-          }
+            }
 
-          <!-- Duplication des 5 premières phrases pour la boucle fluide sans saut -->
-          @for (phrase of phrases.slice(0, 5); track $index) {
-            <div class="animated-phrase" [class.is-center]="$index + phrases.length === centerPhraseIndex()">{{ phrase }}</div>
-          }
+            <!-- Duplication des 5 premières phrases pour la boucle fluide sans saut -->
+            @for (phrase of phrases.slice(0, 5); track $index) {
+            <div class="animated-phrase" [class.is-center]="$index + phrases.length === centerPhraseIndex()">{{ phrase
+              }}</div>
+            }
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="image-wrapper">
-      <img 
-        src="/assets/img/germe.png" 
-        alt="Main 3D" 
-        class="overflow-image" 
-      />
-    </div>
+      <div class="image-wrapper">
+        <img src="/assets/img/germe.png" alt="Main 3D" class="overflow-image" />
+      </div>
 
+    </div>
   </div>
-</div>
+
+  <section class="features-section">
+    <div class="features-container">
+
+      <!-- Visual Column -->
+      <div class="features-visual">
+        <img src="../../../assets/img/seed_6.png" alt="DEEDS Img" class="features-img"
+          loading="lazy" />
+      </div>
+
+      <!-- Content Column -->
+      <div class="features-content">
+
+        <header class="features-header">
+          <span class="features-subtitle">
+            <svg class="subtitle-icon" width="20" height="16" viewBox="0 0 20 16" fill="currentColor"
+              aria-hidden="true">
+              <path d="M0 0L8 8L0 16V0ZM10 0L18 8L10 16V0Z" />
+            </svg>
+            POURQUOI NOUS CHOISIR ?
+          </span>
+          <h2 class="features-title">Un partenaire investi dans votre croissance</h2>
+          <p class="features-description">
+            Nous allons au-delà d'un accompagnement classique pour établir un partenariat solide. Notre reconnaissance
+            officielle et notre engagement tout au long de votre parcours entrepreneurial font de nous un acteur de
+            référence.
+          </p>
+        </header>
+
+        <!-- Feature List -->
+        <ul class="features-list">
+
+          <li class="feature-item">
+            <div class="feature-icon-wrapper">
+              <svg class="feature-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <circle cx="12" cy="12" r="6"></circle>
+                <circle cx="12" cy="12" r="2"></circle>
+              </svg>
+            </div>
+            <div class="feature-text">
+              <h3 class="feature-name">Focus sur les industries créatives</h3>
+              <p class="feature-details">accompagnement spécialisé dans les industries culturelles et créatives (arts
+                numériques, artisanat).</p>
+            </div>
+          </li>
+
+          <li class="feature-item">
+            <div class="feature-icon-wrapper">
+              <svg class="feature-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <circle cx="12" cy="12" r="6"></circle>
+                <circle cx="12" cy="12" r="2"></circle>
+              </svg>
+            </div>
+            <div class="feature-text">
+              <h3 class="feature-name">Reconnu et fiable</h3>
+              <p class="feature-details">incubateur officiellement reconnu par le MINPMEESA et soutenu par des
+                partenaires internationaux.</p>
+            </div>
+          </li>
+
+          <li class="feature-item">
+            <div class="feature-icon-wrapper">
+              <svg class="feature-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <circle cx="12" cy="12" r="6"></circle>
+                <circle cx="12" cy="12" r="2"></circle>
+              </svg>
+            </div>
+            <div class="feature-text">
+              <h3 class="feature-name">Engagement durable</h3>
+              <p class="feature-details">suivi post-incubation pour assurer la pérennité et le succès de votre projet.
+              </p>
+            </div>
+          </li>
+
+        </ul>
+
+      </div>
+    </div>
+  </section>
 
   <!-- ================= DOMAINES D'INTERVENTION ================= -->
   <section class="lq-section" id="domaines">
@@ -186,8 +266,7 @@
       <p class="lq-empty reveal" *ngIf="!latestNews().length">Les actualités arrivent bientôt.</p>
     </div>
 
-    <div class="lq-newsx__viewport reveal" *ngIf="latestNews().length"
-      (scroll)="updateNewsArrows()">
+    <div class="lq-newsx__viewport reveal" *ngIf="latestNews().length" (scroll)="updateNewsArrows()">
       <div class="lq-newsx__track">
         <article class="lq-newsx__card" *ngFor="let item of latestNews()">
           <a class="lq-newsx__media" routerLink="/news/{{ item.slug || item._id }}"
@@ -213,7 +292,8 @@
     </div>
 
     <div class="container text-left mt-2">
-      <a routerLink="/news" class="btn lq-btn--glass-transparent">Toutes les actualités <i class="fa-solid fa-arrow-right"></i></a>
+      <a routerLink="/news" class="btn lq-btn--glass-transparent">Toutes les actualités <i
+          class="fa-solid fa-arrow-right"></i></a>
     </div>
   </section>
 
@@ -240,7 +320,8 @@
       </ng-template>
 
       <div class="text-center mt-2">
-        <a routerLink="/programs" class="btn lq-btn--glass-transparent">Découvrir tous nos programmes <i class="fa-solid fa-arrow-right"></i></a>
+        <a routerLink="/programs" class="btn lq-btn--glass-transparent">Découvrir tous nos programmes <i
+            class="fa-solid fa-arrow-right"></i></a>
       </div>
     </div>
   </section>
@@ -293,24 +374,25 @@
       <div class="lq-marquee__track">
         <div class="lq-marquee__group">
           @for (partner of marqueeItems(); track partner._id) {
-            <span class="lq-chip" [class.lq-chip--link]="partner.website" (click)="partner.website && openNewTab(partner.website)">
-              @if (partner.logo) {
-                <img [src]="partner.logo" [alt]="partner.name" class="lq-chip__logo" />
-              } @else {
-                <i class="fa-solid fa-handshake"></i> {{ partner.name }}
-              }
-            </span>
+          <span class="lq-chip" [class.lq-chip--link]="partner.website"
+            (click)="partner.website && openNewTab(partner.website)">
+            @if (partner.logo) {
+            <img [src]="partner.logo" [alt]="partner.name" class="lq-chip__logo" />
+            } @else {
+            <i class="fa-solid fa-handshake"></i> {{ partner.name }}
+            }
+          </span>
           }
         </div>
         <div class="lq-marquee__group" aria-hidden="true">
           @for (partner of marqueeItems(); track partner._id) {
-            <span class="lq-chip">
-              @if (partner.logo) {
-                <img [src]="partner.logo" [alt]="partner.name" class="lq-chip__logo" />
-              } @else {
-                <i class="fa-solid fa-handshake"></i> {{ partner.name }}
-              }
-            </span>
+          <span class="lq-chip">
+            @if (partner.logo) {
+            <img [src]="partner.logo" [alt]="partner.name" class="lq-chip__logo" />
+            } @else {
+            <i class="fa-solid fa-handshake"></i> {{ partner.name }}
+            }
+          </span>
           }
         </div>
       </div>

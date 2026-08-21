@@ -20,6 +20,8 @@ export class AboutManagementComponent implements OnInit {
   readonly saving = signal(false);
   readonly savingTexts = signal(false);
   readonly savingLogo = signal(false);
+  readonly configLoaded = signal(false);
+  readonly configLoadFailed = signal(false);
 
   readonly config: Partial<SiteConfig> = {
     orgName: '',
@@ -64,8 +66,16 @@ export class AboutManagementComponent implements OnInit {
           youtube: '',
           ...config.social,
         };
+        this.configLoaded.set(true);
+        this.configLoadFailed.set(false);
       },
-      error: () => undefined,
+      error: () => {
+        this.configLoaded.set(false);
+        this.configLoadFailed.set(true);
+        this.toastService.error(
+          'Impossible de charger la configuration du site.',
+        );
+      },
     });
 
     this.aboutService.getPublic().subscribe({
@@ -105,6 +115,13 @@ export class AboutManagementComponent implements OnInit {
   }
 
   saveTexts(): void {
+    if (!this.configLoaded()) {
+      this.toastService.error(
+        'Configuration non chargée : enregistrement impossible.',
+      );
+      return;
+    }
+
     this.savingTexts.set(true);
 
     const payload: Partial<SiteConfig> = {

@@ -10,6 +10,15 @@
   <section class="card mt-2" *ngIf="loaded()">
     <h2>Identité</h2>
 
+    <p class="text-muted" *ngIf="configLoadFailed()">
+      <i class="ti ti-alert-triangle"></i> La configuration du site n’a pas pu
+      être chargée. L’enregistrement est désactivé pour éviter d’écraser les
+      données existantes.
+    </p>
+    <p class="text-muted" *ngIf="!configLoadFailed() && !configLoaded()">
+      Chargement de la configuration…
+    </p>
+
     <div class="identity-grid">
       <aside class="identity-grid__side">
         <label class="identity-grid__side-title">Logo</label>
@@ -112,13 +121,18 @@
     </div>
 
     <div class="form-actions">
-      <button class="btn btn--primary" (click)="saveTexts()" [disabled]="savingTexts()">
+      <button
+        class="btn btn--primary"
+        (click)="saveTexts()"
+        [disabled]="!configLoaded() || savingTexts()"
+      >
         {{ savingTexts() ? 'Enregistrement…' : 'Enregistrer les textes et réseaux' }}
       </button>
     </div>
   </section>
 
   <section class="card mt-2" *ngIf="!loaded()">
+    <h2>Contenu « À propos »</h2>
     <h2>Identité</h2>
     <div class="identity-grid">
       <aside class="identity-grid__side">
