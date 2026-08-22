@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiGatewayService } from './api-gateway.service';
-import type { Program } from '../models/models';
+import type { Paginated, Program } from '../models/models';
 
 @Injectable({ providedIn: 'root' })
 export class ProgramsService {
@@ -11,8 +11,10 @@ export class ProgramsService {
     return this.api.get<Program[]>('/programs');
   }
 
-  getAll(): Observable<Program[]> {
-    return this.api.get<Program[]>('/programs/all');
+  getAll(
+    query: { page?: number; limit?: number; search?: string } = {},
+  ): Observable<Paginated<Program>> {
+    return this.api.get<Paginated<Program>>('/programs/all', query);
   }
 
   getOne(id: string): Observable<Program> {

@@ -6,6 +6,16 @@
     </p>
   </header>
 
+  <div class="toolbar">
+    <input
+      class="form-control search"
+      type="search"
+      [value]="searchQuery()"
+      (input)="onSearch($any($event.target).value)"
+      placeholder="Rechercher (nom, e-mail, sujet)…"
+    />
+  </div>
+
   <div class="card mt-2 table-wrap">
     <table class="table">
       <thead>
@@ -30,7 +40,7 @@
             </div>
           </td>
         </tr>
-        <ng-container *ngFor="let message of data.items">
+        <ng-container *ngFor="let message of !loading() ? data.items : []">
           <tr [class.unread]="!message.isRead" (click)="toggleDetails(message._id)">
             <td>{{ formatDate(message.createdAt) }}</td>
             <td class="font-bold">{{ message.name }}<br /><span class="text-sm text-muted">{{ message.email }}</span></td>
@@ -62,18 +72,38 @@
             </td>
           </tr>
         </ng-container>
-        <tr *ngIf="!data.items.length">
+        <tr *ngIf="!loading() && !data.items.length">
           <td colspan="5"><p class="empty-state">Aucun message.</p></td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <div class="pagination" *ngIf="result() && (result()?.total ?? 0) > (result()?.limit ?? 0)">
-    <button
-      *ngFor="let page of pages()"
-      [class.active]="page === (result()?.page ?? 0)"
-      (click)="load(page)"
-    >{{ page }}</button>
+  <div class="pagination" *ngIf="!loading()">
+    <div class="pagination__size">
+      <label class="pagination__label" for="messages-limit">Par page</label>
+      <select
+        id="messages-limit"
+        class="form-control"
+        [value]="limit()"
+        (change)="onLimitChange($any($event.target).value)"
+      >
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+    </div>
+    <div class="pagination__nav">
+      <button class="btn btn--ghost btn--sm" (click)="previousPage()" [disabled]="!hasPrev()">
+        <i class="fa-solid fa-arrow-left"></i> Précédent
+      </button>
+      <span class="pagination__info">
+        Page {{ page() }} / {{ totalPages() }} · {{ result()?.total ?? 0 }} messages
+      </span>
+      <button class="btn btn--ghost btn--sm" (click)="nextPage()" [disabled]="!hasNext()">
+        Suivant <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
   </div>
 </div>

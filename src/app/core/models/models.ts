@@ -26,6 +26,16 @@ export interface SendTwoFactorCodeResponse {
   message: string;
 }
 
+export interface ForgotPasswordResponse {
+  success: boolean;
+  message: string;
+}
+
+export interface ResetPasswordResponse {
+  success: boolean;
+  message: string;
+}
+
 export interface Paginated<T> {
   items: T[];
   total: number;

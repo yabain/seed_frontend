@@ -64,17 +64,17 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let log of logs()">
+          <tr *ngFor="let log of !logsLoading() ? logs() : []">
             <td>{{ formatLogDate(log.createdAt) }}</td>
             <td>{{ actionLabel(log.action) }}</td>
             <td class="code">{{ log.ip || '—' }}</td>
             <td class="text-muted text-sm">{{ log.userAgent || '—' }}</td>
           </tr>
-          <tr *ngIf="!logs().length && !logsLoading()">
-            <td colspan="4"><p class="empty-state">Aucune activité enregistrée.</p></td>
-          </tr>
           <tr *ngIf="logsLoading()">
             <td colspan="4"><p class="empty-state">Chargement...</p></td>
+          </tr>
+          <tr *ngIf="!logsLoading() && !logs().length">
+            <td colspan="4"><p class="empty-state">Aucune activité enregistrée.</p></td>
           </tr>
         </tbody>
       </table>

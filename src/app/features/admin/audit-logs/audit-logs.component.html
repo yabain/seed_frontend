@@ -46,7 +46,7 @@
         </tr>
       </thead>
         <tbody>
-          <tr *ngFor="let log of logs()">
+          <tr *ngFor="let log of !loading() ? logs() : []">
             <td>{{ formatDate(log.createdAt) }}</td>
             <td>
               <span class="badge" [style.background]="getActionCategory(log.action).bg" [style.color]="getActionCategory(log.action).color">

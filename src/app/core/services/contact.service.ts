@@ -18,9 +18,9 @@ export class ContactService {
   }
 
   // Back-office
-  getMessages(query: { page?: number; limit?: number; read?: string } = {}): Observable<
-    ContactMessagesResult
-  > {
+  getMessages(
+    query: { page?: number; limit?: number; read?: string; search?: string } = {},
+  ): Observable<ContactMessagesResult> {
     return this.api.get<ContactMessagesResult>('/contact', query);
   }
 

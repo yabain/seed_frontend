@@ -19,6 +19,11 @@ export class LoginComponent implements OnInit {
   readonly resending = signal(false);
   readonly requiresTwoFactor = signal(false);
   readonly emailFor2FA = signal('');
+  readonly showPassword = signal(false);
+
+  togglePassword(): void {
+    this.showPassword.update((value) => !value);
+  }
 
   readonly siteConfig = this.siteConfigService.config;
 

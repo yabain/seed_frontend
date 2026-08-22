@@ -223,7 +223,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let email of emailList()">
+          <tr *ngFor="let email of !gettingOutput() ? emailList() : []">
             <td>{{ email.to }}</td>
             <td>{{ getFirst60Chars(email.subject) }}</td>
             <td>{{ email.createdAt | date:'dd-MM-yyyy HH:mm' }}</td>

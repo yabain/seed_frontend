@@ -34,16 +34,30 @@
 
       <div class="form-field">
         <label for="login-password">Mot de passe</label>
-        <input
-          id="login-password"
-          class="form-control"
-          type="password"
-          formControlName="password"
-          placeholder="••••••••"
-        />
+        <div class="input-wrapper">
+          <input
+            id="login-password"
+            class="form-control"
+            [type]="showPassword() ? 'text' : 'password'"
+            formControlName="password"
+            placeholder="••••••••"
+          />
+          <button
+            type="button"
+            class="toggle-btn"
+            (click)="togglePassword()"
+            [attr.aria-label]="showPassword() ? 'Masquer le mot de passe' : 'Afficher le mot de passe'"
+          >
+            <i class="fa-solid" [class.fa-eye]="!showPassword()" [class.fa-eye-slash]="showPassword()"></i>
+          </button>
+        </div>
         <p class="error-msg" *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
           Le mot de passe doit contenir au moins 6 caractères.
         </p>
+      </div>
+
+      <div class="login-forgot">
+        <a routerLink="/admin/forgot-password">Mot de passe oublié&nbsp;?</a>
       </div>
 
       <button class="btn btn--primary btn--block" type="submit" [disabled]="submitting()">

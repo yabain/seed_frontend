@@ -16,6 +16,12 @@ import type { Partner } from '../../../core/models/models';
 export class PartnersManagementComponent implements OnInit {
   readonly items = signal<Partner[]>([]);
   readonly loading = signal(true);
+  readonly page = signal(1);
+  readonly limit = signal(10);
+  readonly total = signal(0);
+  readonly searchQuery = signal('');
+
+  private searchTimer: any;
 
   constructor(
     private readonly router: Router,
@@ -29,11 +35,57 @@ export class PartnersManagementComponent implements OnInit {
 
   load(): void {
     this.loading.set(true);
-    this.partnersService.getAll().subscribe({
-      next: (items) => this.items.set(items),
-      error: () => this.toastService.error('Impossible de charger les partenaires.'),
-      complete: () => this.loading.set(false),
-    });
+    this.partnersService
+      .getAll({ page: this.page(), limit: this.limit(), search: this.searchQuery() })
+      .subscribe({
+        next: (data) => {
+          this.items.set(data.items);
+          this.total.set(data.total);
+        },
+        error: () => this.toastService.error('Impossible de charger les partenaires.'),
+        complete: () => this.loading.set(false),
+      });
+  }
+
+  onSearch(value: string): void {
+    if (this.searchTimer) {
+      clearTimeout(this.searchTimer);
+    }
+    this.searchQuery.set(value);
+    this.page.set(1);
+    this.searchTimer = setTimeout(() => this.load(), 300);
+  }
+
+  totalPages(): number {
+    return Math.max(1, Math.ceil(this.total() / this.limit()));
+  }
+
+  hasPrev(): boolean {
+    return this.page() > 1;
+  }
+
+  hasNext(): boolean {
+    return this.page() < this.totalPages();
+  }
+
+  previousPage(): void {
+    if (this.hasPrev()) {
+      this.page.update((p) => p - 1);
+      this.load();
+    }
+  }
+
+  nextPage(): void {
+    if (this.hasNext()) {
+      this.page.update((p) => p + 1);
+      this.load();
+    }
+  }
+
+  onLimitChange(value: string): void {
+    this.limit.set(parseInt(value, 10));
+    this.page.set(1);
+    this.load();
   }
 
   edit(item: Partner): void {

@@ -15,6 +15,11 @@ export class MessagesManagementComponent implements OnInit {
   readonly result = signal<ContactMessagesResult | null>(null);
   readonly loading = signal(true);
   readonly selected = signal<string | null>(null);
+  readonly page = signal(1);
+  readonly limit = signal(10);
+  readonly searchQuery = signal('');
+
+  private searchTimer: any;
 
   constructor(
     private readonly contactService: ContactService,
@@ -22,16 +27,63 @@ export class MessagesManagementComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.load(1);
+    this.load();
   }
 
-  load(page: number, read?: string): void {
+  load(): void {
     this.loading.set(true);
-    this.contactService.getMessages({ page, limit: 20, read }).subscribe({
-      next: (data) => this.result.set(data),
-      error: () => this.toastService.error('Impossible de charger les messages.'),
-      complete: () => this.loading.set(false),
-    });
+    this.contactService
+      .getMessages({ page: this.page(), limit: this.limit(), search: this.searchQuery() })
+      .subscribe({
+        next: (data) => this.result.set(data),
+        error: () => this.toastService.error('Impossible de charger les messages.'),
+        complete: () => this.loading.set(false),
+      });
+  }
+
+  onSearch(value: string): void {
+    if (this.searchTimer) {
+      clearTimeout(this.searchTimer);
+    }
+    this.searchQuery.set(value);
+    this.page.set(1);
+    this.searchTimer = setTimeout(() => this.load(), 300);
+  }
+
+  totalPages(): number {
+    const data = this.result();
+    if (!data) {
+      return 1;
+    }
+    return Math.max(1, Math.ceil(data.total / data.limit));
+  }
+
+  hasPrev(): boolean {
+    return this.page() > 1;
+  }
+
+  hasNext(): boolean {
+    return this.page() < this.totalPages();
+  }
+
+  previousPage(): void {
+    if (this.hasPrev()) {
+      this.page.update((p) => p - 1);
+      this.load();
+    }
+  }
+
+  nextPage(): void {
+    if (this.hasNext()) {
+      this.page.update((p) => p + 1);
+      this.load();
+    }
+  }
+
+  onLimitChange(value: string): void {
+    this.limit.set(parseInt(value, 10));
+    this.page.set(1);
+    this.load();
   }
 
   toggleDetails(id: string): void {
@@ -64,19 +116,11 @@ export class MessagesManagementComponent implements OnInit {
     }
     this.contactService.remove(message._id).subscribe({
       next: () => {
-        this.load(this.result()?.page ?? 1);
+        this.load();
         this.toastService.success('Message supprimé.');
       },
       error: () => this.toastService.error('Erreur lors de la suppression.'),
     });
-  }
-
-  pages(): number[] {
-    const data = this.result();
-    if (!data) {
-      return [];
-    }
-    return Array.from({ length: Math.max(1, Math.ceil(data.total / data.limit)) }, (_, i) => i + 1);
   }
 
   formatDate(iso: string): string {

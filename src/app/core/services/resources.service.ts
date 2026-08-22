@@ -19,8 +19,10 @@ export class ResourcesService {
   }
 
   // Back-office
-  getAll(): Observable<Paginated<Resource>> {
-    return this.api.get<Paginated<Resource>>('/resources');
+  getAll(
+    query: { page?: number; limit?: number; search?: string } = {},
+  ): Observable<Paginated<Resource>> {
+    return this.api.get<Paginated<Resource>>('/resources', query);
   }
 
   getOne(id: string): Observable<Resource> {

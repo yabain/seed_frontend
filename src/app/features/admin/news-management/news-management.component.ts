@@ -18,7 +18,11 @@ import type { News, Paginated } from '../../../core/models/models';
 export class NewsManagementComponent implements OnInit {
   readonly result = signal<Paginated<News>>({ items: [], total: 0, page: 1, limit: 10 });
   readonly loading = signal(true);
-  search = '';
+  readonly page = signal(1);
+  readonly limit = signal(10);
+  readonly searchQuery = signal('');
+
+  private searchTimer: any;
 
   constructor(
     private readonly newsService: NewsService,
@@ -26,25 +30,60 @@ export class NewsManagementComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadPage(1);
+    this.load();
   }
 
-  loadPage(page: number): void {
+  load(): void {
     this.loading.set(true);
-    this.newsService.getAll({ page, limit: 10, search: this.search }).subscribe({
-      next: (data) => this.result.set(data),
-      error: () => this.toastService.error('Impossible de charger les actualités.'),
-      complete: () => this.loading.set(false),
-    });
+    this.newsService
+      .getAll({ page: this.page(), limit: this.limit(), search: this.searchQuery() })
+      .subscribe({
+        next: (data) => this.result.set(data),
+        error: () => this.toastService.error('Impossible de charger les actualités.'),
+        complete: () => this.loading.set(false),
+      });
   }
 
-  onSearch(): void {
-    this.loadPage(1);
+  onSearch(value: string): void {
+    if (this.searchTimer) {
+      clearTimeout(this.searchTimer);
+    }
+    this.searchQuery.set(value);
+    this.page.set(1);
+    this.searchTimer = setTimeout(() => this.load(), 300);
   }
 
-  pages(): number[] {
+  totalPages(): number {
     const { total, limit } = this.result();
-    return Array.from({ length: Math.max(1, Math.ceil(total / limit)) }, (_, i) => i + 1);
+    return Math.max(1, Math.ceil(total / limit));
+  }
+
+  hasPrev(): boolean {
+    return this.page() > 1;
+  }
+
+  hasNext(): boolean {
+    return this.page() < this.totalPages();
+  }
+
+  previousPage(): void {
+    if (this.hasPrev()) {
+      this.page.update((p) => p - 1);
+      this.load();
+    }
+  }
+
+  nextPage(): void {
+    if (this.hasNext()) {
+      this.page.update((p) => p + 1);
+      this.load();
+    }
+  }
+
+  onLimitChange(value: string): void {
+    this.limit.set(parseInt(value, 10));
+    this.page.set(1);
+    this.load();
   }
 
   remove(item: News): void {
@@ -53,7 +92,7 @@ export class NewsManagementComponent implements OnInit {
     }
     this.newsService.remove(item._id).subscribe({
       next: () => {
-        this.loadPage(this.result().page);
+        this.load();
         this.toastService.success('Actualité supprimée.');
       },
       error: (err: ErrorMessage) =>
@@ -67,7 +106,7 @@ export class NewsManagementComponent implements OnInit {
     const nextStatus = item.status === 'published' ? 'draft' : 'published';
     this.newsService.update(item._id, { status: nextStatus }).subscribe({
       next: () => {
-        this.loadPage(this.result().page);
+        this.load();
         this.toastService.success(
           nextStatus === 'published'
             ? 'Actualité publiée.'

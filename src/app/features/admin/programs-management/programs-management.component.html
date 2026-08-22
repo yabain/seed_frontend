@@ -8,6 +8,13 @@
   </header>
 
   <div class="toolbar">
+    <input
+      class="form-control search"
+      type="search"
+      [value]="searchQuery()"
+      (input)="onSearch($any($event.target).value)"
+      placeholder="Rechercher un programme…"
+    />
     <div class="spacer"></div>
     <button class="btn btn--outline" (click)="startCreate()">+ Nouveau programme</button>
   </div>
@@ -90,7 +97,7 @@
               </div>
             </td>
           </tr>
-          <tr *ngFor="let item of items()">
+          <tr *ngFor="let item of !loading() ? items() : []">
           <td>{{ item.order }}</td>
           <td class="font-bold">{{ item.title }}</td>
           <td>
@@ -105,10 +112,36 @@
             </div>
           </td>
         </tr>
-        <tr *ngIf="!items().length">
+        <tr *ngIf="!loading() && !items().length">
           <td colspan="4"><p class="empty-state">Aucun programme.</p></td>
         </tr>
       </tbody>
     </table>
+  </div>
+
+  <div class="pagination" *ngIf="!loading()">
+    <div class="pagination__size">
+      <label class="pagination__label" for="programs-limit">Par page</label>
+      <select
+        id="programs-limit"
+        class="form-control"
+        [value]="limit()"
+        (change)="onLimitChange($any($event.target).value)"
+      >
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+    </div>
+    <div class="pagination__nav">
+      <button class="btn btn--ghost btn--sm" (click)="previousPage()" [disabled]="!hasPrev()">
+        <i class="fa-solid fa-arrow-left"></i> Précédent
+      </button>
+      <span class="pagination__info">Page {{ page() }} / {{ totalPages() }} · {{ total() }} programmes</span>
+      <button class="btn btn--ghost btn--sm" (click)="nextPage()" [disabled]="!hasNext()">
+        Suivant <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
   </div>
 </div>

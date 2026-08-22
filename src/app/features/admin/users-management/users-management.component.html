@@ -29,12 +29,6 @@
       (input)="onSearch($any($event.target).value)"
       [value]="searchQuery()"
     />
-    <div class="spacer"></div>
-    <select class="form-control" [value]="limit" (change)="onLimitChange($any($event.target).value)">
-      <option [value]="10">10 / page</option>
-      <option [value]="25">25 / page</option>
-      <option [value]="50">50 / page</option>
-    </select>
   </div>
 
   <div class="card mt-2 table-wrap">
@@ -51,7 +45,7 @@
         </tr>
       </thead>
         <tbody>
-          <tr *ngFor="let user of items()">
+          <tr *ngFor="let user of !loading() ? items() : []">
             <td class="font-bold">
               <a class="link" (click)="goToDetail(user)">{{ user.name }} <span *ngIf="isSelf(user)" class="text-muted text-sm">(vous)</span></a>
             </td>
@@ -100,13 +94,31 @@
     </table>
   </div>
 
-  <div class="pagination" *ngIf="meta() && !loading()">
-    <button class="btn btn--ghost btn--sm" (click)="previousPage()" [disabled]="!meta()?.hasPrevPage">
-      <i class="fa-solid fa-arrow-left"></i> Précédent
-    </button>
-    <span class="pagination__info">Page {{ meta()?.currentPage }} / {{ meta()?.totalPages }} ({{ meta()?.totalItems }} comptes)</span>
-    <button class="btn btn--ghost btn--sm" (click)="nextPage()" [disabled]="!meta()?.hasNextPage">
-      Suivant <i class="fa-solid fa-arrow-right"></i>
-    </button>
+  <div class="pagination" *ngIf="!loading()">
+    <div class="pagination__size">
+      <label class="pagination__label" for="users-limit">Par page</label>
+      <select
+        id="users-limit"
+        class="form-control"
+        [value]="limit()"
+        (change)="onLimitChange($any($event.target).value)"
+      >
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+    </div>
+    <div class="pagination__nav">
+      <button class="btn btn--ghost btn--sm" (click)="previousPage()" [disabled]="!meta()?.hasPrevPage">
+        <i class="fa-solid fa-arrow-left"></i> Précédent
+      </button>
+      <span class="pagination__info">
+        Page {{ meta()?.currentPage ?? 1 }} / {{ meta()?.totalPages ?? 1 }} · {{ meta()?.totalItems ?? 0 }} comptes
+      </span>
+      <button class="btn btn--ghost btn--sm" (click)="nextPage()" [disabled]="!meta()?.hasNextPage">
+        Suivant <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
   </div>
 </div>

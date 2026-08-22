@@ -8,6 +8,20 @@ export const appRoutes: Routes = [
       import('./features/admin/login/login.component').then((m) => m.LoginComponent),
   },
   {
+    path: 'admin/forgot-password',
+    loadComponent: () =>
+      import('./features/admin/forgot-password/forgot-password.component').then(
+        (m) => m.ForgotPasswordComponent,
+      ),
+  },
+  {
+    path: 'admin/reset-password',
+    loadComponent: () =>
+      import('./features/admin/reset-password/reset-password.component').then(
+        (m) => m.ResetPasswordComponent,
+      ),
+  },
+  {
     path: 'admin',
     canActivate: [AuthGuard],
     loadComponent: () =>

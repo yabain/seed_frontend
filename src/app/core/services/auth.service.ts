@@ -7,6 +7,8 @@ import type {
   RequiresTwoFactorResponse,
   TwoFactorVerifyResponse,
   SendTwoFactorCodeResponse,
+  ForgotPasswordResponse,
+  ResetPasswordResponse,
 } from '../models/models';
 
 const TOKEN_KEY = 'seed_token';
@@ -64,6 +66,14 @@ export class AuthService {
         localStorage.setItem(ADMIN_KEY, JSON.stringify(response.admin));
       }),
     );
+  }
+
+  forgotPassword(email: string): Observable<ForgotPasswordResponse> {
+    return this.api.post<ForgotPasswordResponse>('/admin/auth/forgot-password', { email });
+  }
+
+  resetPassword(token: string, password: string): Observable<ResetPasswordResponse> {
+    return this.api.post<ResetPasswordResponse>('/admin/auth/reset-password', { token, password });
   }
 
   logout(): void {

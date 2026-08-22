@@ -11,11 +11,10 @@
     <input
       class="form-control search"
       type="search"
-      [(ngModel)]="search"
-      placeholder="Rechercher…"
-      (keyup.enter)="onSearch()"
+      [value]="searchQuery()"
+      (input)="onSearch($any($event.target).value)"
+      placeholder="Rechercher par titre…"
     />
-    <button class="btn btn--primary" (click)="onSearch()">Rechercher</button>
     <a class="btn btn--outline" routerLink="/admin/news/categories">Gérer les catégories</a>
     <a class="btn btn--outline" routerLink="/admin/news/new">+ Nouvelle actualité</a>
   </div>
@@ -45,7 +44,7 @@
               </div>
             </td>
           </tr>
-          <tr *ngFor="let item of result().items">
+          <tr *ngFor="let item of !loading() ? result().items : []">
           <td class="news-thumb">
             <img *ngIf="item.image" [src]="item.image" [alt]="item.title" />
             <span *ngIf="!item.image" class="news-thumb__empty">
@@ -80,18 +79,36 @@
             </div>
           </td>
         </tr>
-        <tr *ngIf="!result().items.length">
+        <tr *ngIf="!loading() && !result().items.length">
           <td colspan="5"><p class="empty-state">Aucune actualité.</p></td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <div class="pagination" *ngIf="result().total > result().limit">
-    <button
-      *ngFor="let page of pages()"
-      [class.active]="page === result().page"
-      (click)="loadPage(page)"
-    >{{ page }}</button>
+  <div class="pagination" *ngIf="!loading()">
+    <div class="pagination__size">
+      <label class="pagination__label" for="news-limit">Par page</label>
+      <select
+        id="news-limit"
+        class="form-control"
+        [value]="limit()"
+        (change)="onLimitChange($any($event.target).value)"
+      >
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+    </div>
+    <div class="pagination__nav">
+      <button class="btn btn--ghost btn--sm" (click)="previousPage()" [disabled]="!hasPrev()">
+        <i class="fa-solid fa-arrow-left"></i> Précédent
+      </button>
+      <span class="pagination__info">Page {{ page() }} / {{ totalPages() }} · {{ result().total }} actualités</span>
+      <button class="btn btn--ghost btn--sm" (click)="nextPage()" [disabled]="!hasNext()">
+        Suivant <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
   </div>
 </div>

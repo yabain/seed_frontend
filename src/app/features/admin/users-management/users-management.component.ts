@@ -40,7 +40,7 @@ export class UsersManagementComponent implements OnInit {
   readonly meta = signal<UsersListResult['meta'] | null>(null);
 
   readonly page = signal(1);
-  limit = 10;
+  readonly limit = signal(10);
 
   readonly roleOptions: UserRole[] = ['user', 'consultant', 'admin', 'superadmin'];
   readonly roleLabels = ROLE_LABELS;
@@ -63,7 +63,9 @@ export class UsersManagementComponent implements OnInit {
   load(): void {
     this.loading.set(true);
 
-    this.usersService.getUsersList(this.page(), this.limit, this.searchQuery(), this.activeFilter() || undefined).subscribe({
+    this.usersService
+      .getUsersList(this.page(), this.limit(), this.searchQuery(), this.activeFilter() || undefined)
+      .subscribe({
       next: (result) => {
         this.items.set(result.data);
         this.meta.set(result.meta);
@@ -158,7 +160,7 @@ export class UsersManagementComponent implements OnInit {
   }
 
   onLimitChange(value: string): void {
-    this.limit = parseInt(value, 10);
+    this.limit.set(parseInt(value, 10));
     this.page.set(1);
     this.load();
   }

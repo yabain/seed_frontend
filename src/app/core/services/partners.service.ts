@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiGatewayService } from './api-gateway.service';
-import type { Partner } from '../models/models';
+import type { Paginated, Partner } from '../models/models';
 
 @Injectable({ providedIn: 'root' })
 export class PartnersService {
@@ -11,8 +11,10 @@ export class PartnersService {
     return this.api.get<Partner[]>('/partners');
   }
 
-  getAll(): Observable<Partner[]> {
-    return this.api.get<Partner[]>('/partners/all');
+  getAll(
+    query: { page?: number; limit?: number; search?: string } = {},
+  ): Observable<Paginated<Partner>> {
+    return this.api.get<Paginated<Partner>>('/partners/all', query);
   }
 
   getOne(id: string): Observable<Partner> {

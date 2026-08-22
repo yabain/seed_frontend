@@ -38,7 +38,7 @@
               </div>
             </td>
           </tr>
-          <tr *ngFor="let category of items()">
+          <tr *ngFor="let category of !loading() ? items() : []">
           <ng-container *ngIf="editingId() !== category._id; else editingRow">
             <td class="font-bold">{{ category.name }}</td>
             <td>
@@ -67,7 +67,7 @@
             </td>
           </ng-template>
         </tr>
-        <tr *ngIf="!items().length">
+        <tr *ngIf="!loading() && !items().length">
           <td colspan="2"><p class="empty-state">Aucune catégorie pour le moment.</p></td>
         </tr>
       </tbody>

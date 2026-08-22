@@ -8,6 +8,13 @@
   </header>
 
   <div class="toolbar">
+    <input
+      class="form-control search"
+      type="search"
+      [value]="searchQuery()"
+      (input)="onSearch($any($event.target).value)"
+      placeholder="Rechercher par titre…"
+    />
     <div class="spacer"></div>
     <button class="btn btn--outline" (click)="startCreate()">+ Nouvelle ressource</button>
   </div>
@@ -83,7 +90,7 @@
               </div>
             </td>
           </tr>
-          <tr *ngFor="let item of items()">
+          <tr *ngFor="let item of !loading() ? items() : []">
           <td class="font-bold">{{ item.title }}</td>
           <td>{{ item.category || '—' }}</td>
           <td>{{ formatSize(item.fileSize) }}</td>
@@ -99,10 +106,36 @@
             </div>
           </td>
         </tr>
-        <tr *ngIf="!items().length">
+        <tr *ngIf="!loading() && !items().length">
           <td colspan="5"><p class="empty-state">Aucune ressource.</p></td>
         </tr>
       </tbody>
     </table>
+  </div>
+
+  <div class="pagination" *ngIf="!loading()">
+    <div class="pagination__size">
+      <label class="pagination__label" for="resources-limit">Par page</label>
+      <select
+        id="resources-limit"
+        class="form-control"
+        [value]="limit()"
+        (change)="onLimitChange($any($event.target).value)"
+      >
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+    </div>
+    <div class="pagination__nav">
+      <button class="btn btn--ghost btn--sm" (click)="previousPage()" [disabled]="!hasPrev()">
+        <i class="fa-solid fa-arrow-left"></i> Précédent
+      </button>
+      <span class="pagination__info">Page {{ page() }} / {{ totalPages() }} · {{ total() }} ressources</span>
+      <button class="btn btn--ghost btn--sm" (click)="nextPage()" [disabled]="!hasNext()">
+        Suivant <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
   </div>
 </div>

@@ -8,9 +8,15 @@
   </header>
 
   <section class="card mt-2" *ngIf="loaded()">
-    <h2>Identité</h2>
+    <div class="section-head">
+      <span class="section-head__icon"><i class="fa-solid fa-address-card"></i></span>
+      <div>
+        <h2>Identité</h2>
+        <p>Logo, visuels de marque et informations affichées sur tout le site.</p>
+      </div>
+    </div>
 
-    <p class="text-muted" *ngIf="configLoadFailed()">
+    <p class="alert alert--warning" *ngIf="configLoadFailed()">
       <i class="ti ti-alert-triangle"></i> La configuration du site n’a pas pu
       être chargée. L’enregistrement est désactivé pour éviter d’écraser les
       données existantes.
@@ -19,12 +25,13 @@
       Chargement de la configuration…
     </p>
 
-    <div class="identity-grid">
-      <aside class="identity-grid__side">
-        <label class="identity-grid__side-title">Logo</label>
-        <p class="text-muted identity-grid__side-hint">
-          PNG, JPG ou WebP — max 5 Mo. Enregistré automatiquement.
-        </p>
+    <div class="asset-cards">
+      <div class="asset-card">
+        <div class="asset-card__head">
+          <span class="asset-card__title"><i class="fa-solid fa-image"></i> Logo</span>
+          <span class="asset-card__status" *ngIf="savingLogo()"><i class="ti ti-loader"></i> Enregistrement…</span>
+        </div>
+        <p class="asset-card__hint">PNG, JPG ou WebP — max 5 Mo. Enregistré automatiquement.</p>
         <app-admin-image-field
           [image]="config.logo"
           (imageChange)="setLogo($event)"
@@ -33,12 +40,14 @@
           [maxHeight]="800"
           alt="Aperçu logo"
         />
-        <p class="form-hint text-muted">{{ savingLogo() ? 'Enregistrement du logo…' : '' }}</p>
+      </div>
 
-        <label class="identity-grid__side-title mt-2">Icône de l’onglet (favicon)</label>
-        <p class="text-muted identity-grid__side-hint">
-          Image carrée visible dans l’onglet du navigateur. Enregistré automatiquement.
-        </p>
+      <div class="asset-card">
+        <div class="asset-card__head">
+          <span class="asset-card__title"><i class="fa-solid fa-window-maximize"></i> Icône de l’onglet</span>
+          <span class="asset-card__status" *ngIf="savingFavicon()"><i class="ti ti-loader"></i> Enregistrement…</span>
+        </div>
+        <p class="asset-card__hint">Favicon carrée visible dans l’onglet du navigateur. Enregistrée automatiquement.</p>
         <app-admin-image-field
           [image]="config.favicon"
           (imageChange)="setFavicon($event)"
@@ -47,13 +56,14 @@
           [maxHeight]="256"
           alt="Aperçu icône de l’onglet"
         />
-        <p class="form-hint text-muted">{{ savingFavicon() ? 'Enregistrement de l’icône…' : '' }}</p>
+      </div>
 
-        <label class="identity-grid__side-title mt-2">Image de partage (WhatsApp & réseaux)</label>
-        <p class="text-muted identity-grid__side-hint">
-          Format paysage ~1200×630 — affichée avec le nom et la description du site lorsque son URL
-          est partagée sur WhatsApp, Facebook, etc.
-        </p>
+      <div class="asset-card">
+        <div class="asset-card__head">
+          <span class="asset-card__title"><i class="fa-solid fa-share-nodes"></i> Image de partage</span>
+          <span class="asset-card__status" *ngIf="savingOgImage()"><i class="ti ti-loader"></i> Enregistrement…</span>
+        </div>
+        <p class="asset-card__hint">Format paysage ~1200×630 — affichée lorsque le site est partagé sur WhatsApp ou Facebook.</p>
         <app-admin-image-field
           [image]="config.ogImage"
           (imageChange)="setOgImage($event)"
@@ -62,30 +72,38 @@
           [maxHeight]="630"
           alt="Aperçu image de partage"
         />
-        <p class="form-hint text-muted">{{ savingOgImage() ? 'Enregistrement de l’image de partage…' : '' }}</p>
-      </aside>
-
-      <div class="identity-grid__fields">
-        <div class="form-field">
-          <label>Nom de l’organisation</label>
-          <input class="form-control" type="text" [(ngModel)]="config.orgName" />
-        </div>
-
-        <div class="form-field">
-          <label>Slogan</label>
-          <input class="form-control" type="text" [(ngModel)]="config.tagline" />
-        </div>
-
-        <div class="form-field">
-          <label>Description</label>
-          <textarea class="form-control" rows="4" [(ngModel)]="config.description"></textarea>
-        </div>
       </div>
     </div>
 
-    <h2>Coordonnées</h2>
     <div class="form-grid">
       <div class="form-field">
+        <label>Nom de l’organisation</label>
+        <input class="form-control" type="text" [(ngModel)]="config.orgName" placeholder="SEED" />
+      </div>
+
+      <div class="form-field">
+        <label>Slogan</label>
+        <input class="form-control" type="text" [(ngModel)]="config.tagline" placeholder="Une phrase courte qui résume votre mission…" />
+      </div>
+    </div>
+
+    <div class="form-field mt-2">
+      <label>Description</label>
+      <textarea class="form-control" rows="4" [(ngModel)]="config.description" placeholder="Présentation courte de l’organisation…"></textarea>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <div class="section-head">
+      <span class="section-head__icon"><i class="fa-solid fa-location-dot"></i></span>
+      <div>
+        <h2>Coordonnées</h2>
+        <p>Moyens de contact affichés dans le pied de page et la page contact.</p>
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-field form-field--full">
         <label>Adresse</label>
         <input class="form-control" type="text" [(ngModel)]="config.address" />
       </div>
@@ -106,8 +124,17 @@
       </div>
     </div>
 
-    <h2>Réseaux sociaux</h2>
-    <div class="form-grid">
+    <div class="section-divider"></div>
+
+    <div class="section-head">
+      <span class="section-head__icon"><i class="fa-solid fa-hashtag"></i></span>
+      <div>
+        <h2>Réseaux sociaux</h2>
+        <p>Liens affichés dans le pied de page et les e-mails envoyés aux utilisateurs.</p>
+      </div>
+    </div>
+
+    <div class="form-grid form-grid--socials">
       <div class="form-field form-field--icon">
         <label>Facebook</label>
         <div class="input-with-icon">
@@ -155,48 +182,66 @@
         (click)="saveTexts()"
         [disabled]="!configLoaded() || savingTexts()"
       >
-        {{ savingTexts() ? 'Enregistrement…' : 'Enregistrer les textes et réseaux' }}
+        {{ savingTexts() ? 'Enregistrement…' : 'Enregistrer les modifications' }}
       </button>
+      <p class="save-hint"><i class="ti ti-photo-plus"></i> Les images sont enregistrées automatiquement dès l’import.</p>
     </div>
   </section>
 
   <section class="card mt-2" *ngIf="!loaded()">
-    <h2>Contenu « À propos »</h2>
-    <h2>Identité</h2>
-    <div class="identity-grid">
-      <aside class="identity-grid__side">
-        <label class="identity-grid__side-title">Logo</label>
-        <span class="skeleton skeleton-thumb"></span>
-      </aside>
-      <div class="identity-grid__fields">
-        <div class="form-field"><span class="skeleton skeleton-text skeleton-text--long"></span></div>
-        <div class="form-field"><span class="skeleton skeleton-text skeleton-text--long"></span></div>
-        <div class="form-field"><span class="skeleton skeleton-text skeleton-text--long"></span></div>
-        <div class="form-field"><span class="skeleton skeleton-text"></span></div>
-        <div class="form-field"><span class="skeleton skeleton-text"></span></div>
-        <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+    <div class="section-head">
+      <span class="section-head__icon"><span class="skeleton skeleton-thumb"></span></span>
+      <div>
+        <h2>Identité</h2>
+        <p>Logo, visuels de marque et informations affichées sur tout le site.</p>
       </div>
     </div>
+
+    <div class="asset-cards">
+      <div class="asset-card" *ngFor="let _ of [1, 2, 3]">
+        <span class="skeleton skeleton-text skeleton-text--short"></span>
+        <span class="skeleton skeleton-text skeleton-text--medium"></span>
+        <span class="skeleton skeleton-preview"></span>
+      </div>
+    </div>
+
     <div class="form-grid">
       <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+      <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+    </div>
+    <div class="form-field mt-2"><span class="skeleton skeleton-textarea"></span></div>
+
+    <div class="section-divider"></div>
+
+    <div class="form-grid">
+      <div class="form-field form-field--full"><span class="skeleton skeleton-text"></span></div>
       <div class="form-field"><span class="skeleton skeleton-text"></span></div>
       <div class="form-field"><span class="skeleton skeleton-text"></span></div>
       <div class="form-field"><span class="skeleton skeleton-text"></span></div>
     </div>
+
+    <div class="section-divider"></div>
+
     <div class="form-grid">
-      <div class="form-field"><span class="skeleton skeleton-text"></span></div>
-      <div class="form-field"><span class="skeleton skeleton-text"></span></div>
-      <div class="form-field"><span class="skeleton skeleton-text"></span></div>
-      <div class="form-field"><span class="skeleton skeleton-text"></span></div>
-      <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+      <div class="form-field" *ngFor="let _ of [1, 2, 3, 4, 5]">
+        <span class="skeleton skeleton-text"></span>
+      </div>
     </div>
+
     <div class="form-actions">
       <span class="skeleton skeleton-btn"></span>
     </div>
   </section>
 
   <section class="card mt-2" *ngIf="loaded()">
-    <h2>Contenu « À propos »</h2>
+    <div class="section-head">
+      <span class="section-head__icon"><i class="fa-solid fa-bullseye"></i></span>
+      <div>
+        <h2>Contenu « À propos »</h2>
+        <p>Mission, vision et valeurs affichées sur la page d’accueil.</p>
+      </div>
+    </div>
+
     <div class="form-field">
       <label>Notre mission</label>
       <textarea
