@@ -20,6 +20,8 @@ export class AboutManagementComponent implements OnInit {
   readonly saving = signal(false);
   readonly savingTexts = signal(false);
   readonly savingLogo = signal(false);
+  readonly savingFavicon = signal(false);
+  readonly savingOgImage = signal(false);
   readonly configLoaded = signal(false);
   readonly configLoadFailed = signal(false);
 
@@ -28,6 +30,8 @@ export class AboutManagementComponent implements OnInit {
     tagline: '',
     description: '',
     logo: '',
+    favicon: '',
+    ogImage: '',
     address: '',
     phone: '',
     phone2: '',
@@ -114,6 +118,44 @@ export class AboutManagementComponent implements OnInit {
     });
   }
 
+  setFavicon(url: string): void {
+    this.config.favicon = url;
+    this.savingFavicon.set(true);
+
+    this.siteConfigService.update({ favicon: url }).subscribe({
+      next: () => {
+        this.savingFavicon.set(false);
+        this.siteConfigService.load();
+        this.toastService.success('Icône de l’onglet enregistrée avec succès.');
+      },
+      error: (err: ErrorMessage) => {
+        this.savingFavicon.set(false);
+        this.toastService.error(
+          err.details?.join(' ') || err.message || 'Erreur lors de l’enregistrement de l’icône.',
+        );
+      },
+    });
+  }
+
+  setOgImage(url: string): void {
+    this.config.ogImage = url;
+    this.savingOgImage.set(true);
+
+    this.siteConfigService.update({ ogImage: url }).subscribe({
+      next: () => {
+        this.savingOgImage.set(false);
+        this.siteConfigService.load();
+        this.toastService.success('Image de partage enregistrée avec succès.');
+      },
+      error: (err: ErrorMessage) => {
+        this.savingOgImage.set(false);
+        this.toastService.error(
+          err.details?.join(' ') || err.message || 'Erreur lors de l’enregistrement de l’image de partage.',
+        );
+      },
+    });
+  }
+
   saveTexts(): void {
     if (!this.configLoaded()) {
       this.toastService.error(
@@ -129,6 +171,8 @@ export class AboutManagementComponent implements OnInit {
       tagline: this.config.tagline,
       description: this.config.description,
       logo: this.config.logo ?? '',
+      favicon: this.config.favicon ?? '',
+      ogImage: this.config.ogImage ?? '',
       address: this.config.address,
       phone: this.config.phone,
       phone2: this.config.phone2,

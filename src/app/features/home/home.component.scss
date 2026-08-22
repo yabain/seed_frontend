@@ -1470,12 +1470,39 @@ $visible-lines: 5;
 }
 
 @media (max-width: 600px) {
+  $line-height-sm: 1.8rem;
+
   .banner-card {
-    padding: 30px 20px;
+    padding: 28px 18px;
+  }
+
+  .banner-content {
+    gap: 12px;
+
+    .fixed-text {
+      font-size: 1.25rem;
+      white-space: normal;
+    }
+  }
+
+  .animated-text-container {
+    height: calc(#{$line-height-sm} * #{$visible-lines});
+
+    .animated-phrase {
+      height: $line-height-sm;
+      line-height: $line-height-sm;
+      font-size: clamp(0.78rem, 3.6vw, 0.98rem);
+    }
   }
 
   .image-wrapper {
-    display: none;
+    display: flex;
+    width: 120px;
+    height: auto;
+    top: auto;
+    bottom: -24px;
+    right: -12px;
+    z-index: 1;
   }
 }
 
@@ -1638,6 +1665,20 @@ $radius-circle: 50%;
 
 .reveal--from-right {
   transform: translateX(56px);
+}
+
+.lq-eyebrow--solid {
+  -webkit-text-stroke: 0.45px transparent;
+  transform-origin: left center;
+  transition:
+    transform 0.35s ease,
+    -webkit-text-stroke-color 0.35s ease;
+}
+
+.lq-section:hover .lq-eyebrow--solid,
+.features-section:hover .lq-eyebrow--solid {
+  transform: scale(1.2);
+  -webkit-text-stroke-color: currentColor;
 }
 
 .reveal--from-top {

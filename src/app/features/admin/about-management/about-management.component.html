@@ -34,6 +34,35 @@
           alt="Aperçu logo"
         />
         <p class="form-hint text-muted">{{ savingLogo() ? 'Enregistrement du logo…' : '' }}</p>
+
+        <label class="identity-grid__side-title mt-2">Icône de l’onglet (favicon)</label>
+        <p class="text-muted identity-grid__side-hint">
+          Image carrée visible dans l’onglet du navigateur. Enregistré automatiquement.
+        </p>
+        <app-admin-image-field
+          [image]="config.favicon"
+          (imageChange)="setFavicon($event)"
+          variant="square"
+          [maxWidth]="256"
+          [maxHeight]="256"
+          alt="Aperçu icône de l’onglet"
+        />
+        <p class="form-hint text-muted">{{ savingFavicon() ? 'Enregistrement de l’icône…' : '' }}</p>
+
+        <label class="identity-grid__side-title mt-2">Image de partage (WhatsApp & réseaux)</label>
+        <p class="text-muted identity-grid__side-hint">
+          Format paysage ~1200×630 — affichée avec le nom et la description du site lorsque son URL
+          est partagée sur WhatsApp, Facebook, etc.
+        </p>
+        <app-admin-image-field
+          [image]="config.ogImage"
+          (imageChange)="setOgImage($event)"
+          variant="wide"
+          [maxWidth]="1200"
+          [maxHeight]="630"
+          alt="Aperçu image de partage"
+        />
+        <p class="form-hint text-muted">{{ savingOgImage() ? 'Enregistrement de l’image de partage…' : '' }}</p>
       </aside>
 
       <div class="identity-grid__fields">

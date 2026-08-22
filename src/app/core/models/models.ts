@@ -165,6 +165,8 @@ export interface SiteConfig {
   tagline: string;
   description?: string;
   logo?: string;
+  favicon?: string;
+  ogImage?: string;
   heroTitle?: string;
   heroSubtitle?: string;
   address?: string;

@@ -1,5 +1,19 @@
 .page-hero {
-  background: linear-gradient(135deg, var(--color-primary-darker), var(--color-primary));
+  position: relative;
+  background: url('../../../assets/img/seeds_letters.png') center / cover no-repeat;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: linear-gradient(135deg, rgba(2, 44, 34, 0.82), rgba(6, 95, 73, 0.7));
+  }
+
+  > .container {
+    position: relative;
+    z-index: 1;
+  }
   color: var(--color-white);
   padding: 3.5rem 0;
   text-align: center;
