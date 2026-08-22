@@ -8,7 +8,17 @@
 
 <section class="section">
   <div class="container">
-    <div class="grid grid--4" *ngIf="partners().length; else empty">
+    <div class="grid grid--4" *ngIf="loading()" aria-busy="true">
+      <article class="card" *ngFor="let s of [0, 1, 2, 3, 4, 5, 6, 7]">
+        <span class="sk sk--logo"></span>
+        <span class="sk sk--title sk--w50 sk--center"></span>
+        <span class="sk sk--text sk--w90 sk--center"></span>
+        <span class="sk sk--text sk--w70 sk--center"></span>
+        <span class="sk sk--btn sk--center"></span>
+      </article>
+    </div>
+
+    <div class="grid grid--4" *ngIf="!loading() && partners().length">
       <article class="partner-card card card--hover" *ngFor="let partner of partners()">
         <div class="partner-logo">
           <img *ngIf="partner.logo" [src]="partner.logo" [alt]="partner.name" />
@@ -26,9 +36,7 @@
       </article>
     </div>
 
-    <ng-template #empty>
-      <p class="empty-state" *ngIf="!loading()">La liste des partenaires sera bientôt disponible.</p>
-    </ng-template>
+    <p class="empty-state" *ngIf="!loading() && !partners().length">La liste des partenaires sera bientôt disponible.</p>
   </div>
 </section>
 

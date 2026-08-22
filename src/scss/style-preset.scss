@@ -40,7 +40,7 @@ File: style.css
           &:focus,
           &:hover {
             > a {
-              color: $pc-secondary;
+              color: var(--color-primary, #0bcc9c);
             }
           }
           .coded-submenu > app-nav-item li {
@@ -49,7 +49,7 @@ File: style.css
             &:hover {
               > a {
                 &:before {
-                  background: $pc-secondary;
+                  background: var(--color-primary, #0bcc9c);
                 }
               }
             }
@@ -63,7 +63,7 @@ File: style.css
               &.coded-trigger,
               &:hover {
                 > a {
-                  color: $pc-secondary;
+                  color: var(--color-primary, #0bcc9c);
                 }
               }
             }
@@ -74,8 +74,8 @@ File: style.css
           &.active,
           &.coded-trigger {
             > a {
-              background: shift-color($pc-secondary, $soft-bg-level);
-              color: $pc-secondary;
+              background: color-mix(in srgb, var(--color-primary, #0bcc9c) 20%, #ffffff);
+              color: var(--color-primary, #0bcc9c);
             }
           }
           &.active {
@@ -87,19 +87,19 @@ File: style.css
         app-nav-item > li.nav-item:hover,
         > app-nav-group > app-nav-collapse > li:hover {
           > a {
-            background: shift-color($pc-secondary, $soft-bg-level);
+            background: color-mix(in srgb, var(--color-primary, #0bcc9c) 20%, #ffffff);
           }
         }
         .nav-link:hover,
         .nav-link:focus {
-          color: $pc-secondary;
+          color: var(--color-primary, #0bcc9c);
         }
       }
 
       .version {
         label {
-          background: shift-color($pc-secondary, $soft-bg-level);
-          color: $pc-secondary;
+          background: color-mix(in srgb, var(--color-primary, #0bcc9c) 20%, #ffffff);
+          color: var(--color-primary, #0bcc9c);
         }
       }
     }

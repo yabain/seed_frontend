@@ -36,6 +36,8 @@ export class AboutManagementComponent implements OnInit {
     phone: '',
     phone2: '',
     email: '',
+    primaryColor: '',
+    secondaryColor: '',
     social: {
       facebook: '',
       instagram: '',
@@ -177,6 +179,8 @@ export class AboutManagementComponent implements OnInit {
       phone: this.config.phone,
       phone2: this.config.phone2,
       email: this.config.email,
+      primaryColor: (this.config.primaryColor ?? '').trim(),
+      secondaryColor: (this.config.secondaryColor ?? '').trim(),
       social: { ...this.config.social },
     };
 

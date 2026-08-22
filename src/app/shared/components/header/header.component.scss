@@ -61,11 +61,11 @@
 
       &:hover,
       &.active {
-        color: #5eead4;
+        color: color-mix(in srgb, var(--color-primary) 60%, #ffffff);
       }
 
       &.active::after {
-        background: #5eead4;
+        background: color-mix(in srgb, var(--color-primary) 60%, #ffffff);
       }
     }
   }

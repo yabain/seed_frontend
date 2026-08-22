@@ -1,0 +1,152 @@
+/* ============================================================
+   Couleur primaire dynamique — définie dans « À propos »
+   Surcharges les valeurs compilées (Bootstrap + Berry) pour que
+   boutons, liens, badges, formulaires… suivent --color-primary.
+   Importé en dernier dans styles.scss.
+   ============================================================ */
+
+[part='preset-1'] {
+  --brand: var(--color-primary, #0bcc9c);
+  --brand-soft: color-mix(in srgb, var(--color-primary, #0bcc9c) 20%, #ffffff);
+
+  /* Boutons pleins */
+  .btn-primary {
+    --bs-btn-color: #ffffff;
+    --bs-btn-bg: var(--brand);
+    --bs-btn-border-color: var(--brand);
+    --bs-btn-hover-color: #ffffff;
+    --bs-btn-hover-bg: color-mix(in srgb, var(--brand) 85%, #000000);
+    --bs-btn-hover-border-color: color-mix(in srgb, var(--brand) 78%, #000000);
+    --bs-btn-focus-shadow-rgb: var(--bs-primary-rgb);
+    --bs-btn-active-color: #ffffff;
+    --bs-btn-active-bg: color-mix(in srgb, var(--brand) 72%, #000000);
+    --bs-btn-active-border-color: color-mix(in srgb, var(--brand) 68%, #000000);
+    --bs-btn-disabled-color: #ffffff;
+    --bs-btn-disabled-bg: var(--brand);
+    --bs-btn-disabled-border-color: var(--brand);
+  }
+
+  /* Boutons contour */
+  .btn-outline-primary {
+    --bs-btn-color: var(--brand);
+    --bs-btn-border-color: var(--brand);
+    --bs-btn-hover-color: #ffffff;
+    --bs-btn-hover-bg: var(--brand);
+    --bs-btn-hover-border-color: var(--brand);
+    --bs-btn-focus-shadow-rgb: var(--bs-primary-rgb);
+    --bs-btn-active-color: #ffffff;
+    --bs-btn-active-bg: color-mix(in srgb, var(--brand) 85%, #000000);
+    --bs-btn-active-border-color: color-mix(in srgb, var(--brand) 80%, #000000);
+    --bs-btn-disabled-color: var(--brand);
+    --bs-btn-disabled-border-color: var(--brand);
+  }
+
+  /* Utilitaires texte / fond (la boucle Berry les fige en !important) */
+  .text-primary,
+  .text-secondary {
+    color: var(--brand) !important;
+  }
+
+  .bg-primary,
+  .bg-secondary {
+    background-color: var(--brand) !important;
+  }
+
+  .bg-light-primary,
+  .bg-light-secondary {
+    background: var(--brand-soft) !important;
+    color: var(--brand);
+  }
+
+  .badge.bg-light-primary,
+  .badge.bg-light-secondary {
+    background: var(--brand-soft) !important;
+    color: var(--brand) !important;
+    border-color: var(--brand-soft) !important;
+  }
+
+  .text-hover-primary:hover,
+  .text-hover-secondary:hover {
+    color: var(--brand) !important;
+  }
+
+  /* Boutons « light » Berry */
+  .btn-light-primary,
+  .btn-light-secondary {
+    background: var(--brand-soft);
+    color: var(--brand);
+    border-color: var(--brand-soft);
+
+    &:hover,
+    &.focus,
+    &:focus,
+    &:not(:disabled):not(.disabled).active,
+    &:not(:disabled):not(.disabled):active,
+    .show > &.dropdown-toggle {
+      background: var(--brand);
+      color: #ffffff;
+      border-color: var(--brand);
+    }
+  }
+
+  /* Icônes d'en-tête du back-office */
+  .pc-header .pc-head-link.head-link-primary,
+  .pc-header .pc-head-link.head-link-secondary {
+    background: var(--brand-soft);
+    color: var(--brand);
+
+    > i {
+      color: var(--brand);
+    }
+
+    &:hover {
+      background: var(--brand);
+      color: #ffffff;
+
+      > i {
+        color: #ffffff;
+      }
+    }
+  }
+
+  /* Pagination, accordéon, pills */
+  .page-link {
+    color: var(--brand);
+
+    &:hover {
+      background: var(--brand-soft);
+    }
+  }
+
+  .accordion-button:not(.collapsed) {
+    color: var(--brand);
+    background: var(--brand-soft);
+  }
+
+  .nav-pills .nav-link.active,
+  .nav-pills .show > .nav-link {
+    background-color: var(--brand);
+    color: #ffffff;
+  }
+
+  .list-group-item.active {
+    color: #ffffff;
+    background-color: var(--brand);
+    border-color: var(--brand);
+  }
+
+  /* Formulaires */
+  .form-select,
+  .form-control {
+    &:focus,
+    &:hover {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 1px var(--brand);
+    }
+  }
+
+  .form-check-input:checked {
+    background-color: var(--brand);
+    border-color: var(--brand);
+  }
+}

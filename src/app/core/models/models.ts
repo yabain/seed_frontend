@@ -183,6 +183,8 @@ export interface SiteConfig {
   phone?: string;
   phone2?: string;
   email?: string;
+  primaryColor?: string;
+  secondaryColor?: string;
   social?: SiteSocial;
   segments?: SiteSegments;
 }

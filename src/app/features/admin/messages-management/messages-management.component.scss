@@ -1,5 +1,5 @@
 tr.unread {
-  background: #f0fdfa;
+  background: color-mix(in srgb, var(--color-primary) 5%, #ffffff);
   cursor: pointer;
 
   td:first-child {

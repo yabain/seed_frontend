@@ -1,16 +1,16 @@
 // ============================================================
 //   SEED — Couche applicative / espace public & back-office
-//   Identité verte (teal) : primary #0bcc9c, accent #115e59
+//   Identité verte : primary #0bcc9c (+ déclinaisons plus profondes)
 // ============================================================
 
 :root {
   --color-primary: #0bcc9c;
-  --color-primary-dark: #0f766e;
-  --color-primary-darker: #115e59;
+  --color-primary-dark: #0aa886;
+  --color-primary-darker: #089373;
   --color-primary-light: #14b8a6;
   --color-primary-lighter: #ccfbf1;
-  --color-accent: #115e59;
-  --color-accent-dark: #134e4a;
+  --color-accent: #089373;
+  --color-accent-dark: #077f63;
   --color-accent-light: #ccfbf1;
   --color-dark: #161c25;
   --color-dark-2: #1f2937;
@@ -182,12 +182,12 @@ code {
 .btn--primary {
   background: var(--color-primary);
   color: var(--color-white);
-  box-shadow: 0 2px 6px rgba(13, 148, 136, 0.35);
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--color-primary) 35% , transparent);
 
   &:hover:not(:disabled) {
     background: var(--color-primary-dark);
     color: var(--color-white);
-    box-shadow: 0 4px 12px rgba(13, 148, 136, 0.4);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--color-primary) 40% , transparent);
   }
 }
 
@@ -781,14 +781,14 @@ textarea.form-control {
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-width: thin;
-    scrollbar-color: rgba(13, 148, 136, 0.35) transparent;
+    scrollbar-color: color-mix(in srgb, var(--color-primary) 35% , transparent) transparent;
 
     &::-webkit-scrollbar {
       width: 5px;
     }
 
     &::-webkit-scrollbar-thumb {
-      background: rgba(13, 148, 136, 0.35);
+      background: color-mix(in srgb, var(--color-primary) 35% , transparent);
       border-radius: 10px;
     }
 
@@ -812,12 +812,12 @@ textarea.form-control {
   height: 38px;
   flex: 0 0 auto;
   border-radius: 10px;
-  background: linear-gradient(135deg, #0bcc9c, #115e59);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-darker));
   color: #ffffff;
   font-weight: 800;
   font-size: 1.05rem;
   letter-spacing: 0.02em;
-  box-shadow: 0 4px 10px rgba(13, 148, 136, 0.35);
+  box-shadow: 0 4px 10px color-mix(in srgb, var(--color-primary) 35% , transparent);
 }
 
 .brand-emblem--img {
@@ -851,10 +851,6 @@ textarea.form-control {
   }
 }
 
-.head-link-secondary .ti-menu-2 {
-  color: #115e59;
-}
-
 .coded-navbar.pc-sidebar.mob-open {
   .m-header {
     display: flex;
@@ -874,7 +870,7 @@ textarea.form-control {
 
 html {
   scrollbar-width: thin;
-  scrollbar-color: #0bcc9c transparent;
+  scrollbar-color: var(--color-primary) transparent;
 
   &::-webkit-scrollbar {
     width: 10px;
@@ -885,11 +881,99 @@ html {
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #0bcc9c;
+    background: var(--color-primary);
     border-radius: 10px;
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background: #0aa886;
+    background: var(--color-primary-dark);
+  }
+}
+/* ============================================================
+   Skeletons de chargement (front-office)
+   Teinte dérivée de --color-primary (pilotée par la config).
+   ============================================================ */
+.sk {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--color-primary) 12%, #edf1f4);
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.55),
+      transparent
+    );
+    animation: sk-shimmer 1.4s ease-in-out infinite;
+  }
+}
+
+@keyframes sk-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.sk--icon {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-md);
+}
+
+.sk--icon--sm {
+  width: 48px;
+  height: 48px;
+}
+
+.sk--logo {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  margin: 0 auto;
+}
+
+.sk--badge {
+  width: 120px;
+  height: 1.5rem;
+  border-radius: var(--radius-full);
+}
+
+.sk--thumb {
+  height: 180px;
+  border-radius: var(--radius-md);
+}
+
+.sk--title {
+  height: 1.35rem;
+  margin-top: 1rem;
+}
+
+.sk--text {
+  height: 0.85rem;
+  margin-top: 0.55rem;
+}
+
+.sk--btn {
+  width: 140px;
+  height: 2.2rem;
+  margin-top: 1.1rem;
+  border-radius: var(--radius-md);
+}
+
+.sk--w50 { width: 50%; }
+.sk--w70 { width: 70%; }
+.sk--w90 { width: 90%; }
+.sk--center { margin-inline: auto; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sk::after {
+    animation: none;
   }
 }

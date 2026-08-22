@@ -101,7 +101,7 @@ export class AuditLogsComponent implements OnInit {
 
   getActionCategory(action: string): { label: string; color: string; bg: string } {
     if (action.startsWith('auth.two_factor')) {
-      return { label: '2FA', color: '#0f766e', bg: '#ccfbf1' };
+      return { label: '2FA', color: 'var(--color-primary-dark)', bg: 'color-mix(in srgb, var(--color-primary) 22%, #ffffff)' };
     }
     if (action.startsWith('auth.')) {
       return { label: 'Auth', color: '#1d4ed8', bg: '#dbeafe' };

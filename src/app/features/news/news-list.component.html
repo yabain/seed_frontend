@@ -19,7 +19,20 @@
       <button class="btn btn--primary" (click)="onSearch()">Rechercher</button>
     </div>
 
-    <div class="grid grid--3" *ngIf="result().items.length; else empty">
+    <div class="grid grid--3" *ngIf="loading()" aria-busy="true">
+      <article class="card" *ngFor="let s of [0, 1, 2, 3, 4, 5]">
+        <span class="sk sk--thumb"></span>
+        <div class="news-body">
+          <span class="sk sk--badge sk--w50"></span>
+          <span class="sk sk--title"></span>
+          <span class="sk sk--text"></span>
+          <span class="sk sk--text sk--w70"></span>
+          <span class="sk sk--btn"></span>
+        </div>
+      </article>
+    </div>
+
+    <div class="grid grid--3" *ngIf="!loading() && result().items.length">
       <article class="card card--hover news-card" *ngFor="let item of result().items">
         <div class="news-thumb">
           <img *ngIf="item.image" [src]="item.image" [alt]="item.title" />
@@ -35,9 +48,7 @@
       </article>
     </div>
 
-    <ng-template #empty>
-      <p class="empty-state" *ngIf="!loading()">Aucune actualité trouvée.</p>
-    </ng-template>
+    <p class="empty-state" *ngIf="!loading() && !result().items.length">Aucune actualité trouvée.</p>
 
     <div class="pagination" *ngIf="result().total > result().limit">
       <button

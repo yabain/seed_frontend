@@ -30,7 +30,7 @@
   &.is-active {
     border-color: var(--color-primary);
     color: var(--color-primary);
-    box-shadow: 0 8px 20px rgba(13, 148, 136, 0.18);
+    box-shadow: 0 8px 20px color-mix(in srgb, var(--color-primary) 18% , transparent);
     transform: translateY(-2px);
   }
 }

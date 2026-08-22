@@ -22,7 +22,17 @@
       >{{ category }}</button>
     </div>
 
-    <div class="grid grid--4" *ngIf="result().items.length; else empty">
+    <div class="grid grid--4" *ngIf="loading()" aria-busy="true">
+      <article class="card" *ngFor="let s of [0, 1, 2, 3, 4, 5, 6, 7]">
+        <span class="sk sk--icon sk--icon--sm"></span>
+        <span class="sk sk--title sk--w90"></span>
+        <span class="sk sk--text"></span>
+        <span class="sk sk--badge sk--w70"></span>
+        <span class="sk sk--btn"></span>
+      </article>
+    </div>
+
+    <div class="grid grid--4" *ngIf="!loading() && result().items.length">
       <article class="resource-card card card--hover" *ngFor="let resource of result().items">
         <div class="resource-icon"><i class="fa-solid fa-file-lines"></i></div>
         <h3>{{ resource.title }}</h3>
@@ -40,9 +50,7 @@
       </article>
     </div>
 
-    <ng-template #empty>
-      <p class="empty-state" *ngIf="!loading()">Aucune ressource disponible dans cette catégorie.</p>
-    </ng-template>
+    <p class="empty-state" *ngIf="!loading() && !result().items.length">Aucune ressource disponible dans cette catégorie.</p>
 
     <div class="pagination" *ngIf="result().total > result().limit">
       <button

@@ -2,31 +2,39 @@
   <div
     class="admin-image-field__area"
     [class.dragging]="dragging()"
+    role="button"
+    tabindex="0"
+    aria-label="Importer une image"
+    (click)="openPicker()"
+    (keydown.enter)="openPicker()"
+    (keydown.space)="openPicker()"
     (dragover)="onDragOver($event)"
     (dragleave)="onDragLeave($event)"
     (drop)="onDrop($event)"
   >
     <input
+      #fileInput
       type="file"
       accept="image/*"
       class="admin-image-field__input"
       (change)="onFileChange($event)"
       [disabled]="uploading()"
-      [attr.aria-label]="'Importer une image'"
+      tabindex="-1"
+      aria-hidden="true"
     />
 
     <div class="admin-image-field__preview">
       <img *ngIf="preview()" [src]="preview()" [alt]="alt" />
       <span *ngIf="!preview() && !uploading()" class="admin-image-field__placeholder">
         <i class="ti ti-photo-plus"></i>
-        <small>Cliquez ou Drag and Drop pour importer une image (max 5 Mo)
+        <small>Cliquez ou glissez-déposez pour importer une image (max 5 Mo)
         </small>
       </span>
       <span *ngIf="uploading()" class="admin-image-field__spinner">
         <i class="ti ti-loader"></i>
       </span>
 
-      <span class="admin-image-field__camera" title="Importer une image">
+      <span class="admin-image-field__camera" title="Importer une image" aria-hidden="true">
         <i class="ti ti-camera"></i>
       </span>
     </div>

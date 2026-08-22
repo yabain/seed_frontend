@@ -24,9 +24,9 @@
   }
 
   &--active {
-    border-color: var(--color-primary, #0bcc9c);
-    background: #f0fdfa;
-    box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.15);
+    border-color: var(--color-primary, var(--color-primary));
+    background: color-mix(in srgb, var(--color-primary) 5%, #ffffff);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 15% , transparent);
   }
 
   &__icon {

@@ -1,5 +1,5 @@
 .site-footer {
-  background: var(--color-dark);
+  background: var(--color-secondary, var(--color-dark));
   color: var(--color-gray-300);
 }
 

@@ -176,6 +176,62 @@
       </div>
     </div>
 
+    <div class="section-divider"></div>
+
+    <div class="section-head">
+      <span class="section-head__icon"><i class="fa-solid fa-palette"></i></span>
+      <div>
+        <h2>Couleurs</h2>
+        <p>Personnalisez la charte graphique du site public.</p>
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-field">
+        <label>Couleur primaire</label>
+        <div class="color-field">
+          <span
+            class="color-swatch"
+            [style.background]="config.primaryColor || '#0bcc9c'"
+            [class.color-swatch--empty]="!config.primaryColor"
+          ></span>
+          <input
+            class="form-control"
+            type="text"
+            [(ngModel)]="config.primaryColor"
+            name="config-primary-color"
+            maxlength="7"
+            placeholder="#0bcc9c"
+            spellcheck="false"
+          />
+        </div>
+        <p class="field-hint">
+          Appliquée sur tout le site (boutons, liens, accents…). Laissez vide pour le vert par défaut.
+        </p>
+      </div>
+
+      <div class="form-field">
+        <label>Couleur secondaire</label>
+        <div class="color-field">
+          <span
+            class="color-swatch"
+            [style.background]="config.secondaryColor || ''"
+            [class.color-swatch--empty]="!config.secondaryColor"
+          ></span>
+          <input
+            class="form-control"
+            type="text"
+            [(ngModel)]="config.secondaryColor"
+            name="config-secondary-color"
+            maxlength="7"
+            placeholder="#134e4a"
+            spellcheck="false"
+          />
+        </div>
+        <p class="field-hint">Utilisée comme arrière-plan du pied de page du site public.</p>
+      </div>
+    </div>
+
     <div class="form-actions">
       <button
         class="btn btn--primary"
@@ -225,6 +281,13 @@
     <div class="form-grid">
       <div class="form-field" *ngFor="let _ of [1, 2, 3, 4, 5]">
         <span class="skeleton skeleton-text"></span>
+      </div>
+    </div>
+
+    <div class="form-grid mt-2">
+      <div class="form-field" *ngFor="let _ of [1, 2]">
+        <span class="skeleton skeleton-text"></span>
+        <span class="skeleton color-swatch color-swatch--empty"></span>
       </div>
     </div>
 

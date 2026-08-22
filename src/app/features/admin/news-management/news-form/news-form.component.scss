@@ -62,17 +62,17 @@
   }
 
   &:hover {
-    border-color: var(--color-primary, #0bcc9c);
-    color: var(--color-primary-dark, #0f766e);
+    border-color: var(--color-primary, var(--color-primary));
+    color: var(--color-primary-dark, var(--color-primary-dark));
   }
 
   &.is-selected {
     background: var(--color-primary-lighter, #ccfbf1);
-    border-color: var(--color-primary, #0bcc9c);
-    color: var(--color-primary-darker, #115e59);
+    border-color: var(--color-primary, var(--color-primary));
+    color: var(--color-primary-darker, var(--color-primary-darker));
 
     i {
-      color: var(--color-primary, #0bcc9c);
+      color: var(--color-primary, var(--color-primary));
     }
   }
 }

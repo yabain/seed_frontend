@@ -12,8 +12,8 @@
 }
 
 .toast {
-  --toast-color: var(--color-primary, #0bcc9c);
-  --toast-glow: rgba(13, 148, 136, 0.35);
+  --toast-color: var(--color-primary, var(--color-primary));
+  --toast-glow: color-mix(in srgb, var(--color-primary) 35% , transparent);
   position: relative;
   overflow: hidden;
   display: flex;
@@ -67,8 +67,8 @@
 }
 
 .toast--info {
-  --toast-color: var(--color-primary, #0bcc9c);
-  --toast-glow: rgba(13, 148, 136, 0.35);
+  --toast-color: var(--color-primary, var(--color-primary));
+  --toast-glow: color-mix(in srgb, var(--color-primary) 35% , transparent);
 }
 
 .toast__shine {

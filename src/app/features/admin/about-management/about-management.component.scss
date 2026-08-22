@@ -78,7 +78,7 @@
 
   &:hover {
     border-color: color-mix(in srgb, var(--color-primary) 45%, var(--color-gray-200));
-    box-shadow: 0 6px 18px rgba(13, 148, 136, 0.08);
+    box-shadow: 0 6px 18px color-mix(in srgb, var(--color-primary) 8% , transparent);
   }
 
   &__head {
@@ -136,6 +136,50 @@
 
 .form-field--full {
   grid-column: 1 / -1;
+}
+
+/* Champs couleur avec aperçu */
+.color-field {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.color-swatch {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--color-gray-300);
+  background-color: #ffffff;
+  background-clip: padding-box;
+  box-shadow: inset 0 0 0 2px #ffffff;
+}
+
+.color-swatch--empty {
+  background-image: linear-gradient(
+      45deg,
+      var(--color-gray-100) 25%,
+      transparent 25%,
+      transparent 75%,
+      var(--color-gray-100) 75%
+    ),
+    linear-gradient(
+      45deg,
+      var(--color-gray-100) 25%,
+      transparent 25%,
+      transparent 75%,
+      var(--color-gray-100) 75%
+    );
+  background-size: 10px 10px;
+  background-position: 0 0, 5px 5px;
+}
+
+.field-hint {
+  margin: 0.4rem 0 0;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--color-gray-500);
 }
 
 .form-actions {

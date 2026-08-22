@@ -1,5 +1,6 @@
 import {
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
@@ -7,6 +8,7 @@ import {
   Output,
   signal,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UploadService } from '../../../core/services/upload.service';
@@ -31,6 +33,9 @@ export class AdminImageFieldComponent implements OnChanges, OnDestroy {
 
   @Output() imageChange = new EventEmitter<string>();
 
+  @ViewChild('fileInput')
+  private fileInput?: ElementRef<HTMLInputElement>;
+
   readonly preview = signal<string | null>(null);
   readonly uploading = signal(false);
   readonly dragging = signal(false);
@@ -42,6 +47,13 @@ export class AdminImageFieldComponent implements OnChanges, OnDestroy {
     private readonly toastService: ToastService,
   ) {
     this.preview.set(this.image ?? null);
+  }
+
+  openPicker(): void {
+    if (this.uploading()) {
+      return;
+    }
+    this.fileInput?.nativeElement.click();
   }
 
   ngOnChanges(changes: SimpleChanges): void {

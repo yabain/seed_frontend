@@ -8,7 +8,20 @@
 
 <section class="section">
   <div class="container">
-    <div class="grid grid--2" *ngIf="programs().length; else empty">
+    <div class="grid grid--2" *ngIf="loading()" aria-busy="true">
+      <article class="card" *ngFor="let s of [0, 1, 2, 3]">
+        <div class="program-top">
+          <span class="sk sk--icon"></span>
+          <span class="sk sk--badge"></span>
+        </div>
+        <span class="sk sk--title sk--w70"></span>
+        <span class="sk sk--text"></span>
+        <span class="sk sk--text sk--w90"></span>
+        <span class="sk sk--btn"></span>
+      </article>
+    </div>
+
+    <div class="grid grid--2" *ngIf="!loading() && programs().length">
       <article class="program-card card card--hover" *ngFor="let program of programs()">
         <div class="program-top">
           <span class="program-icon"><i [class]="iconFor(program)"></i></span>
@@ -21,9 +34,7 @@
       </article>
     </div>
 
-    <ng-template #empty>
-      <p class="empty-state" *ngIf="!loading()">Les programmes seront bientôt présentés ici.</p>
-    </ng-template>
+    <p class="empty-state" *ngIf="!loading() && !programs().length">Les programmes seront bientôt présentés ici.</p>
   </div>
 </section>
 
