@@ -1,4 +1,15 @@
 <div class="lq-scene">
+  <!-- ================= LOADER INITIAL ================= -->
+  <div class="lq-loader" [class.is-done]="!loading()" [attr.aria-hidden]="!loading()">
+    <div class="lq-loader__inner">
+      <div class="lq-loader__box">
+        <span class="lq-loader__ring"></span>
+        <i class="fa-solid fa-seedling lq-loader__icon"></i>
+      </div>
+      <span class="lq-loader__text">Chargement<span class="lq-loader__dots"><i>.</i><i>.</i><i>.</i></span></span>
+    </div>
+  </div>
+
   <!-- Ombres / orbes décoratifs parallaxe -->
   <div class="parallax lq-orb lq-orb--1" data-speed="-0.18" aria-hidden="true"></div>
   <div class="parallax lq-orb lq-orb--2" data-speed="-0.28" aria-hidden="true"></div>
