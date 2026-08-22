@@ -3,6 +3,7 @@ import { Observable, tap } from 'rxjs';
 import { ApiGatewayService } from './api-gateway.service';
 import type {
   Admin,
+  AdminProfile,
   LoginResponse,
   RequiresTwoFactorResponse,
   TwoFactorVerifyResponse,
@@ -74,6 +75,25 @@ export class AuthService {
 
   resetPassword(token: string, password: string): Observable<ResetPasswordResponse> {
     return this.api.post<ResetPasswordResponse>('/admin/auth/reset-password', { token, password });
+  }
+
+  getProfile(): Observable<AdminProfile> {
+    return this.api.get<AdminProfile>('/admin/auth/me');
+  }
+
+  refreshProfile(): Observable<AdminProfile> {
+    return this.getProfile().pipe(tap((profile) => this.setAdmin(profile)));
+  }
+
+  updateProfile(data: { name?: string; phone?: string; avatar?: string }): Observable<{ updated: boolean; admin: AdminProfile }> {
+    return this.api
+      .patch<{ updated: boolean; admin: AdminProfile }>('/admin/auth/me', data)
+      .pipe(tap((response) => this.setAdmin(response.admin)));
+  }
+
+  private setAdmin(admin: Admin): void {
+    this.adminSignal.set(admin);
+    localStorage.setItem(ADMIN_KEY, JSON.stringify(admin));
   }
 
   logout(): void {

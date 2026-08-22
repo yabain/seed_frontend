@@ -1,0 +1,107 @@
+<div class="admin-page">
+  <header class="page-head">
+    <h1><i class="ti ti-user-cog"></i> Mon profil</h1>
+    <p class="text-muted">
+      Consultez vos informations, modifiez-les et gérez votre photo de profil.
+    </p>
+  </header>
+
+  <div class="profile-skeleton card" *ngIf="loading()">
+    <span class="skeleton skeleton-stat-card"></span>
+  </div>
+
+  <div class="profile-layout" *ngIf="!loading() && profile(); else missing">
+    <!-- Carte identité -->
+    <aside class="card profile-card">
+      <div class="profile-card__avatar">
+        <img *ngIf="profile()!.avatar" [src]="profile()!.avatar" [alt]="profile()!.name" />
+        <span *ngIf="!profile()!.avatar" class="profile-card__initials">{{ initials(profile()!.name) }}</span>
+      </div>
+      <h2>{{ profile()!.name }}</h2>
+      <p class="profile-card__email">{{ profile()!.email }}</p>
+      <span class="badge badge--green">{{ roleLabel(profile()!.role) }}</span>
+
+      <ul class="profile-meta">
+        <li>
+          <i class="ti ti-phone"></i>
+          <span>{{ profile()!.phone || 'Aucun téléphone renseigné' }}</span>
+        </li>
+        <li>
+          <i class="ti ti-calendar"></i>
+          <span>Membre depuis le {{ formatDate(profile()!.createdAt) }}</span>
+        </li>
+        <li>
+          <i class="ti ti-clock"></i>
+          <span>Dernière connexion : {{ formatDate(profile()!.lastLoginAt) }}</span>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Édition -->
+    <div class="profile-main">
+      <section class="card">
+        <h2><i class="ti ti-camera"></i> Photo de profil</h2>
+        <p class="text-muted profile-hint">
+          Formats acceptés : images (max 5 Mo). La photo est convertie en WebP puis
+          enregistrée. Elle est appliquée immédiatement dans la barre de navigation.
+        </p>
+        <app-admin-image-field
+          [image]="profile()!.avatar"
+          [maxWidth]="512"
+          [maxHeight]="512"
+          variant="square"
+          alt="Photo de profil"
+          (imageChange)="onAvatarChange($event)"
+        />
+      </section>
+
+      <section class="card">
+        <h2><i class="ti ti-id"></i> Informations personnelles</h2>
+
+        <form (ngSubmit)="save()">
+          <div class="form-field">
+            <label for="profile-name">Nom complet</label>
+            <input
+              id="profile-name"
+              class="form-control"
+              type="text"
+              [(ngModel)]="form.name"
+              name="name"
+              maxlength="100"
+              required
+            />
+          </div>
+
+          <div class="form-field">
+            <label for="profile-phone">Téléphone</label>
+            <input
+              id="profile-phone"
+              class="form-control"
+              type="tel"
+              [(ngModel)]="form.phone"
+              name="phone"
+              maxlength="30"
+              placeholder="+225 07 00 00 00 00"
+            />
+          </div>
+
+          <div class="form-field">
+            <label for="profile-email">Adresse e-mail</label>
+            <input id="profile-email" class="form-control" type="email" [value]="profile()!.email" disabled />
+            <small class="text-muted">L’adresse e-mail ne peut pas être modifiée.</small>
+          </div>
+
+          <button class="btn btn--primary" type="submit" [disabled]="saving()">
+            {{ saving() ? 'Enregistrement…' : 'Enregistrer les modifications' }}
+          </button>
+        </form>
+      </section>
+    </div>
+  </div>
+
+  <ng-template #missing>
+    <div class="card" *ngIf="!loading()">
+      <p class="empty-state">Profil indisponible. Reconnectez-vous.</p>
+    </div>
+  </ng-template>
+</div>

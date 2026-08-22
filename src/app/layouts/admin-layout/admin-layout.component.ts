@@ -25,10 +25,26 @@ interface AdminNavGroup {
   styleUrl: './admin-layout.component.scss',
 })
 export class AdminLayoutComponent implements OnInit {
-  private readonly auth = inject(AuthService);
+  protected readonly auth = inject(AuthService);
   private readonly siteConfigService = inject(SiteConfigService);
 
   readonly siteConfig = this.siteConfigService.config;
+
+  firstName(): string {
+    const name = this.auth.admin()?.name?.trim() || '';
+    return name.split(/\s+/)[0] || 'Admin';
+  }
+
+  roleLabel(): string {
+    const labels: Record<string, string> = {
+      user: 'Utilisateur',
+      consultant: 'Consultant',
+      admin: 'Administrateur',
+      superadmin: 'Super-admin',
+    };
+    const role = this.auth.admin()?.role ?? '';
+    return labels[role] ?? role;
+  }
 
   ngOnInit(): void {
     this.siteConfigService.load();
@@ -39,6 +55,7 @@ export class AdminLayoutComponent implements OnInit {
       caption: 'Administration',
       items: [
         { label: 'Tableau de bord', path: '/admin/dashboard', icon: 'ti ti-dashboard', exact: true },
+        { label: 'Tracking', path: '/admin/tracking', icon: 'ti ti-radar' },
         { label: 'Actualités', path: '/admin/news', icon: 'ti ti-article' },
         { label: 'Ressources', path: '/admin/resources', icon: 'ti ti-files' },
         { label: 'Programmes', path: '/admin/programs', icon: 'ti ti-plant-2' },

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiGatewayService } from './api-gateway.service';
-import type { DailyStat, StatsSummary, TopPage } from '../models/models';
+import type { DailyStat, StatsSummary, TopPage, TrafficRange } from '../models/models';
 
 @Injectable({ providedIn: 'root' })
 export class StatsService {
@@ -38,6 +38,10 @@ export class StatsService {
 
   getDaily(days = 14): Observable<DailyStat[]> {
     return this.api.get<DailyStat[]>('/stats/daily', { days });
+  }
+
+  getSeries(range: TrafficRange): Observable<DailyStat[]> {
+    return this.api.get<DailyStat[]>('/stats/series', { range });
   }
 
   getTopPages(limit = 8): Observable<TopPage[]> {

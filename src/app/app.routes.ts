@@ -38,6 +38,13 @@ export const appRoutes: Routes = [
           ),
       },
       {
+        path: 'tracking',
+        loadComponent: () =>
+          import('./features/admin/tracking/tracking.component').then(
+            (m) => m.TrackingComponent,
+          ),
+      },
+      {
         path: 'news',
         loadComponent: () =>
           import('./features/admin/news-management/news-management.component').then(
@@ -119,6 +126,13 @@ export const appRoutes: Routes = [
         loadComponent: () =>
           import('./features/admin/messages-management/messages-management.component').then(
             (m) => m.MessagesManagementComponent,
+          ),
+      },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./features/admin/profile/profile.component').then(
+            (m) => m.ProfileComponent,
           ),
       },
       {

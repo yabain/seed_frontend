@@ -3,6 +3,14 @@ export interface Admin {
   name: string;
   email: string;
   role: string;
+  phone?: string;
+  avatar?: string;
+}
+
+export interface AdminProfile extends Admin {
+  isActive: boolean;
+  lastLoginAt?: string;
+  createdAt: string;
 }
 
 export interface LoginResponse {
@@ -42,6 +50,8 @@ export interface Paginated<T> {
   page: number;
   limit: number;
 }
+
+export type TrafficRange = '24h' | '7d' | '30d' | '12m';
 
 export type NewsStatus = 'draft' | 'published';
 

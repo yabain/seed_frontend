@@ -1,0 +1,157 @@
+:host {
+  display: block;
+}
+
+.traffic-card {
+  margin-top: 1.5rem;
+}
+
+.traffic-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+
+  h2 {
+    font-size: 1.1rem;
+    margin: 0;
+  }
+}
+
+/* Filtre segmenté */
+.traffic-filter {
+  display: inline-flex;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border-radius: var(--radius-full, 50rem);
+  background: color-mix(in srgb, var(--color-gray-100, #f1f5f9) 80%, transparent);
+  border: 1px solid var(--color-gray-200);
+
+  button {
+    border: none;
+    background: transparent;
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-full, 50rem);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-gray-500);
+    cursor: pointer;
+    transition:
+      background 0.2s ease,
+      color 0.2s ease,
+      box-shadow 0.2s ease;
+
+    &:hover {
+      color: var(--color-primary);
+    }
+
+    &.active {
+      background: var(--color-primary);
+      color: #ffffff;
+      box-shadow: 0 2px 8px
+        color-mix(in srgb, var(--color-primary) 40%, transparent);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+  }
+}
+
+/* ---------- Graphique (SVG) ---------- */
+.traffic-body {
+  width: 100%;
+  min-height: 220px;
+  margin-top: 0.5rem;
+}
+
+.chart-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+
+  .grid line {
+    stroke: var(--color-gray-200);
+    stroke-width: 1;
+    stroke-dasharray: 3 5;
+  }
+
+  .axis-label {
+    font-size: 11px;
+    fill: var(--color-gray-500);
+
+    &.y {
+      text-anchor: end;
+      font-variant-numeric: tabular-nums;
+    }
+
+    &.x {
+      text-anchor: middle;
+    }
+  }
+
+  /* Courbe : tracé animé de gauche à droite */
+  .line-path {
+    fill: none;
+    stroke: var(--color-primary);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: tc-draw 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .dot {
+    fill: var(--color-primary);
+    opacity: 0;
+    animation: tc-pop 0.35s ease forwards;
+    animation-delay: 0.9s;
+
+    &:nth-of-type(3n) {
+      animation-delay: 1s;
+    }
+  }
+
+  /* Valeurs des points : toujours au-dessus de la courbe, couleur primaire */
+  .val-label {
+    font-size: 11px;
+    font-weight: 700;
+    fill: var(--color-primary);
+    paint-order: stroke;
+    stroke: var(--color-white);
+    stroke-width: 3px;
+    stroke-linejoin: round;
+    opacity: 0;
+    animation: tc-pop 0.35s ease forwards;
+    animation-delay: 1s;
+  }
+}
+
+@keyframes tc-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes tc-pop {
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chart-svg {
+    .line-path,
+    .dot,
+    .val-label {
+      animation: none;
+      opacity: 1;
+      stroke-dashoffset: 0;
+    }
+  }
+}

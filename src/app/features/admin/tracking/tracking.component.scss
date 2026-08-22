@@ -1,0 +1,49 @@
+.admin-page {
+  width: 100%;
+}
+
+.page-head {
+  h1 {
+    font-size: 1.6rem;
+    margin-bottom: 0.2rem;
+  }
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.metric-card {
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  padding: 1.3rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: var(--shadow-sm);
+
+  .metric-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: var(--radius-md);
+    background: var(--color-primary-lighter);
+    display: grid;
+    place-items: center;
+    font-size: 1.3rem;
+  }
+
+  strong {
+    display: block;
+    font-size: 1.6rem;
+    color: var(--color-dark);
+  }
+
+  span:not(.metric-icon) {
+    color: var(--color-gray-500);
+    font-size: 0.85rem;
+  }
+}

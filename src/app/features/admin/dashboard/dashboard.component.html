@@ -1,83 +1,91 @@
 <div class="admin-page">
   <header class="page-head">
     <h1><i class="ti ti-dashboard"></i> Tableau de bord</h1>
-    <p class="text-muted">Vue d'ensemble de la fréquentation de la plateforme.</p>
+    <p class="text-muted">Vue d'ensemble de l'activité et du contenu de la plateforme.</p>
   </header>
 
-  <!-- Métriques -->
-  <div class="metric-grid" *ngIf="summary() as s">
-    <div class="metric-card">
-      <span class="metric-icon"><i class="fa-solid fa-users"></i></span>
-      <div>
+  <!-- Statistiques : une seule rangée sur desktop -->
+  <div class="stat-row">
+    <div class="stat-card" *ngIf="summary() as s; else statsSkeleton">
+      <span class="stat-icon"><i class="fa-solid fa-users"></i></span>
+      <div class="stat-info">
         <strong>{{ s.uniqueVisitors }}</strong>
-        <span>Visiteurs uniques</span>
+        <small>Visiteurs uniques</small>
       </div>
     </div>
-    <div class="metric-card">
-      <span class="metric-icon"><i class="fa-solid fa-chart-line"></i></span>
-      <div>
-        <strong>{{ s.totalPageViews }}</strong>
-        <span>Pages vues</span>
+
+    <ng-template #statsSkeleton>
+      <div class="stat-card">
+        <span class="sk sk--icon--sm"></span>
+        <div class="stat-info">
+          <span class="sk sk--badge" style="width: 3rem"></span>
+          <small>Visiteurs uniques</small>
+        </div>
       </div>
-    </div>
-    <div class="metric-card">
-      <span class="metric-icon"><i class="fa-solid fa-fire"></i></span>
-      <div>
-        <strong>{{ s.todayVisitors }}</strong>
-        <span>Aujourd'hui (visiteurs)</span>
+    </ng-template>
+
+    <a class="stat-card stat-card--link" routerLink="/admin/messages">
+      <span class="stat-icon" [class.stat-icon--alert]="(unreadMessages() ?? 0) > 0">
+        <i class="ti ti-mail"></i>
+      </span>
+      <div class="stat-info">
+        <strong [class.text-danger]="(unreadMessages() ?? 0) > 0">
+          @if (unreadMessages() !== null) {
+            {{ unreadMessages() }}
+          } @else {
+            <span class="sk sk--badge" style="width: 3rem"></span>
+          }
+        </strong>
+        <small>Messages non lus</small>
       </div>
-    </div>
-    <div class="metric-card">
-      <span class="metric-icon"><i class="fa-solid fa-bolt"></i></span>
-      <div>
-        <strong>{{ s.todayPageViews }}</strong>
-        <span>Aujourd'hui (pages vues)</span>
+      <i class="ti ti-chevron-right stat-arrow"></i>
+    </a>
+
+    <a class="stat-card stat-card--link" routerLink="/admin/news">
+      <span class="stat-icon"><i class="ti ti-article"></i></span>
+      <div class="stat-info">
+        <strong>
+          @if (newsTotal() !== null) {
+            {{ newsTotal() }}
+          } @else {
+            <span class="sk sk--badge" style="width: 3rem"></span>
+          }
+        </strong>
+        <small>Actualités</small>
       </div>
-    </div>
+      <i class="ti ti-chevron-right stat-arrow"></i>
+    </a>
+
+    <a class="stat-card stat-card--link" routerLink="/admin/resources">
+      <span class="stat-icon"><i class="ti ti-files"></i></span>
+      <div class="stat-info">
+        <strong>
+          @if (resourcesTotal() !== null) {
+            {{ resourcesTotal() }}
+          } @else {
+            <span class="sk sk--badge" style="width: 3rem"></span>
+          }
+        </strong>
+        <small>Ressources</small>
+      </div>
+      <i class="ti ti-chevron-right stat-arrow"></i>
+    </a>
+
+    <a class="stat-card stat-card--link" routerLink="/admin/programs">
+      <span class="stat-icon"><i class="ti ti-plant-2"></i></span>
+      <div class="stat-info">
+        <strong>
+          @if (programsTotal() !== null) {
+            {{ programsTotal() }}
+          } @else {
+            <span class="sk sk--badge" style="width: 3rem"></span>
+          }
+        </strong>
+        <small>Programmes</small>
+      </div>
+      <i class="ti ti-chevron-right stat-arrow"></i>
+    </a>
   </div>
 
-  <div class="metric-grid" *ngIf="!summary()">
-    <div class="skeleton skeleton-metric-card"></div>
-    <div class="skeleton skeleton-metric-card"></div>
-    <div class="skeleton skeleton-metric-card"></div>
-    <div class="skeleton skeleton-metric-card"></div>
-  </div>
-
-  <p class="empty-state" *ngIf="!summary()">Chargement des statistiques…</p>
-
-  <!-- Graphique 14 jours -->
-  <section class="card mt-3">
-    <h2>Fréquentation — 14 derniers jours</h2>
-    <div class="chart" *ngIf="daily().length">
-      <div class="chart-bar" *ngFor="let day of daily()">
-        <span class="bar-fill" [style.height]="barHeight(day)">
-          <b *ngIf="day.pageViews">{{ day.pageViews }}</b>
-        </span>
-        <span class="bar-label">{{ shortLabel(day.date) }}</span>
-      </div>
-    </div>
-    <div class="skeleton skeleton-chart" *ngIf="!daily()"></div>
-    <p class="empty-state" *ngIf="daily().length === 0">Pas encore de données de fréquentation.</p>
-  </section>
-
-  <!-- Pages les plus visitées -->
-  <section class="card mt-3" *ngIf="topPages().length">
-    <h2>Pages les plus visitées</h2>
-    <div class="table-wrap">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Page</th>
-            <th>Vues</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let page of topPages()">
-            <td><code>{{ page.path }}</code></td>
-            <td>{{ page.count }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+  <app-traffic-chart />
 </div>

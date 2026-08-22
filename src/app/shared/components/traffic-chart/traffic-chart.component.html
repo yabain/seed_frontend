@@ -1,0 +1,89 @@
+<section class="card traffic-card">
+  <div class="traffic-head">
+    <h2>Fréquentation</h2>
+    <div class="traffic-filter" role="tablist">
+      <button
+        type="button"
+        role="tab"
+        *ngFor="let r of ranges"
+        [class.active]="range() === r.value"
+        [attr.aria-selected]="range() === r.value"
+        (click)="setRange(r.value)"
+      >
+        {{ r.label }}
+      </button>
+    </div>
+  </div>
+
+  <div #plotWrap class="traffic-body">
+    <ng-container *ngIf="!loading(); else chartSkeleton">
+      <svg
+        *ngIf="points().length"
+        class="chart-svg"
+        [attr.viewBox]="'0 0 ' + width() + ' ' + height"
+        preserveAspectRatio="xMidYMid meet"
+      >
+        <!-- Grille + graduations Y -->
+        <g class="grid">
+          <line
+            *ngFor="let t of ticks()"
+            [attr.x1]="pad.l"
+            [attr.x2]="width() - pad.r"
+            [attr.y1]="y(t)"
+            [attr.y2]="y(t)"
+          />
+          <text
+            *ngFor="let t of ticks()"
+            class="axis-label y"
+            [attr.x]="pad.l - 8"
+            [attr.y]="y(t)"
+            dy="4"
+          >
+            {{ fmtTick(t) }}
+          </text>
+        </g>
+
+        <!-- Courbe animée -->
+        <path class="line-path" [attr.d]="linePath()" pathLength="1" />
+
+        <!-- Points + valeurs -->
+        <g *ngFor="let p of points(); let i = index">
+          <circle
+            *ngIf="p.value > 0"
+            class="dot"
+            [attr.cx]="p.x"
+            [attr.cy]="p.y"
+            r="3.5"
+          />
+          <text
+            *ngIf="p.value > 0"
+            class="val-label"
+            [attr.x]="p.x"
+            [attr.y]="p.y"
+            [attr.dy]="dyFor()"
+            [attr.text-anchor]="anchorFor(i)"
+          >
+            {{ fmtValue(p.value) }}
+          </text>
+        </g>
+
+        <!-- Graduations X -->
+        <text
+          *ngFor="let l of xLabels()"
+          class="axis-label x"
+          [attr.x]="l.x"
+          [attr.y]="height - pad.b + 20"
+          [attr.text-anchor]="l.anchor"
+        >
+          {{ l.label }}
+        </text>
+      </svg>
+
+      <p class="empty-state" *ngIf="!points().length">{{ emptyMessage() }}</p>
+    </ng-container>
+
+    <ng-template #chartSkeleton>
+      <div class="skeleton skeleton-chart"></div>
+    </ng-template>
+  </div>
+</section>

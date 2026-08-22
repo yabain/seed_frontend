@@ -50,13 +50,22 @@
           <div class="pc-h-item dropdown" [class.show]="profileMenuOpen">
             <a
               href="javascript:void(0)"
-              class="pc-head-link head-link-primary arrow-none me-0"
+              class="pc-head-link arrow-none me-0 user-trigger"
+              [class.is-open]="profileMenuOpen"
               (click)="toggleProfile($event)"
             >
-              <span class="user-avtar d-flex align-items-center justify-content-center bg-light-primary">
-                <i class="ti ti-user text-primary"></i>
+              <span class="user-avtar">
+                @if (auth.admin()?.avatar) {
+                  <img [src]="auth.admin()!.avatar" [alt]="auth.admin()?.name || ''" />
+                } @else {
+                  <i class="ti ti-user"></i>
+                }
               </span>
-              <span><i class="ti ti-chevron-down"></i></span>
+              <span class="user-trigger__meta">
+                <strong>{{ firstName() }}</strong>
+                <small>{{ roleLabel() }}</small>
+              </span>
+              <i class="ti ti-chevron-down user-trigger__chev"></i>
             </a>
             <div
               class="dropdown-user-profile dropdown-menu-end pc-h-dropdown dropdown-menu"
@@ -66,8 +75,12 @@
                 <h4 class="m-0">
                   <small class="text-muted">Administrateur</small>
                 </h4>
-                <p class="text-muted mb-2">Panneau de gestion SEEDS</p>
+                <p class="text-muted mb-2">{{ auth.admin()?.email }}</p>
                 <hr />
+                <a href="javascript:void(0)" class="dropdown-item" routerLink="/admin/profile" (click)="profileMenuOpen = false">
+                  <i class="ti ti-user-cog"></i>
+                  <span>Mon profil</span>
+                </a>
                 <a href="javascript:void(0)" class="dropdown-item" routerLink="/" (click)="profileMenuOpen = false">
                   <i class="ti ti-world"></i>
                   <span>Voir le site public</span>
