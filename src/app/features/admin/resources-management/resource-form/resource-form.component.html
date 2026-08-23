@@ -62,27 +62,38 @@
       <textarea id="res-description" class="form-control" [(ngModel)]="form.description" name="description"></textarea>
     </div>
 
-    <div class="form-field">
-      <label for="res-file">Fichier (PDF ou document) {{ isEdit ? '' : '*' }}</label>
-      <input
-        id="res-file"
-        class="form-control"
-        type="file"
-        accept=".pdf,.doc,.docx,.xlsx"
-        (change)="onFileChange($event)"
-      />
-      <p *ngIf="file?.fileName" class="text-sm text-muted mt-1">
-        {{ file!.fileName }} · {{ formatSize(file!.fileSize) }}
-      </p>
-      <a
-        *ngIf="currentFileUrl()"
-        [href]="currentFileUrl()"
-        target="_blank"
-        rel="noopener"
-        class="btn btn--sm btn--ghost mt-1"
-      >
-        Voir le document actuel
-      </a>
+    <div class="form-grid form-grid--media">
+      <div class="form-field">
+        <label>Image d’aperçu</label>
+        <app-admin-image-field
+          [image]="form.previewImage"
+          variant="square"
+          (imageChange)="setPreviewImage($event)"
+          alt="Aperçu de la ressource"
+        />
+        <small class="text-muted">
+          Vignette affichée à côté du document (max 5 Mo).
+        </small>
+      </div>
+
+      <div class="form-field">
+        <label>Fichier (PDF ou document) {{ isEdit ? '' : '*' }}</label>
+        <app-admin-file-field
+          accept=".pdf,.doc,.docx,.xlsx"
+          hint="PDF, DOC, DOCX, XLSX"
+          [currentFileName]="currentFileName()"
+          (fileChange)="onFileSelected($event)"
+        />
+        <a
+          *ngIf="currentFileUrl()"
+          [href]="currentFileUrl()"
+          target="_blank"
+          rel="noopener"
+          class="btn btn--sm btn--ghost mt-1"
+        >
+          <i class="ti ti-external-link"></i> Voir le document actuel
+        </a>
+      </div>
     </div>
 
     <div class="form-actions">

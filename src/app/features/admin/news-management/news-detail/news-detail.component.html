@@ -1,0 +1,76 @@
+<div class="admin-page">
+  <header class="page-head detail-head">
+    <div>
+      <h1><i class="ti ti-article"></i> Actualité</h1>
+      <p class="text-muted">Consultation détaillée de la publication.</p>
+    </div>
+    <button class="btn btn--ghost btn--sm" (click)="back()">
+      <i class="ti ti-arrow-left"></i> Retour à la liste
+    </button>
+  </header>
+
+  <p class="empty-state" *ngIf="loading()">Chargement de l’actualité…</p>
+
+  <ng-container *ngIf="!loading() && news() as n">
+    <section class="card mt-2 item-header">
+      <div class="item-title">
+        <h2>{{ n.title }}</h2>
+        <span
+          class="badge"
+          [class.badge--green]="n.status === 'published'"
+          [class.badge--amber]="n.status !== 'published'"
+        >
+          {{ n.status === 'published' ? 'Publiée' : 'Brouillon' }}
+        </span>
+      </div>
+
+      <dl class="meta-grid">
+        <div>
+          <dt>Catégories</dt>
+          <dd>{{ n.categories?.join(', ') || '—' }}</dd>
+        </div>
+        <div>
+          <dt>Auteur</dt>
+          <dd>{{ n.author || '—' }}</dd>
+        </div>
+        <div>
+          <dt>Publiée le</dt>
+          <dd>{{ formatDate(n.publishedAt) }}</dd>
+        </div>
+        <div>
+          <dt>Créée le</dt>
+          <dd>{{ formatDate(n.createdAt) }}</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="card cover-image mt-2" *ngIf="n.image">
+      <img [src]="n.image" [alt]="n.title" />
+    </section>
+
+    <section class="card mt-2">
+      <p *ngIf="n.excerpt" class="item-excerpt">{{ n.excerpt }}</p>
+      <article class="item-body">
+        <p *ngFor="let paragraph of paragraphs()">{{ paragraph }}</p>
+        <p class="text-muted" *ngIf="!paragraphs().length">Aucun contenu.</p>
+      </article>
+    </section>
+
+    <div class="detail-actions mt-3" *ngIf="isAdmin">
+      <a class="btn btn--outline" [routerLink]="['/admin/news', n._id, 'edit']">
+        <i class="ti ti-edit"></i> Modifier
+      </a>
+      <button
+        class="btn"
+        [class.btn--primary]="n.status !== 'published'"
+        [class.btn--outline]="n.status === 'published'"
+        (click)="toggleStatus()"
+      >
+        {{ n.status === 'published' ? 'Désactiver' : 'Publier' }}
+      </button>
+      <button class="btn btn--danger" (click)="remove()">
+        <i class="ti ti-trash"></i> Supprimer
+      </button>
+    </div>
+  </ng-container>
+</div>

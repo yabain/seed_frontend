@@ -1,0 +1,55 @@
+<div
+  class="dropzone"
+  [class.dropzone--dragging]="dragging()"
+  [class.dropzone--disabled]="disabled"
+  (click)="openPicker()"
+  (dragover)="onDragOver($event)"
+  (dragleave)="onDragLeave($event)"
+  (drop)="onDrop($event)"
+  role="button"
+  tabindex="0"
+  (keydown.enter)="openPicker()"
+  aria-label="Zone de dépôt de fichier"
+>
+  <input
+    #fileInput
+    type="file"
+    class="dropzone__input"
+    [accept]="accept"
+    [disabled]="disabled"
+    (change)="onFileChange($event)"
+  />
+
+  <ng-container *ngIf="selected() as file; else idle">
+    <span class="dropzone__icon dropzone__icon--file"><i class="ti ti-file-check"></i></span>
+    <span class="dropzone__text">
+      <strong>{{ file.name }}</strong>
+      <small>{{ formatSize(file.size) }}</small>
+    </span>
+    <button
+      type="button"
+      class="dropzone__clear"
+      (click)="clear(); $event.stopPropagation()"
+      aria-label="Retirer le fichier"
+    >
+      <i class="ti ti-x"></i>
+    </button>
+  </ng-container>
+
+  <ng-template #idle>
+    <ng-container *ngIf="currentFileName; else empty">
+      <span class="dropzone__icon"><i class="ti ti-file"></i></span>
+      <span class="dropzone__text">
+        <strong>{{ currentFileName }}</strong>
+        <small>Fichier actuel — déposez un fichier pour le remplacer</small>
+      </span>
+    </ng-container>
+    <ng-template #empty>
+      <span class="dropzone__icon"><i class="ti ti-cloud-upload"></i></span>
+      <span class="dropzone__text">
+        <strong>Glissez-déposez le fichier ici</strong>
+        <small>ou cliquez pour parcourir{{ hint ? ' · ' + hint : '' }}</small>
+      </span>
+    </ng-template>
+  </ng-template>
+</div>

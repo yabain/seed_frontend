@@ -1,9 +1,10 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { NewsService } from '../../../core/services/news.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { SegmentVisibilityComponent } from '../../../shared/components/segment-visibility/segment-visibility.component';
 import type { ErrorMessage } from '../../../core/interceptors/error.interceptor';
 import type { News, Paginated } from '../../../core/models/models';
@@ -24,9 +25,15 @@ export class NewsManagementComponent implements OnInit {
 
   private searchTimer: any;
 
+  get isAdmin(): boolean {
+    return ['admin', 'superadmin'].includes(this.authService.admin()?.role ?? '');
+  }
+
   constructor(
     private readonly newsService: NewsService,
     private readonly toastService: ToastService,
+    private readonly authService: AuthService,
+    private readonly router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -35,13 +42,19 @@ export class NewsManagementComponent implements OnInit {
 
   load(): void {
     this.loading.set(true);
-    this.newsService
-      .getAll({ page: this.page(), limit: this.limit(), search: this.searchQuery() })
-      .subscribe({
-        next: (data) => this.result.set(data),
-        error: () => this.toastService.error('Impossible de charger les actualités.'),
-        complete: () => this.loading.set(false),
-      });
+    const query = { page: this.page(), limit: this.limit(), search: this.searchQuery() };
+    const request$ = this.isAdmin
+      ? this.newsService.getAll(query)
+      : this.newsService.getPublished(query);
+    request$.subscribe({
+      next: (data) => this.result.set(data),
+      error: () => this.toastService.error('Impossible de charger les actualités.'),
+      complete: () => this.loading.set(false),
+    });
+  }
+
+  open(item: News): void {
+    void this.router.navigate(['/admin/news', item._id]);
   }
 
   onSearch(value: string): void {

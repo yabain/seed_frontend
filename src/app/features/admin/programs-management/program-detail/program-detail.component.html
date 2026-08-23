@@ -1,0 +1,53 @@
+<div class="admin-page">
+  <header class="page-head detail-head">
+    <div>
+      <h1><i class="ti ti-plant-2"></i> Programme</h1>
+      <p class="text-muted">Consultation détaillée du programme.</p>
+    </div>
+    <button class="btn btn--ghost btn--sm" (click)="back()">
+      <i class="ti ti-arrow-left"></i> Retour à la liste
+    </button>
+  </header>
+
+  <p class="empty-state" *ngIf="loading()">Chargement du programme…</p>
+
+  <ng-container *ngIf="!loading() && program() as p">
+    <section class="card mt-2 item-header">
+      <div class="program-visual">
+        <span class="program-icon"><i [class]="p.icon || 'ti ti-seedling'"></i></span>
+        <div>
+          <div class="item-title">
+            <h2>{{ p.title }}</h2>
+            <span
+              class="badge"
+              [class.badge--green]="p.isActive"
+              [class.badge--gray]="!p.isActive"
+            >
+              {{ p.isActive ? 'Actif' : 'Masqué' }}
+            </span>
+          </div>
+          <p class="text-muted" style="margin:0.35rem 0 0;">
+            Ordre d’affichage : {{ p.order ?? '—' }}
+          </p>
+        </div>
+      </div>
+
+      <img *ngIf="p.visual" class="cover-image mt-3" [src]="p.visual" [alt]="p.title" />
+    </section>
+
+    <section class="card mt-2">
+      <p *ngIf="p.excerpt" class="item-excerpt">{{ p.excerpt }}</p>
+      <h2 class="body-title"><i class="ti ti-align-left"></i> Description</h2>
+      <div class="item-body">
+        <p *ngIf="p.description">{{ p.description }}</p>
+        <p class="text-muted" *ngIf="!p.description">Aucune description.</p>
+      </div>
+    </section>
+
+    <div class="detail-actions mt-3" *ngIf="isAdmin">
+      <a class="btn btn--outline" [routerLink]="['/admin/programs', p._id, 'edit']">
+        <i class="ti ti-edit"></i> Modifier
+      </a>
+    </div>
+  </ng-container>
+</div>

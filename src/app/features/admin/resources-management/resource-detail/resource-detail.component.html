@@ -1,0 +1,84 @@
+<div class="admin-page">
+  <header class="page-head detail-head">
+    <div>
+      <h1><i class="ti ti-files"></i> Ressource</h1>
+      <p class="text-muted">Consultation détaillée du document.</p>
+    </div>
+    <button class="btn btn--ghost btn--sm" (click)="back()">
+      <i class="ti ti-arrow-left"></i> Retour à la liste
+    </button>
+  </header>
+
+  <p class="empty-state" *ngIf="loading()">Chargement de la ressource…</p>
+
+  <ng-container *ngIf="!loading() && resource() as r">
+    <section class="card mt-2 item-header">
+      <div class="program-visual">
+        <span *ngIf="!r.previewImage" class="program-icon"><i [class]="fileIcon()"></i></span>
+        <img
+          *ngIf="r.previewImage"
+          class="preview-thumb"
+          [src]="r.previewImage"
+          [alt]="r.title"
+        />
+        <div>
+          <div class="item-title">
+            <h2>{{ r.title }}</h2>
+            <span
+              class="badge"
+              [class.badge--green]="r.isPublished"
+              [class.badge--gray]="!r.isPublished"
+            >
+              {{ r.isPublished ? 'En ligne' : 'Masquée' }}
+            </span>
+          </div>
+          <p class="text-muted" style="margin:0.35rem 0 0;">{{ r.fileName }}</p>
+        </div>
+      </div>
+
+      <dl class="meta-grid">
+        <div>
+          <dt>Catégorie</dt>
+          <dd>{{ r.category || '—' }}</dd>
+        </div>
+        <div>
+          <dt>Taille</dt>          <dd>{{ formatSize(r.fileSize) }}</dd>
+        </div>
+        <div>
+          <dt>Ajoutée le</dt>
+          <dd>{{ formatDate(r.createdAt) }}</dd>
+        </div>
+        <div>
+          <dt>Visibilité</dt>
+          <dd>{{ r.isPublished ? 'Public' : 'Privé' }}</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="card cover-image mt-2" *ngIf="r.previewImage">
+      <img [src]="r.previewImage" [alt]="r.title" />
+    </section>
+
+    <section class="card mt-2" *ngIf="r.description">
+      <h2 class="body-title"><i class="ti ti-align-left"></i> Description</h2>
+      <div class="item-body">
+        <p>{{ r.description }}</p>
+      </div>
+    </section>
+
+    <div class="detail-actions mt-3">
+      <a
+        class="btn btn--primary"
+        *ngIf="r.fileUrl"
+        [href]="r.fileUrl"
+        target="_blank"
+        rel="noopener"
+      >
+        <i class="ti ti-download"></i> Télécharger le document
+      </a>
+      <a class="btn btn--outline" *ngIf="isAdmin" [routerLink]="['/admin/resources', r._id, 'edit']">
+        <i class="ti ti-edit"></i> Modifier
+      </a>
+    </div>
+  </ng-container>
+</div>

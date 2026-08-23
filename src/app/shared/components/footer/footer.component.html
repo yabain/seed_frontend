@@ -8,10 +8,10 @@
           alt="Logo"
           class="brand-badge brand-badge--img"
         />
-        <span class="brand-badge" *ngIf="!siteConfig()?.logo">{{ (siteConfig()?.orgName || 'S').charAt(0) }}</span>
-        <strong>{{ siteConfig()?.orgName || 'SEEDS' }}</strong>
+        <!-- <span class="brand-badge">{{ (siteConfig()?.orgName || 'S').charAt(0) }}</span> -->
+        <strong *ngIf="!siteConfig()?.logo">{{ siteConfig()?.orgName || '' }}</strong>
       </div>
-      <p>{{ siteConfig()?.description || 'Une organisation engagée pour l’éducation, l’environnement et le développement communautaire.' }}</p>
+      <p>{{ siteConfig()?.tagline || '' }}</p>
 
       <div class="social-row" *ngIf="socialLinks().length">
         <a

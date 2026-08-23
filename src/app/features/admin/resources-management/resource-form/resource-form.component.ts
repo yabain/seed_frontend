@@ -5,12 +5,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ResourcesService } from '../../../../core/services/resources.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { readFileAsDataUrl } from '../../../../shared/utils/file.util';
+import { AdminFileFieldComponent } from '../../../../shared/components/admin-file-field/admin-file-field.component';
+import { AdminImageFieldComponent } from '../../../../shared/components/admin-image-field/admin-image-field.component';
 import type { Resource } from '../../../../core/models/models';
 
 @Component({
   selector: 'app-resource-form',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AdminFileFieldComponent, AdminImageFieldComponent],
   templateUrl: './resource-form.component.html',
   styleUrl: './resource-form.component.scss',
 })
@@ -19,15 +21,24 @@ export class ResourceFormComponent implements OnInit {
   readonly saving = signal(false);
   readonly editingId = signal<string | null>(null);
   readonly currentFileUrl = signal('');
+  readonly currentFileName = signal('');
 
   readonly form = {
     title: '',
     category: '',
     description: '',
     isPublished: true,
+    previewImage: '',
   };
 
   file: {
+    fileUrl: string;
+    fileName: string;
+    fileType: string;
+    fileSize: number;
+  } | null = null;
+
+  private originalFile: {
     fileUrl: string;
     fileName: string;
     fileType: string;
@@ -61,13 +72,16 @@ export class ResourceFormComponent implements OnInit {
         this.form.category = item.category ?? '';
         this.form.description = item.description ?? '';
         this.form.isPublished = item.isPublished ?? true;
+        this.form.previewImage = item.previewImage ?? '';
         this.currentFileUrl.set(item.fileUrl ?? '');
-        this.file = {
+        this.currentFileName.set(item.fileName ?? '');
+        this.originalFile = {
           fileUrl: item.fileUrl ?? '',
           fileName: item.fileName ?? '',
           fileType: item.fileType ?? '',
           fileSize: item.fileSize ?? 0,
         };
+        this.file = { ...this.originalFile };
         this.loading.set(false);
       },
       error: () => {
@@ -77,18 +91,18 @@ export class ResourceFormComponent implements OnInit {
     });
   }
 
-  setVisibility(visibility: 'public' | 'private'): void {
-    this.form.isPublished = visibility === 'public';
+  setPreviewImage(url: string): void {
+    this.form.previewImage = url;
   }
 
-  get visibility(): 'public' | 'private' {
-    return this.form.isPublished ? 'public' : 'private';
-  }
-
-  async onFileChange(event: Event): Promise<void> {
-    const target = event.target as HTMLInputElement;
-    const file = target.files?.[0];
-    if (!file) return;
+  async onFileSelected(file: File | null): Promise<void> {
+    if (!file) {
+      // sélection annulée : on conserve le fichier existant en édition
+      this.file = this.originalFile ? { ...this.originalFile } : null;
+      this.currentFileUrl.set(this.file?.fileUrl ?? '');
+      this.currentFileName.set(this.file?.fileName ?? '');
+      return;
+    }
     const result = await readFileAsDataUrl(file);
     this.file = {
       fileUrl: result.dataUrl,
@@ -97,6 +111,15 @@ export class ResourceFormComponent implements OnInit {
       fileSize: result.fileSize,
     };
     this.currentFileUrl.set(result.dataUrl);
+    this.currentFileName.set(result.fileName);
+  }
+
+  setVisibility(visibility: 'public' | 'private'): void {
+    this.form.isPublished = visibility === 'public';
+  }
+
+  get visibility(): 'public' | 'private' {
+    return this.form.isPublished ? 'public' : 'private';
   }
 
   save(): void {
@@ -115,6 +138,7 @@ export class ResourceFormComponent implements OnInit {
       category: this.form.category.trim(),
       description: this.form.description.trim(),
       isPublished: this.form.isPublished,
+      previewImage: this.form.previewImage || '',
     };
     if (this.file) {
       payload.fileUrl = this.file.fileUrl;

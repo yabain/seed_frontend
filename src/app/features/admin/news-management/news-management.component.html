@@ -4,7 +4,7 @@
       <h1><i class="ti ti-article"></i> Gestion des actualités</h1>
       <p class="text-muted">Créez, modifiez ou supprimez les publications du site.</p>
     </div>
-    <app-segment-visibility segment="news" />
+    <app-segment-visibility *ngIf="isAdmin" segment="news" />
   </header>
 
   <div class="toolbar">
@@ -15,8 +15,8 @@
       (input)="onSearch($any($event.target).value)"
       placeholder="Rechercher par titre…"
     />
-    <a class="btn btn--outline" routerLink="/admin/news/categories">Gérer les catégories</a>
-    <a class="btn btn--outline" routerLink="/admin/news/new">+ Nouvelle actualité</a>
+    <a *ngIf="isAdmin" class="btn btn--outline" routerLink="/admin/news/categories">Gérer les catégories</a>
+    <a *ngIf="isAdmin" class="btn btn--outline" routerLink="/admin/news/new">+ Nouvelle actualité</a>
   </div>
 
   <!-- Liste -->
@@ -44,7 +44,11 @@
               </div>
             </td>
           </tr>
-          <tr *ngFor="let item of !loading() ? result().items : []">
+          <tr
+            *ngFor="let item of !loading() ? result().items : []"
+            class="clickable"
+            (click)="open(item)"
+          >
           <td class="news-thumb">
             <img *ngIf="item.image" [src]="item.image" [alt]="item.title" />
             <span *ngIf="!item.image" class="news-thumb__empty">
@@ -58,8 +62,8 @@
             </span>
           </td>
           <td>{{ formatDate(item.publishedAt || item.createdAt) }}</td>
-          <td>
-            <div class="row-actions">
+          <td (click)="$event.stopPropagation()">
+            <div class="row-actions" *ngIf="isAdmin; else viewOnly">
               <button
                 class="btn btn--sm btn--primary"
                 *ngIf="item.status === 'draft'"
@@ -77,6 +81,9 @@
               <a class="btn btn--sm btn--ghost" [routerLink]="['/admin/news', item._id, 'edit']">Modifier</a>
               <button class="btn btn--sm btn--danger" (click)="remove(item)">Supprimer</button>
             </div>
+            <ng-template #viewOnly>
+              <i class="ti ti-chevron-right text-muted"></i>
+            </ng-template>
           </td>
         </tr>
         <tr *ngIf="!loading() && !result().items.length">

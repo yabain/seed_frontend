@@ -120,7 +120,7 @@
       <div class="pc-navbar-scroll">
         <div class="navbar-content">
           <ul class="nav coded-inner-navbar" (click)="onMenuClick()">
-            <ng-container *ngFor="let group of navGroups">
+            <ng-container *ngFor="let group of visibleGroups()">
               <app-nav-group>
                 <li class="nav-item coded-menu-caption">
                   <label>{{ group.caption }}</label>

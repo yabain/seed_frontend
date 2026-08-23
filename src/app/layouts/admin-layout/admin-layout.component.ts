@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, HostListener, OnInit, inject } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, HostListener, OnInit, computed, inject } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
@@ -9,12 +9,15 @@ interface AdminNavItem {
   path: string;
   icon: string;
   exact?: boolean;
+  roles?: string[];
 }
 
 interface AdminNavGroup {
   caption: string;
   items: AdminNavItem[];
 }
+
+const CONTENT_ROLES = ['user', 'consultant', 'admin', 'superadmin'];
 
 @Component({
   selector: 'app-admin-layout',
@@ -56,9 +59,24 @@ export class AdminLayoutComponent implements OnInit {
       items: [
         { label: 'Tableau de bord', path: '/admin/dashboard', icon: 'ti ti-dashboard', exact: true },
         { label: 'Tracking', path: '/admin/tracking', icon: 'ti ti-radar' },
-        { label: 'Actualités', path: '/admin/news', icon: 'ti ti-article' },
-        { label: 'Ressources', path: '/admin/resources', icon: 'ti ti-files' },
-        { label: 'Programmes', path: '/admin/programs', icon: 'ti ti-plant-2' },
+        {
+          label: 'Actualités',
+          path: '/admin/news',
+          icon: 'ti ti-article',
+          roles: CONTENT_ROLES,
+        },
+        {
+          label: 'Ressources',
+          path: '/admin/resources',
+          icon: 'ti ti-files',
+          roles: CONTENT_ROLES,
+        },
+        {
+          label: 'Programmes',
+          path: '/admin/programs',
+          icon: 'ti ti-plant-2',
+          roles: CONTENT_ROLES,
+        },
       ],
     },
     {
@@ -90,6 +108,19 @@ export class AdminLayoutComponent implements OnInit {
   mobileOpen = false;
   profileMenuOpen = false;
   readonly year = new Date().getFullYear();
+
+  readonly visibleGroups = computed<AdminNavGroup[]>(() => {
+    const role = this.auth.admin()?.role ?? '';
+    const isAdmin = role === 'admin' || role === 'superadmin';
+    return this.navGroups
+      .map((group) => ({
+        ...group,
+        items: group.items.filter((item) =>
+          isAdmin ? true : (item.roles?.includes(role) ?? false),
+        ),
+      }))
+      .filter((group) => group.items.length > 0);
+  });
 
   toggleCollapsed(): void {
     if (window.innerWidth < 1025) {

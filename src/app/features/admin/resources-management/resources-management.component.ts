@@ -1,8 +1,9 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { ResourcesService } from '../../../core/services/resources.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { SegmentVisibilityComponent } from '../../../shared/components/segment-visibility/segment-visibility.component';
 import { formatBytes } from '../../../shared/utils/file.util';
 import type { Resource } from '../../../core/models/models';
@@ -24,10 +25,20 @@ export class ResourcesManagementComponent implements OnInit {
 
   private searchTimer: any;
 
+  get isAdmin(): boolean {
+    return ['admin', 'superadmin'].includes(this.authService.admin()?.role ?? '');
+  }
+
   constructor(
     private readonly resourcesService: ResourcesService,
     private readonly toastService: ToastService,
+    private readonly authService: AuthService,
+    private readonly router: Router,
   ) {}
+
+  open(item: Resource): void {
+    void this.router.navigate(['/admin/resources', item._id]);
+  }
 
   ngOnInit(): void {
     this.load();
@@ -35,16 +46,24 @@ export class ResourcesManagementComponent implements OnInit {
 
   load(): void {
     this.loading.set(true);
-    this.resourcesService
-      .getAll({ page: this.page(), limit: this.limit(), search: this.searchQuery() })
-      .subscribe({
-        next: (data) => {
-          this.items.set(data.items);
-          this.total.set(data.total);
-        },
-        error: () => this.toastService.error('Impossible de charger les ressources.'),
-        complete: () => this.loading.set(false),
-      });
+    const request$ = this.isAdmin
+      ? this.resourcesService.getAll({
+          page: this.page(),
+          limit: this.limit(),
+          search: this.searchQuery(),
+        })
+      : this.resourcesService.getPublished({
+          page: this.page(),
+          limit: this.limit(),
+        });
+    request$.subscribe({
+      next: (data) => {
+        this.items.set(data.items);
+        this.total.set(data.total);
+      },
+      error: () => this.toastService.error('Impossible de charger les ressources.'),
+      complete: () => this.loading.set(false),
+    });
   }
 
   onSearch(value: string): void {

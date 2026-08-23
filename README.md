@@ -1,6 +1,6 @@
-# SEEDS Frontend — Plateforme web institutionnelle (Angular)
+# yFrontend — Plateforme web institutionnelle (Angular)
 
-Application web **single-page responsive** de la plateforme de l'organisation **SEEDS**, développée par **Yaba-In SARL**.
+Application web **single-page responsive** de la plateforme de l'organisation **yFrontend**, développée par **Yaba-In SARL**.
 
 Stack : **Angular 17** (Standalone Components, Signals, Router) · **TypeScript** · **SCSS**.
 
@@ -25,7 +25,7 @@ Stack : **Angular 17** (Standalone Components, Signals, Router) · **TypeScript*
 ## Pré-requis
 
 - Node.js **20.x** (ou supérieur)
-- Le **backend** SEEDS démarré (voir `seed_backend/README.md`)
+- Le **backend** yFrontend démarré (voir `seed_backend/README.md`)
 - Un cluster **MongoDB Atlas** accessible depuis le backend
 
 ## Installation & démarrage (local)

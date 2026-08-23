@@ -1,8 +1,9 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { ProgramsService } from '../../../core/services/programs.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { SegmentVisibilityComponent } from '../../../shared/components/segment-visibility/segment-visibility.component';
 import type { Program } from '../../../core/models/models';
 
@@ -23,10 +24,20 @@ export class ProgramsManagementComponent implements OnInit {
 
   private searchTimer: any;
 
+  get isAdmin(): boolean {
+    return ['admin', 'superadmin'].includes(this.authService.admin()?.role ?? '');
+  }
+
   constructor(
     private readonly programsService: ProgramsService,
     private readonly toastService: ToastService,
+    private readonly authService: AuthService,
+    private readonly router: Router,
   ) {}
+
+  open(item: Program): void {
+    void this.router.navigate(['/admin/programs', item._id]);
+  }
 
   ngOnInit(): void {
     this.load();
@@ -34,16 +45,31 @@ export class ProgramsManagementComponent implements OnInit {
 
   load(): void {
     this.loading.set(true);
-    this.programsService
-      .getAll({ page: this.page(), limit: this.limit(), search: this.searchQuery() })
-      .subscribe({
-        next: (data) => {
-          this.items.set(data.items);
-          this.total.set(data.total);
-        },
-        error: () => this.toastService.error('Impossible de charger les programmes.'),
-        complete: () => this.loading.set(false),
-      });
+    if (this.isAdmin) {
+      this.programsService
+        .getAll({ page: this.page(), limit: this.limit(), search: this.searchQuery() })
+        .subscribe({
+          next: (data) => {
+            this.items.set(data.items);
+            this.total.set(data.total);
+          },
+          error: () => this.toastService.error('Impossible de charger les programmes.'),
+          complete: () => this.loading.set(false),
+        });
+      return;
+    }
+    this.programsService.getPublic().subscribe({
+      next: (data) => {
+        const q = this.searchQuery().trim().toLowerCase();
+        const filtered = q
+          ? data.filter((p) => p.title?.toLowerCase().includes(q))
+          : data;
+        this.items.set(filtered);
+        this.total.set(filtered.length);
+      },
+      error: () => this.toastService.error('Impossible de charger les programmes.'),
+      complete: () => this.loading.set(false),
+    });
   }
 
   onSearch(value: string): void {

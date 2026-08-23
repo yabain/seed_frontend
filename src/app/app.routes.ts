@@ -1,5 +1,8 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
+import { RoleGuard } from './core/guards/role.guard';
+
+const CONTENT_ROLES = ['user', 'consultant', 'admin', 'superadmin'];
 
 export const appRoutes: Routes = [
   {
@@ -24,6 +27,7 @@ export const appRoutes: Routes = [
   {
     path: 'admin',
     canActivate: [AuthGuard],
+    canActivateChild: [RoleGuard],
     loadComponent: () =>
       import('./layouts/admin-layout/admin-layout.component').then(
         (m) => m.AdminLayoutComponent,
@@ -46,6 +50,7 @@ export const appRoutes: Routes = [
       },
       {
         path: 'news',
+        data: { roles: CONTENT_ROLES },
         loadComponent: () =>
           import('./features/admin/news-management/news-management.component').then(
             (m) => m.NewsManagementComponent,
@@ -53,6 +58,7 @@ export const appRoutes: Routes = [
       },
       {
         path: 'news/categories',
+        data: { roles: ['admin', 'superadmin'] },
         loadComponent: () =>
           import('./features/admin/categories-management/categories-management.component').then(
             (m) => m.CategoriesManagementComponent,
@@ -66,7 +72,16 @@ export const appRoutes: Routes = [
           ),
       },
       {
+        path: 'news/:id',
+        data: { roles: CONTENT_ROLES },
+        loadComponent: () =>
+          import('./features/admin/news-management/news-detail/news-detail.component').then(
+            (m) => m.NewsDetailComponent,
+          ),
+      },
+      {
         path: 'news/:id/edit',
+        data: { roles: ['admin', 'superadmin'] },
         loadComponent: () =>
           import('./features/admin/news-management/news-form/news-form.component').then(
             (m) => m.NewsFormComponent,
@@ -74,6 +89,7 @@ export const appRoutes: Routes = [
       },
       {
         path: 'resources',
+        data: { roles: CONTENT_ROLES },
         loadComponent: () =>
           import('./features/admin/resources-management/resources-management.component').then(
             (m) => m.ResourcesManagementComponent,
@@ -87,7 +103,16 @@ export const appRoutes: Routes = [
           ).then((m) => m.ResourceFormComponent),
       },
       {
+        path: 'resources/:id',
+        data: { roles: CONTENT_ROLES },
+        loadComponent: () =>
+          import(
+            './features/admin/resources-management/resource-detail/resource-detail.component'
+          ).then((m) => m.ResourceDetailComponent),
+      },
+      {
         path: 'resources/:id/edit',
+        data: { roles: ['admin', 'superadmin'] },
         loadComponent: () =>
           import(
             './features/admin/resources-management/resource-form/resource-form.component'
@@ -95,6 +120,7 @@ export const appRoutes: Routes = [
       },
       {
         path: 'programs',
+        data: { roles: CONTENT_ROLES },
         loadComponent: () =>
           import('./features/admin/programs-management/programs-management.component').then(
             (m) => m.ProgramsManagementComponent,
@@ -108,7 +134,16 @@ export const appRoutes: Routes = [
           ).then((m) => m.ProgramFormComponent),
       },
       {
+        path: 'programs/:id',
+        data: { roles: CONTENT_ROLES },
+        loadComponent: () =>
+          import(
+            './features/admin/programs-management/program-detail/program-detail.component'
+          ).then((m) => m.ProgramDetailComponent),
+      },
+      {
         path: 'programs/:id/edit',
+        data: { roles: ['admin', 'superadmin'] },
         loadComponent: () =>
           import(
             './features/admin/programs-management/program-form/program-form.component'
@@ -165,6 +200,7 @@ export const appRoutes: Routes = [
       },
       {
         path: 'profile',
+        data: { roles: ['*'] },
         loadComponent: () =>
           import('./features/admin/profile/profile.component').then(
             (m) => m.ProfileComponent,

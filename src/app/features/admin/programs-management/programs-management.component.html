@@ -4,7 +4,7 @@
       <h1><i class="ti ti-plant-2"></i> Gestion des programmes</h1>
       <p class="text-muted">Gérez les programmes et domaines d’intervention affichés sur le site.</p>
     </div>
-    <app-segment-visibility segment="programs" />
+    <app-segment-visibility *ngIf="isAdmin" segment="programs" />
   </header>
 
   <div class="toolbar">
@@ -16,7 +16,7 @@
       placeholder="Rechercher un programme…"
     />
     <div class="spacer"></div>
-    <a class="btn btn--outline" routerLink="/admin/programs/new">+ Nouveau programme</a>
+    <a *ngIf="isAdmin" class="btn btn--outline" routerLink="/admin/programs/new">+ Nouveau programme</a>
   </div>
 
   <!-- Liste -->
@@ -42,7 +42,11 @@
               </div>
             </td>
           </tr>
-          <tr *ngFor="let item of !loading() ? items() : []">
+          <tr
+            *ngFor="let item of !loading() ? items() : []"
+            class="clickable"
+            (click)="open(item)"
+          >
           <td>{{ item.order }}</td>
           <td class="font-bold">{{ item.title }}</td>
           <td>
@@ -50,11 +54,14 @@
               {{ item.isActive ? 'Actif' : 'Masqué' }}
             </span>
           </td>
-          <td>
-            <div class="row-actions">
+          <td (click)="$event.stopPropagation()">
+            <div class="row-actions" *ngIf="isAdmin; else viewOnly">
               <a class="btn btn--sm btn--ghost" [routerLink]="['/admin/programs', item._id, 'edit']">Modifier</a>
               <button class="btn btn--sm btn--danger" (click)="remove(item)">Supprimer</button>
             </div>
+            <ng-template #viewOnly>
+              <i class="ti ti-chevron-right text-muted"></i>
+            </ng-template>
           </td>
         </tr>
         <tr *ngIf="!loading() && !items().length">

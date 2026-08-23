@@ -103,3 +103,13 @@
     border-radius: 8px;
   }
 }
+
+/* Grille image d'aperçu + fichier */
+.form-grid--media {
+  gap: 1.25rem;
+  align-items: start;
+
+  > .form-field {
+    margin-bottom: 0;
+  }
+}

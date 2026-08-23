@@ -84,6 +84,7 @@ export interface Resource {
   category?: string;
   description?: string;
   fileUrl?: string;
+  previewImage?: string;
   fileName?: string;
   fileType?: string;
   fileSize?: number;
