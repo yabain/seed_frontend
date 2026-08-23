@@ -58,7 +58,7 @@
       <section class="card">
         <h2><i class="ti ti-id"></i> Informations personnelles</h2>
 
-        <form (ngSubmit)="save()">
+        <form>
           <div class="form-field">
             <label for="profile-name">Nom complet</label>
             <input
@@ -68,7 +68,6 @@
               [(ngModel)]="form.name"
               name="name"
               maxlength="100"
-              required
             />
           </div>
 
@@ -91,7 +90,7 @@
             <small class="text-muted">L’adresse e-mail ne peut pas être modifiée.</small>
           </div>
 
-          <button class="btn btn--primary" type="submit" [disabled]="saving()">
+          <button class="btn btn--primary" type="button" (click)="save()" [disabled]="saving()">
             {{ saving() ? 'Enregistrement…' : 'Enregistrer les modifications' }}
           </button>
         </form>

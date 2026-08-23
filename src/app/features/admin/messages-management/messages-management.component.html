@@ -2,7 +2,8 @@
   <header class="page-head">
     <h1><i class="ti ti-mail"></i> Messages reçus</h1>
     <p class="text-muted" *ngIf="result() as data">
-      {{ data.unreadCount }} message(s) non lu(s) sur {{ data.total }}.
+      {{ data.unreadCount }} message(s) non lu(s) sur {{ data.total }} — cliquez
+      sur une ligne pour l'ouvrir.
     </p>
   </header>
 
@@ -41,7 +42,11 @@
           </td>
         </tr>
         <ng-container *ngFor="let message of !loading() ? data.items : []">
-          <tr [class.unread]="!message.isRead" (click)="toggleDetails(message._id)">
+          <tr
+            [class.unread]="!message.isRead"
+            class="clickable"
+            (click)="open(message._id)"
+          >
             <td>{{ formatDate(message.createdAt) }}</td>
             <td class="font-bold">{{ message.name }}<br /><span class="text-sm text-muted">{{ message.email }}</span></td>
             <td>{{ message.subject }}</td>
@@ -56,18 +61,6 @@
                   {{ message.isRead ? 'Marquer non lu' : 'Marquer lu' }}
                 </button>
                 <button class="btn btn--sm btn--danger" (click)="remove(message)">Supprimer</button>
-              </div>
-            </td>
-          </tr>
-          <tr *ngIf="selected() === message._id" class="detail-row">
-            <td colspan="5">
-              <div class="message-detail">
-                <p><strong>Message :</strong></p>
-                <p class="message-body">{{ message.message }}</p>
-                <p class="text-sm text-muted mt-1">
-                  Téléphone : <a *ngIf="message.phone" [href]="'tel:' + message.phone">{{ message.phone }}</a>
-                  <span *ngIf="!message.phone">—</span>
-                </p>
               </div>
             </td>
           </tr>

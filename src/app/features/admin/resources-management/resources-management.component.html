@@ -16,54 +16,8 @@
       placeholder="Rechercher par titre…"
     />
     <div class="spacer"></div>
-    <button class="btn btn--outline" (click)="startCreate()">+ Nouvelle ressource</button>
+    <a class="btn btn--outline" routerLink="/admin/resources/new">+ Nouvelle ressource</a>
   </div>
-
-  <!-- Formulaire -->
-  <section class="card mt-2" *ngIf="showForm()">
-    <h2>{{ editing() ? 'Modifier la ressource' : 'Nouvelle ressource' }}</h2>
-
-    <div class="form-grid">
-      <div class="form-field">
-        <label>Titre *</label>
-        <input class="form-control" type="text" [(ngModel)]="form.title" />
-      </div>
-
-      <div class="form-field">
-        <label>Catégorie</label>
-        <input class="form-control" type="text" [(ngModel)]="form.category" placeholder="Rapports, Guides…" />
-      </div>
-    </div>
-
-    <div class="form-field">
-      <label>Description</label>
-      <textarea class="form-control" [(ngModel)]="form.description"></textarea>
-    </div>
-
-    <div class="form-field">
-      <label>Fichier (PDF ou document)</label>
-      <input class="form-control" type="file" accept=".pdf,.doc,.docx,.xlsx" (change)="onFileChange($event)" />
-      <p *ngIf="form.fileName" class="text-sm text-muted mt-1">
-        {{ form.fileName }} · {{ formatSize(form.fileSize) }}
-      </p>
-      <a *ngIf="form.fileUrl" [href]="form.fileUrl" target="_blank" rel="noopener" class="btn btn--sm btn--ghost mt-1">
-        Voir le document
-      </a>
-    </div>
-
-    <div class="form-field">
-      <label>
-        <input type="checkbox" [(ngModel)]="form.isPublished" /> Publiée sur le site
-      </label>
-    </div>
-
-    <div class="form-actions">
-      <button class="btn btn--primary" (click)="save()" [disabled]="saving()">
-        {{ saving() ? 'Enregistrement…' : 'Enregistrer' }}
-      </button>
-      <button class="btn btn--ghost" (click)="cancel()">Annuler</button>
-    </div>
-  </section>
 
   <!-- Liste -->
   <div class="card mt-2 table-wrap">
@@ -101,7 +55,7 @@
           </td>
           <td>
             <div class="row-actions">
-              <button class="btn btn--sm btn--ghost" (click)="startEdit(item)">Modifier</button>
+              <a class="btn btn--sm btn--ghost" [routerLink]="['/admin/resources', item._id, 'edit']">Modifier</a>
               <button class="btn btn--sm btn--danger" (click)="remove(item)">Supprimer</button>
             </div>
           </td>

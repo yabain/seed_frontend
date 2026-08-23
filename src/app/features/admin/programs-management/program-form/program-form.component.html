@@ -1,0 +1,92 @@
+<div class="admin-page">
+  <header class="page-head form-head">
+    <div>
+      <h1>
+        <i class="ti" [class.ti-plant-2]="!isEdit" [class.ti-edit]="isEdit"></i>
+        {{ isEdit ? 'Modifier le programme' : 'Nouveau programme' }}
+      </h1>
+      <p class="text-muted">Les programmes présentés sur la page d'accueil.</p>
+    </div>
+    <button class="btn btn--ghost btn--sm" (click)="cancel()">
+      <i class="fa-solid fa-arrow-left"></i> Retour à la liste
+    </button>
+  </header>
+
+  <p class="empty-state" *ngIf="loading()">Chargement…</p>
+
+  <section class="card mt-2" *ngIf="!loading()">
+    <div class="form-field">
+      <label for="prog-title">Titre *</label>
+      <input id="prog-title" class="form-control" type="text" [(ngModel)]="form.title" name="title" />
+    </div>
+
+    <div class="form-grid">
+      <div class="form-field">
+        <label for="prog-icon">Icône</label>
+        <select id="prog-icon" class="form-control" [(ngModel)]="form.icon" name="icon">
+          <option *ngFor="let opt of iconOptions" [value]="opt.value">{{ opt.label }}</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label for="prog-order">Ordre d'affichage</label>
+        <input id="prog-order" class="form-control" type="number" [(ngModel)]="form.order" name="order" />
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label for="prog-excerpt">Résumé</label>
+      <input
+        id="prog-excerpt"
+        class="form-control"
+        type="text"
+        [(ngModel)]="form.excerpt"
+        name="excerpt"
+        placeholder="Phrase courte affichée sous le titre…"
+      />
+    </div>
+
+    <div class="form-field">
+      <label for="prog-description">Description</label>
+      <textarea
+        id="prog-description"
+        class="form-control"
+        rows="5"
+        [(ngModel)]="form.description"
+        name="description"
+      ></textarea>
+    </div>
+
+    <div class="form-field">
+      <label>Visuel</label>
+      <app-admin-image-field
+        [image]="form.visual"
+        variant="wide"
+        alt="Visuel du programme"
+        (imageChange)="onVisualChange($event)"
+      />
+    </div>
+
+    <div class="form-field">
+      <label>Visibilité</label>
+      <div class="visibility-toggle">
+        <button type="button" [class.active]="visibility === 'public'" (click)="setVisibility('public')">
+          <i class="ti ti-world"></i> Public
+        </button>
+        <button type="button" [class.active]="visibility === 'private'" (click)="setVisibility('private')">
+          <i class="ti ti-lock"></i> Privé
+        </button>
+      </div>
+      <small class="text-muted">
+        {{ visibility === 'public' ? 'Affiché sur le frontoffice.' : 'Masqué du site, visible uniquement en back-office.' }}
+      </small>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn--primary" (click)="save()" [disabled]="saving()">
+        {{ saving() ? 'Enregistrement…' : 'Enregistrer' }}
+      </button>
+      <button class="btn btn--ghost" (click)="cancel()">Annuler</button>
+    </div>
+  </section>
+</div>

@@ -80,11 +80,39 @@ export const appRoutes: Routes = [
           ),
       },
       {
+        path: 'resources/new',
+        loadComponent: () =>
+          import(
+            './features/admin/resources-management/resource-form/resource-form.component'
+          ).then((m) => m.ResourceFormComponent),
+      },
+      {
+        path: 'resources/:id/edit',
+        loadComponent: () =>
+          import(
+            './features/admin/resources-management/resource-form/resource-form.component'
+          ).then((m) => m.ResourceFormComponent),
+      },
+      {
         path: 'programs',
         loadComponent: () =>
           import('./features/admin/programs-management/programs-management.component').then(
             (m) => m.ProgramsManagementComponent,
           ),
+      },
+      {
+        path: 'programs/new',
+        loadComponent: () =>
+          import(
+            './features/admin/programs-management/program-form/program-form.component'
+          ).then((m) => m.ProgramFormComponent),
+      },
+      {
+        path: 'programs/:id/edit',
+        loadComponent: () =>
+          import(
+            './features/admin/programs-management/program-form/program-form.component'
+          ).then((m) => m.ProgramFormComponent),
       },
       {
         path: 'partners',
@@ -129,6 +157,13 @@ export const appRoutes: Routes = [
           ),
       },
       {
+        path: 'messages/:id',
+        loadComponent: () =>
+          import(
+            './features/admin/messages-management/message-detail/message-detail.component'
+          ).then((m) => m.MessageDetailComponent),
+      },
+      {
         path: 'profile',
         loadComponent: () =>
           import('./features/admin/profile/profile.component').then(
@@ -141,6 +176,20 @@ export const appRoutes: Routes = [
           import('./features/admin/users-management/users-management.component').then(
             (m) => m.UsersManagementComponent,
           ),
+      },
+      {
+        path: 'users/new',
+        loadComponent: () =>
+          import(
+            './features/admin/users-management/user-form/user-form.component'
+          ).then((m) => m.UserFormComponent),
+      },
+      {
+        path: 'users/:id/edit',
+        loadComponent: () =>
+          import(
+            './features/admin/users-management/user-form/user-form.component'
+          ).then((m) => m.UserFormComponent),
       },
       {
         path: 'users/:id',

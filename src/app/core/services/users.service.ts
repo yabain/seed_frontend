@@ -17,6 +17,7 @@ export interface CreateUserPayload {
   role: UserRole;
   isActive: boolean;
   notifyContact: boolean;
+  siteUrl?: string;
 }
 
 export type UpdateUserPayload = Partial<

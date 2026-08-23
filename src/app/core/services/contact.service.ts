@@ -24,6 +24,10 @@ export class ContactService {
     return this.api.get<ContactMessagesResult>('/contact', query);
   }
 
+  getMessage(id: string): Observable<ContactMessage> {
+    return this.api.get<ContactMessage>(`/contact/${id}`);
+  }
+
   markRead(id: string, isRead: boolean): Observable<ContactMessage> {
     return this.api.patch<ContactMessage>(`/contact/${id}/read`, { isRead });
   }

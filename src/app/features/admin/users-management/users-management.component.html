@@ -4,6 +4,7 @@
     <p class="text-muted">
       Gérez les comptes et leurs rôles : utilisateur, consultant, administrateur, super admin.
       Les comptes ayant « Notifier contact » actif reçoivent les messages du formulaire de contact.
+      Liste triée du compte le plus récent au plus ancien.
     </p>
   </header>
 
@@ -29,14 +30,15 @@
       (input)="onSearch($any($event.target).value)"
       [value]="searchQuery()"
     />
+    <div class="spacer"></div>
+    <a class="btn btn--outline" routerLink="/admin/users/new">+ Nouveau compte</a>
   </div>
 
   <div class="card mt-2 table-wrap">
     <table class="table">
       <thead>
         <tr>
-          <th>Nom</th>
-          <th>E-mail</th>
+          <th>Utilisateur</th>
           <th>Rôle</th>
           <th>Notifications</th>
           <th>Statut</th>
@@ -46,10 +48,23 @@
       </thead>
         <tbody>
           <tr *ngFor="let user of !loading() ? items() : []">
-            <td class="font-bold">
-              <a class="link" (click)="goToDetail(user)">{{ user.name }} <span *ngIf="isSelf(user)" class="text-muted text-sm">(vous)</span></a>
+            <td>
+              <div class="user-cell">
+                <span class="user-avatar">
+                  @if (user.avatar) {
+                    <img [src]="user.avatar" [alt]="user.name" />
+                  } @else {
+                    <span class="user-avatar__initials">{{ initials(user.name) }}</span>
+                  }
+                </span>
+                <span class="user-cell__text">
+                  <a class="link font-bold" (click)="goToDetail(user)">
+                    {{ user.name }} <span *ngIf="isSelf(user)" class="text-muted text-sm">(vous)</span>
+                  </a>
+                  <small class="text-muted">{{ user.email }}</small>
+                </span>
+              </div>
             </td>
-            <td>{{ user.email }}</td>
             <td>
               <span class="badge"
                 [class.badge--green]="user.role === 'superadmin'"
@@ -71,12 +86,20 @@
             <td>
               <div class="row-actions">
                 <button class="btn btn--sm btn--ghost" (click)="goToDetail(user)">Détails</button>
+                <a class="btn btn--sm btn--ghost" [routerLink]="['/admin/users', user.id, 'edit']">Modifier</a>
               </div>
             </td>
           </tr>
           <tr *ngFor="let _ of loading() ? [1,2,3,4,5] : []" class="skeleton-row">
-            <td><span class="skeleton skeleton-text skeleton-text--long"></span></td>
-            <td><span class="skeleton skeleton-text skeleton-text--medium"></span></td>
+            <td>
+              <div class="user-cell">
+                <span class="skeleton user-avatar"></span>
+                <span class="user-cell__text">
+                  <span class="skeleton skeleton-text skeleton-text--medium"></span>
+                  <span class="skeleton skeleton-text"></span>
+                </span>
+              </div>
+            </td>
             <td><span class="skeleton skeleton-badge"></span></td>
             <td><span class="skeleton skeleton-badge"></span></td>
             <td><span class="skeleton skeleton-badge"></span></td>

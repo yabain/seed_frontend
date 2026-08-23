@@ -165,8 +165,15 @@ export class UsersManagementComponent implements OnInit {
     this.load();
   }
 
-  goToDetail(user: AdminUser): void {
-    void this.router.navigate(['/admin/users', user.id]);
+  initials(name: string): string {
+    const parts = name.trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) return '?';
+    const first = parts[0].charAt(0);
+    const second = parts.length > 1 ? parts[parts.length - 1].charAt(0) : '';
+    return (first + second).toUpperCase();
+  }
+
+  goToDetail(user: AdminUser): void {    void this.router.navigate(['/admin/users', user.id]);
   }
 
   isSelf(user: AdminUser): boolean {

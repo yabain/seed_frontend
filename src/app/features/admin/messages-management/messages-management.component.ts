@@ -1,5 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { ContactService } from '../../../core/services/contact.service';
 import { ToastService } from '../../../core/services/toast.service';
 import type { ContactMessagesResult } from '../../../core/models/models';
@@ -11,10 +12,8 @@ import type { ContactMessagesResult } from '../../../core/models/models';
   templateUrl: './messages-management.component.html',
   styleUrl: '../management.scss',
 })
-export class MessagesManagementComponent implements OnInit {
-  readonly result = signal<ContactMessagesResult | null>(null);
+export class MessagesManagementComponent implements OnInit {  readonly result = signal<ContactMessagesResult | null>(null);
   readonly loading = signal(true);
-  readonly selected = signal<string | null>(null);
   readonly page = signal(1);
   readonly limit = signal(10);
   readonly searchQuery = signal('');
@@ -24,6 +23,7 @@ export class MessagesManagementComponent implements OnInit {
   constructor(
     private readonly contactService: ContactService,
     private readonly toastService: ToastService,
+    private readonly router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -86,8 +86,8 @@ export class MessagesManagementComponent implements OnInit {
     this.load();
   }
 
-  toggleDetails(id: string): void {
-    this.selected.set(this.selected() === id ? null : id);
+  open(id: string): void {
+    void this.router.navigate(['/admin/messages', id]);
   }
 
   markRead(message: { _id: string; isRead: boolean }): void {

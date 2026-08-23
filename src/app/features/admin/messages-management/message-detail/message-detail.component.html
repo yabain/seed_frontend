@@ -1,0 +1,66 @@
+<div class="admin-page">
+  <header class="page-head detail-head">
+    <div>
+      <h1><i class="ti ti-mail-opened"></i> Message reçu</h1>
+      <p class="text-muted">Consultation détaillée du message.</p>
+    </div>
+    <button class="btn btn--ghost btn--sm" (click)="back()">
+      <i class="fa-solid fa-arrow-left"></i> Retour à la liste
+    </button>
+  </header>
+
+  <p class="empty-state" *ngIf="loading()">Chargement du message…</p>
+
+  <ng-container *ngIf="!loading() && message() as m">
+    <section class="card mt-2 message-header">
+      <div class="message-title">
+        <h2>{{ m.subject }}</h2>
+        <span
+          class="badge"
+          [class.badge--amber]="!m.isRead"
+          [class.badge--green]="m.isRead"
+        >
+          {{ m.isRead ? 'Lu' : 'Non lu' }}
+        </span>
+      </div>
+      <p class="text-muted">{{ formatDate(m.createdAt) }}</p>
+
+      <dl class="sender-grid">
+        <div>
+          <dt>Expéditeur</dt>
+          <dd class="font-bold">{{ m.name }}</dd>
+        </div>
+        <div>
+          <dt>E-mail</dt>
+          <dd><a [href]="'mailto:' + m.email">{{ m.email }}</a></dd>
+        </div>
+        <div>
+          <dt>Téléphone</dt>
+          <dd>
+            <a *ngIf="m.phone" [href]="'tel:' + m.phone">{{ m.phone }}</a>
+            <span *ngIf="!m.phone" class="text-muted">—</span>
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="card mt-3">
+      <h2 class="body-title"><i class="ti ti-message"></i> Contenu du message</h2>
+      <p class="message-body">{{ m.message }}</p>
+    </section>
+
+    <div class="detail-actions mt-3">
+      <button
+        class="btn btn--ghost"
+        (click)="markRead(!m.isRead)"
+        [disabled]="m.isRead === false && loading()"
+      >
+        <i class="ti" [class.ti-mail]="m.isRead" [class.ti-mail-off]="!m.isRead"></i>
+        {{ m.isRead ? 'Marquer comme non lu' : 'Marquer comme lu' }}
+      </button>
+      <button class="btn btn--danger" (click)="remove()">
+        <i class="ti ti-trash"></i> Supprimer le message
+      </button>
+    </div>
+  </ng-container>
+</div>

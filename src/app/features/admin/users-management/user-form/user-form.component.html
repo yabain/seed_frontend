@@ -1,0 +1,113 @@
+<div class="admin-page">
+  <header class="page-head form-head">
+    <div>
+      <h1>
+        <i class="ti" [class.ti-user-plus]="!isEdit" [class.ti-user-edit]="isEdit"></i>
+        {{ isEdit ? 'Modifier le compte' : 'Nouveau compte' }}
+      </h1>
+      <p class="text-muted">Comptes d'accès au back-office.</p>
+    </div>
+    <button class="btn btn--ghost btn--sm" (click)="cancel()">
+      <i class="fa-solid fa-arrow-left"></i> Retour à la liste
+    </button>
+  </header>
+
+  <p class="empty-state" *ngIf="loading()">Chargement…</p>
+
+  <section class="card mt-2" *ngIf="!loading()">
+    <div class="form-grid">
+      <div class="form-field">
+        <label for="user-name">Nom complet *</label>
+        <input id="user-name" class="form-control" type="text" [(ngModel)]="form.name" name="name" />
+      </div>
+
+      <div class="form-field">
+        <label for="user-email">E-mail {{ isEdit ? '(non modifiable)' : '*' }}</label>
+        <input
+          id="user-email"
+          class="form-control"
+          type="email"
+          [(ngModel)]="form.email"
+          name="email"
+          [disabled]="isEdit"
+        />
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-field">
+        <label for="user-phone">Téléphone</label>
+        <input id="user-phone" class="form-control" type="tel" [(ngModel)]="form.phone" name="phone" />
+      </div>
+
+      <div class="form-field">
+        <label for="user-role">Type de compte</label>
+        <select id="user-role" class="form-control" [(ngModel)]="form.role" name="role">
+          <option *ngFor="let role of roleOptions" [value]="role">{{ roleLabels[role] }}</option>
+        </select>
+        <small class="text-muted">Détermine les droits d'accès du compte.</small>
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label>Statut du compte</label>
+      <div class="visibility-toggle">
+        <button type="button" [class.active]="status === 'active'" (click)="setStatus('active')">
+          <i class="ti ti-circle-check"></i> Actif
+        </button>
+        <button type="button" [class.active]="status === 'inactive'" (click)="setStatus('inactive')">
+          <i class="ti ti-circle-x"></i> Inactif
+        </button>
+      </div>
+      <small class="text-muted">
+        {{
+          status === 'active'
+            ? 'Le compte peut se connecter au back-office.'
+            : 'Le compte est suspendu : la connexion est refusée.'
+        }}
+      </small>
+    </div>
+
+    <div class="form-field">
+      <span class="field-label">Notification contact</span>
+      <button
+        type="button"
+        class="toggle-switch"
+        role="switch"
+        [class.on]="form.notifyContact"
+        [attr.aria-checked]="form.notifyContact"
+        (click)="toggleNotifyContact()"
+      >
+        <span class="toggle-track"><span class="toggle-thumb"></span></span>
+        <span class="toggle-text">
+          Notifier contact — ce compte reçoit les messages du formulaire de contact.
+        </span>
+      </button>
+      <small class="text-muted">
+        Si actif, l'utilisateur reçoit ses identifiants de connexion et le lien
+        du site par e-mail dès la création.
+      </small>
+    </div>
+
+    <div class="form-field">
+      <label for="user-password">
+        {{ isEdit ? 'Nouveau mot de passe (laisser vide pour conserver)' : 'Mot de passe *' }}
+      </label>
+      <input
+        id="user-password"
+        class="form-control"
+        type="password"
+        [(ngModel)]="form.password"
+        name="password"
+        autocomplete="new-password"
+      />
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn--primary" (click)="save()" [disabled]="saving()">
+        {{ saving() ? 'Enregistrement…' : 'Enregistrer' }}
+      </button>
+      <button class="btn btn--ghost" (click)="cancel()">Annuler</button>
+    </div>
+  </section>
+</div>
