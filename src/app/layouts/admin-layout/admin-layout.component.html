@@ -141,8 +141,8 @@
             </ng-container>
           </ul>
           <div class="pc-navbar-card bg-primary rounded">
-            <h4 class="text-white">SEEDS Platform</h4>
-            <p class="text-white">Développé par Yaba-In SARL</p>
+            <h4 class="text-white">{{ siteConfig()?.orgName || 'SEEDS' }}</h4>
+            <p class="text-white">{{ siteConfig()?.tagline || 'Plateforme institutionnelle' }}</p>
             <a routerLink="/" class="btn btn-light text-primary">Voir le site</a>
           </div>
           <div class="version">
@@ -176,7 +176,8 @@
     <div class="row align-items-center">
       <div class="col my-1">
         <p class="m-0">
-          Copyright &copy; {{ year }} <strong>SEEDS</strong> — Plateforme institutionnelle
+          Copyright &copy; {{ year }}
+          <strong>{{ siteConfig()?.orgName || 'SEEDS' }}</strong>{{ siteConfig()?.tagline ? ' — ' + siteConfig()?.tagline : ' — Plateforme institutionnelle' }}
         </p>
       </div>
       <div class="col-auto my-1">

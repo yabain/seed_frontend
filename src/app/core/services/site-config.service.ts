@@ -120,6 +120,7 @@ export class SiteConfigService {
 
     const title = [config.orgName, config.tagline].filter((part) => part?.trim()).join(' — ');
     if (title) {
+      this.document.title = title;
       this.upsertMeta('property', 'og:title', title);
     }
     const description = config.description?.trim();

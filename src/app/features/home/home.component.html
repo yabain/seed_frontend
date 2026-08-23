@@ -64,11 +64,10 @@
       <div class="lq-section__head reveal">
         <span class="lq-eyebrow lq-eyebrow--solid">
           <i class="fa-solid fa-spa"></i> À propos</span>
-        <h2>Une organisation engagée au service des jeune entrepreneurs africain</h2>
+        <h2>
+          {{ siteConfig()?.tagline || '' }}</h2>
         <p>
-          {{ siteConfig()?.description ||
-          'SEEDS est une organisation qui œuvre pour un développement durable, équitable et solidaire à travers des
-          programmes éducatifs, environnementaux et sociaux.' }}
+          {{ siteConfig()?.description || '' }}
         </p>
       </div>
 
@@ -110,7 +109,7 @@
 
       <!-- Zone Contenu Texte -->
       <div class="banner-content">
-        <h2 class="fixed-text">Chez SEEDS, nous</h2>
+        <h2 class="fixed-text">Chez {{ siteConfig()?.orgName || 'SEEDS' }}, nous</h2>
 
         <!-- Masque de défilement accueillant 5 lignes visibles -->
         <div class="animated-text-container">
@@ -150,7 +149,7 @@
 
         <header class="features-header">
         <span class="lq-eyebrow lq-eyebrow--solid">
-          <i class="fa-solid fa-spa"></i> Pourquoi SEEDS</span>
+          <i class="fa-solid fa-spa"></i> Pourquoi {{ siteConfig()?.orgName || 'SEEDS' }}</span>
           <h2 class="features-title">Un partenaire investi dans votre croissance</h2>
           <p class="features-description">
             Nous allons au-delà d'un accompagnement classique pour établir un partenariat solide. Notre reconnaissance
@@ -258,7 +257,7 @@
             <i class="fa-solid fa-spa"></i>
             Actualités</span>
           <h2>Nos dernières nouvelles</h2>
-          <p>Suivez l’actualité et les réalisations de SEEDS sur le terrain.</p>
+          <p>Suivez l’actualité et les réalisations de {{ siteConfig()?.orgName || 'SEEDS' }} sur le terrain.</p>
         </div>
 
         <div class="lq-newsx__nav" *ngIf="latestNews().length; else noNav">

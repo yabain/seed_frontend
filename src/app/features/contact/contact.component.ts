@@ -18,13 +18,13 @@ export class ContactComponent {
   readonly submitted = signal(false);
 
   readonly phoneCodes = [
+    { code: '+237', label: 'Cameroun' },
     { code: '+225', label: 'Côte d’Ivoire' },
     { code: '+33', label: 'France' },
     { code: '+221', label: 'Sénégal' },
     { code: '+228', label: 'Togo' },
     { code: '+229', label: 'Bénin' },
     { code: '+226', label: 'Burkina Faso' },
-    { code: '+237', label: 'Cameroun' },
     { code: '+233', label: 'Ghana' },
     { code: '+224', label: 'Guinée' },
     { code: '+1', label: 'États-Unis / Canada' },

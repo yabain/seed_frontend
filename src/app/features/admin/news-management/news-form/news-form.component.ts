@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NewsService } from '../../../../core/services/news.service';
 import { NewsCategoryService } from '../../../../core/services/news-category.service';
+import { SiteConfigService } from '../../../../core/services/site-config.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { AdminImageFieldComponent } from '../../../../shared/components/admin-image-field/admin-image-field.component';
 import type { ErrorMessage } from '../../../../core/interceptors/error.interceptor';
@@ -29,7 +30,7 @@ export class NewsFormComponent implements OnInit {
     status: 'draft' as 'draft' | 'published',
     image: '',
     tags: '',
-    author: 'SEED',
+    author: this.siteConfig()?.orgName?.trim() || 'SEED',
     categories: [] as string[],
   };
 
@@ -39,7 +40,12 @@ export class NewsFormComponent implements OnInit {
     private readonly newsService: NewsService,
     private readonly newsCategoryService: NewsCategoryService,
     private readonly toastService: ToastService,
+    private readonly siteConfigService: SiteConfigService,
   ) {}
+
+  siteConfig() {
+    return this.siteConfigService.config();
+  }
 
   ngOnInit(): void {
     this.newsCategoryService.getAll().subscribe({
@@ -59,7 +65,7 @@ export class NewsFormComponent implements OnInit {
           this.form.status = item.status;
           this.form.image = item.image ?? '';
           this.form.tags = (item.tags ?? []).join(', ');
-          this.form.author = item.author ?? 'SEED';
+          this.form.author = item.author || this.siteConfig()?.orgName?.trim() || 'SEED';
           this.form.categories = item.categories ?? [];
           this.loading.set(false);
         },
@@ -101,7 +107,7 @@ export class NewsFormComponent implements OnInit {
       content: this.form.content,
       status: this.form.status,
       image: this.form.image,
-      author: this.form.author || 'SEED',
+      author: this.form.author || this.siteConfig()?.orgName?.trim() || 'SEED',
       tags: this.form.tags
         .split(',')
         .map((t) => t.trim())

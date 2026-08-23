@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { SiteConfigService } from '../../core/services/site-config.service';
 
 @Component({
   selector: 'app-legal-mentions',
@@ -8,4 +9,6 @@ import { RouterLink } from '@angular/router';
   templateUrl: './legal-mentions.component.html',
   styleUrl: './legal.component.scss',
 })
-export class LegalMentionsComponent {}
+export class LegalMentionsComponent {
+  readonly siteConfig = inject(SiteConfigService).config;
+}
