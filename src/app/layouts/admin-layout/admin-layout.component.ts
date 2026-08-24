@@ -93,6 +93,7 @@ export class AdminLayoutComponent implements OnInit {
         { label: 'Messages', path: '/admin/messages', icon: 'ti ti-mail' },
         { label: 'Prospects', path: '/admin/prospects', icon: 'ti ti-clipboard-list' },
         { label: 'E-mails', path: '/admin/email', icon: 'ti ti-send' },
+        { label: 'Annonces', path: '/admin/announcements', icon: 'ti ti-speakerphone' },
       ],
     },
     {
@@ -162,6 +163,10 @@ export class AdminLayoutComponent implements OnInit {
     if (window.innerWidth < 1025) {
       this.mobileOpen = false;
     }
+  }
+
+  onContentClick(): void {
+    this.mobileOpen = false;
   }
 
   logout(): void {

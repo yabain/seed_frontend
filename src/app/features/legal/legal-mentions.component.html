@@ -15,7 +15,7 @@
     </p>
     <ul>
       <li><strong>Nom :</strong> {{ siteConfig()?.orgName || 'SEEDS' }}</li>
-      <li *ngIf="siteConfig()?.address"><strong>Adresse :</strong> {{ siteConfig()?.address }}</li>
+      <li *ngIf="siteConfig()?.address as addr"><strong>Adresse :</strong> {{ addr }}</li>
       <li><strong>Site :</strong> Plateforme institutionnelle de {{ siteConfig()?.orgName || 'SEEDS' }}</li>
     </ul>
 
@@ -36,13 +36,13 @@
     <h2>Contact</h2>
     <p>Pour toute question relative aux mentions légales&nbsp;:</p>
     <ul>
-      <li *ngIf="siteConfig()?.email">
+      <li *ngIf="siteConfig()?.email as email">
         <strong>E-mail :</strong>
-        <a [href]="'mailto:' + siteConfig()?.email">{{ siteConfig()?.email }}</a>
+        <a [href]="'mailto:' + email">{{ email }}</a>
       </li>
-      <li *ngIf="siteConfig()?.phone">
+      <li *ngIf="siteConfig()?.phone as phone">
         <strong>Téléphone :</strong>
-        <a [href]="'tel:' + siteConfig()?.phone">{{ siteConfig()?.phone }}</a>
+        <a [href]="'tel:' + phone">{{ phone }}</a>
       </li>
       <li>
         Écrivez-nous via la <a routerLink="/contact">page contact</a>.

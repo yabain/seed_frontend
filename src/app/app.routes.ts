@@ -255,6 +255,41 @@ export const appRoutes: Routes = [
             (m) => m.ProspectsManagementComponent,
           ),
       },
+      {
+        path: 'announcements',
+        loadComponent: () =>
+          import(
+            './features/admin/announcements-management/announcements-list.component'
+          ).then((m) => m.AnnouncementsListComponent),
+      },
+      {
+        path: 'announcements/settings',
+        loadComponent: () =>
+          import(
+            './features/admin/announcements-management/announcement-settings.component'
+          ).then((m) => m.AnnouncementSettingsComponent),
+      },
+      {
+        path: 'announcements/new',
+        loadComponent: () =>
+          import(
+            './features/admin/announcements-management/announcement-form.component'
+          ).then((m) => m.AnnouncementFormComponent),
+      },
+      {
+        path: 'announcements/:id/edit',
+        loadComponent: () =>
+          import(
+            './features/admin/announcements-management/announcement-form.component'
+          ).then((m) => m.AnnouncementFormComponent),
+      },
+      {
+        path: 'announcements/:id/detail',
+        loadComponent: () =>
+          import(
+            './features/admin/announcements-management/announcement-detail.component'
+          ).then((m) => m.AnnouncementDetailComponent),
+      },
     ],
   },
   {

@@ -1,0 +1,90 @@
+<div class="admin-page">
+  <header class="page-head page-head--between">
+    <div class="page-head__text">
+      <h1><i class="ti ti-settings"></i> Réglages e-mail des annonces</h1>
+      <p class="text-muted">
+        Ces blocs HTML encadrent le contenu de chaque annonce envoyée.
+      </p>
+    </div>
+    <a class="btn btn--ghost" routerLink="/admin/announcements">← Retour</a>
+  </header>
+
+  <p *ngIf="loading()" class="text-muted mt-2">Chargement…</p>
+
+  <div class="announcement-form-grid mt-2" *ngIf="!loading()">
+    <div class="card form-card">
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="settings-header">En-tête (HTML)</label>
+          <textarea
+            id="settings-header"
+            class="form-control code-editor"
+            rows="12"
+            spellcheck="false"
+            [value]="headerHtml()"
+            (input)="headerHtml.set($any($event.target).value)"
+          ></textarea>
+        </div>
+
+        <div class="form-field">
+          <label for="settings-footer">Pied de page (HTML)</label>
+          <textarea
+            id="settings-footer"
+            class="form-control code-editor"
+            rows="12"
+            spellcheck="false"
+            [value]="footerHtml()"
+            (input)="footerHtml.set($any($event.target).value)"
+          ></textarea>
+        </div>
+
+        <p class="text-muted text-sm">
+          Variables disponibles dans les deux blocs :
+          <code>{{ '&#123;userName}' }}</code>,
+          <code>{{ '&#123;userFirstName}' }}</code>,
+          <code>{{ '&#123;userLastName}' }}</code>,
+          <code>{{ '&#123;userEmail}' }}</code>,
+          <code>{{ '&#123;userPhone}' }}</code> et
+          <code>{{ '&#123;subject}' }}</code>.
+        </p>
+
+        <div class="form-actions">
+          <button
+            type="button"
+            class="btn btn--outline"
+            (click)="refreshPreview()"
+            [disabled]="previewLoading()"
+          >
+            Aperçu
+          </button>
+          <button
+            type="button"
+            class="btn btn--primary"
+            (click)="save()"
+            [disabled]="saving()"
+          >
+            {{ saving() ? 'Enregistrement…' : 'Enregistrer' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card preview-card">
+      <div class="preview-card__head">
+        <h2><i class="ti ti-eye"></i> Aperçu</h2>
+      </div>
+      <div class="preview-frame-wrap">
+        <iframe
+          *ngIf="trustedPreviewUrl(); else previewEmpty"
+          [src]="trustedPreviewUrl()"
+          sandbox=""
+          title="Aperçu des réglages"
+          class="preview-frame"
+        ></iframe>
+        <ng-template #previewEmpty>
+          <p class="empty-state">L'aperçu apparaîtra ici.</p>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

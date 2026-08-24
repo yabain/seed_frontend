@@ -1,0 +1,207 @@
+<div class="admin-page">
+  <header class="page-head page-head--between">
+    <div class="page-head__text">
+      <h1><i class="ti ti-speakerphone"></i> Annonces</h1>
+      <p class="text-muted">
+        Envoyez des annonces par e-mail à vos comptes et prospects.
+      </p>
+    </div>
+    <div class="page-head__actions">
+      <a class="btn btn--outline" routerLink="/admin/announcements/settings">
+        <i class="ti ti-settings"></i> Réglages e-mail
+      </a>
+      <a class="btn btn--primary" routerLink="/admin/announcements/new">
+        + Nouvelle annonce
+      </a>
+    </div>
+  </header>
+
+  <!-- Statistiques -->
+  <div class="announcement-stats mt-2" *ngIf="stats() as s">
+    <div class="stat-chip stat-chip--total">
+      <span class="stat-chip__value">{{ s.total }}</span>
+      <span class="stat-chip__label">Total</span>
+    </div>
+    <div class="stat-chip">
+      <span class="stat-chip__value">{{ s.draft }}</span>
+      <span class="stat-chip__label">Brouillons</span>
+    </div>
+    <div class="stat-chip stat-chip--blue">
+      <span class="stat-chip__value">{{ s.scheduled }}</span>
+      <span class="stat-chip__label">Programmées</span>
+    </div>
+    <div class="stat-chip stat-chip--amber">
+      <span class="stat-chip__value">{{ s.sending }}</span>
+      <span class="stat-chip__label">En cours</span>
+    </div>
+    <div class="stat-chip stat-chip--green">
+      <span class="stat-chip__value">{{ s.sent }}</span>
+      <span class="stat-chip__label">Envoyées</span>
+    </div>
+    <div class="stat-chip stat-chip--red">
+      <span class="stat-chip__value">{{ s.failed }}</span>
+      <span class="stat-chip__label">Échecs</span>
+    </div>
+  </div>
+
+  <!-- Filtres -->
+  <div class="toolbar">
+    <input
+      class="form-control search"
+      type="search"
+      [value]="searchQuery()"
+      (input)="onSearch($any($event.target).value)"
+      placeholder="Rechercher par sujet…"
+    />
+    <select
+      class="form-control"
+      [value]="statusFilter()"
+      (change)="onStatusChange($any($event.target).value)"
+      aria-label="Filtrer par statut"
+    >
+      <option *ngFor="let f of statusFilters" [value]="f.value">{{ f.label }}</option>
+    </select>
+    <select
+      class="form-control"
+      [value]="groupFilter()"
+      (change)="onGroupChange($any($event.target).value)"
+      aria-label="Filtrer par destinataires"
+    >
+      <option value="">Tous les destinataires</option>
+      <option
+        *ngFor="let g of groupOptions"
+        [value]="g.value"
+      >{{ g.label }}</option>
+    </select>
+  </div>
+
+  <!-- Liste -->
+  <div class="card mt-2 table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Sujet</th>
+          <th>Destinataires</th>
+          <th>Statut</th>
+          <th>Progression</th>
+          <th>Date</th>
+          <th class="text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let _ of loading() ? [1,2,3] : []" class="skeleton-row">
+          <td><span class="skeleton skeleton-text skeleton-text--long"></span></td>
+          <td><span class="skeleton skeleton-text"></span></td>
+          <td><span class="skeleton skeleton-badge"></span></td>
+          <td><span class="skeleton skeleton-text"></span></td>
+          <td><span class="skeleton skeleton-text"></span></td>
+          <td>
+            <div class="row-actions">
+              <span class="skeleton skeleton-btn"></span>
+              <span class="skeleton skeleton-btn"></span>
+            </div>
+          </td>
+        </tr>
+        <tr
+          *ngFor="let item of !loading() ? items() : []"
+          class="clickable"
+          (click)="open(item)"
+        >
+          <td class="font-bold">
+            {{ item.subject }}
+          </td>
+          <td>{{ item.groupLabel || groupLabel(item.recipientGroup) }}</td>
+          <td>
+            <span [class]="statusClass(item.status)">
+              {{ item.statusLabel }}
+              <ng-container *ngIf="item.status === 'scheduled' && item.scheduledAt">
+                · {{ formatDate(item.scheduledAt) }}
+              </ng-container>
+            </span>
+          </td>
+          <td>
+            <ng-container *ngIf="item.counts && item.counts.total; else noCounts">
+              {{ item.counts.sent }}/{{ item.counts.total }}
+              <span
+                *ngIf="item.counts.failed"
+                class="text-danger"
+              >({{ item.counts.failed }} échecs)</span>
+            </ng-container>
+            <ng-template #noCounts>—</ng-template>
+          </td>
+          <td>{{ formatDate(item.sentAt || item.updatedAt) }}</td>
+          <td (click)="$event.stopPropagation()">
+            <div class="row-actions">
+              <button
+                class="btn btn--sm btn--outline"
+                *ngIf="item.status === 'scheduled'"
+                (click)="cancelSchedule(item)"
+              >
+                Annuler la programmation
+              </button>
+              <button
+                class="btn btn--sm btn--ghost"
+                *ngIf="item.status === 'draft' || item.status === 'failed'"
+                (click)="duplicate(item)"
+              >
+                Dupliquer
+              </button>
+              <a
+                class="btn btn--sm btn--outline"
+                *ngIf="item.status === 'draft' || item.status === 'failed'"
+                [routerLink]="['/admin/announcements', item.id, 'edit']"
+              >Modifier</a>
+              <button
+                class="btn btn--sm btn--danger"
+                *ngIf="item.status !== 'sending'"
+                (click)="remove(item)"
+              >Supprimer</button>
+              <i
+                *ngIf="item.status === 'sent' || item.status === 'sending'"
+                class="ti ti-chevron-right text-muted"
+              ></i>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="!loading() && !items().length">
+          <td colspan="6">
+            <p class="empty-state">Aucune annonce pour le moment.</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination" *ngIf="!loading() && pagination()">
+    <div class="pagination__size">
+      <label class="pagination__label" for="ann-limit">Par page</label>
+      <select
+        id="ann-limit"
+        class="form-control"
+        [value]="limit()"
+        (change)="onLimitChange($any($event.target).value)"
+      >
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+      </select>
+    </div>
+    <div class="pagination__nav">
+      <button class="btn btn--ghost btn--sm" (click)="previousPage()" [disabled]="!hasPrev()">
+        Précédent
+      </button>
+      <span class="pagination__info">
+        Page {{ pagination()?.currentPage }} / {{ pagination()?.totalPages }} ·
+        {{ pagination()?.totalItems }} annonce(s) — du plus récent au plus ancien
+      </span>
+      <button class="btn btn--ghost btn--sm" (click)="nextPage()" [disabled]="!hasNext()">
+        Suivant
+      </button>
+    </div>
+  </div>
+
+  <p class="text-muted mt-2 text-sm">
+    Les envois sont traités par vagues afin d'éviter tout blocage par les
+    serveurs de messagerie.
+  </p>
+</div>

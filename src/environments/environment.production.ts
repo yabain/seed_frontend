@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.seed.org/api',
-  siteUrl: 'https://seed.org',
+  apiUrl: 'https://seeds.racciram.org/api',
+  siteUrl: 'https://seeds.yaba-in.com',
 };

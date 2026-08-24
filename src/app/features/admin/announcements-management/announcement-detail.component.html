@@ -1,0 +1,151 @@
+<div class="admin-page">
+  <header class="page-head page-head--between">
+    <div class="page-head__text">
+      <h1><i class="ti ti-speakerphone"></i> Détail de l'annonce</h1>
+    </div>
+    <a class="btn btn--ghost" routerLink="/admin/announcements">← Retour</a>
+  </header>
+
+  <p *ngIf="loading()" class="text-muted mt-2">Chargement…</p>
+
+  <ng-container *ngIf="!loading() && announcement() as a">
+    <div class="card mt-2 detail-card">
+      <div class="detail-head">
+        <div>
+          <h2>{{ a.subject }}</h2>
+          <span [class]="statusClass(a.status)">{{ a.statusLabel }}</span>
+        </div>
+      </div>
+
+      <dl class="meta-grid mt-2">
+        <div>
+          <dt>Destinataires</dt>
+          <dd>{{ a.groupLabel }}</dd>
+        </div>
+        <div *ngIf="a.customRecipients?.length">
+          <dt>Adresses supplémentaires</dt>
+          <dd>{{ a.customRecipients.join(', ') }}</dd>
+        </div>
+        <div>
+          <dt>Créée le</dt>
+          <dd>{{ formatDate(a.createdAt) }}</dd>
+        </div>
+        <div>
+          <dt>Programmée pour</dt>
+          <dd>{{ formatDate(a.scheduledAt) }}</dd>
+        </div>
+        <div>
+          <dt>Envoyée le</dt>
+          <dd>{{ formatDate(a.sentAt) }}</dd>
+        </div>
+        <div *ngIf="a.attachments?.length">
+          <dt>Pièces jointes</dt>
+          <dd>{{ a.attachments!.length }} fichier(s)</dd>
+        </div>
+        <div>
+          <dt>Blocs du mail</dt>
+          <dd>
+            {{ a.includeHeader === false ? 'Sans en-tête' : 'Avec en-tête' }} ·
+            {{ a.includeFooter === false ? 'sans pied de page' : 'avec pied de page' }}
+          </dd>
+        </div>
+        <div *ngIf="a.error">
+          <dt>Erreur</dt>
+          <dd class="text-danger">{{ a.error }}</dd>
+        </div>
+      </dl>
+
+      <div
+        class="progress-line mt-2"
+        *ngIf="a.counts && a.counts.total"
+      >
+        <strong>{{ a.counts.sent }}</strong> envoyé(s) sur
+        {{ a.counts.total }}
+        <span *ngIf="a.counts.pending"> · {{ a.counts.pending }} en attente</span>
+        <span *ngIf="a.counts.failed" class="text-danger">
+          · {{ a.counts.failed }} en échec
+        </span>
+      </div>
+    </div>
+
+    <!-- Aperçu de l'annonce -->
+    <div class="card preview-card mt-2">
+      <div class="preview-card__head">
+        <h2><i class="ti ti-eye"></i> Aperçu de l'annonce</h2>
+        <div class="preview-card__actions">
+          <button
+            type="button"
+            class="btn btn--outline btn--sm"
+            (click)="openInNewTab()"
+            [disabled]="previewLoading()"
+          >
+            <i class="ti ti-external-link"></i> Voir
+          </button>
+          <button
+            type="button"
+            class="btn btn--primary btn--sm"
+            (click)="copySource()"
+          >
+            <i class="ti ti-copy"></i> Copier la source
+          </button>
+        </div>
+      </div>
+      <div class="preview-frame-wrap">
+        <iframe
+          *ngIf="trustedPreviewUrl(); else previewEmpty"
+          [src]="trustedPreviewUrl()"
+          sandbox=""
+          title="Aperçu de l'annonce"
+          class="preview-frame"
+        ></iframe>
+        <ng-template #previewEmpty>
+          <p class="empty-state">
+            {{ previewLoading() ? "Génération de l'aperçu…" : "Aperçu indisponible." }}
+          </p>
+        </ng-template>
+      </div>
+    </div>
+
+    <!-- Destinataires -->
+    <div class="card mt-2 table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Adresse e-mail</th>
+            <th>Nom</th>
+            <th>Statut</th>
+            <th>Tentatives</th>
+            <th>Envoyé le</th>
+            <th>Erreur</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let d of visibleDeliveries">
+            <td>{{ d.email }}</td>
+            <td>{{ d.userName || '—' }}</td>
+            <td>
+              <span [class]="deliveryClass(d.status)">{{ deliveryLabel(d.status) }}</span>
+            </td>
+            <td>{{ d.attempts }}</td>
+            <td>{{ formatDate(d.sentAt) }}</td>
+            <td class="text-danger text-sm">{{ d.error || '' }}</td>
+          </tr>
+          <tr *ngIf="!(announcement()?.deliveries)?.length">
+            <td colspan="6">
+              <p class="empty-state">Aucun destinataire enregistré.</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <button
+      type="button"
+      class="btn btn--ghost mt-2"
+      *ngIf="(announcement()?.deliveries?.length ?? 0) > 25"
+      (click)="toggleShowAll()"
+    >
+      {{ showAllDeliveries() ? 'Afficher moins' : 'Afficher tous les destinataires' }}
+    </button>
+  </ng-container>
+</div>

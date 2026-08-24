@@ -1,0 +1,220 @@
+<div class="admin-page">
+  <header class="page-head page-head--between">
+    <div class="page-head__text">
+      <h1>
+        <i class="ti ti-speakerphone"></i>
+        {{ isEdit() ? 'Modifier l’annonce' : 'Nouvelle annonce' }}
+      </h1>
+      <p class="text-muted">
+        Rédigez votre annonce, choisissez les destinataires puis envoyez ou
+        programmez l'envoi.
+      </p>
+    </div>
+    <a class="btn btn--ghost" routerLink="/admin/announcements">← Retour</a>
+  </header>
+
+  <div class="announcement-form-grid mt-2" *ngIf="!loading()">
+    <!-- Colonne formulaire -->
+    <div class="card form-card">
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="ann-subject">Sujet de l'e-mail *</label>
+          <input
+            id="ann-subject"
+            class="form-control"
+            type="text"
+            [value]="subject()"
+            (input)="subject.set($any($event.target).value)"
+            placeholder="Ex. : Invitation à notre prochain événement"
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="ann-group">Destinataires</label>
+          <select
+            id="ann-group"
+            class="form-control"
+            [value]="recipientGroup()"
+            (change)="recipientGroup.set($any($event.target).value)"
+          >
+            <option *ngFor="let g of groupOptions" [value]="g.value">
+              {{ g.label }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="ann-custom">
+            Adresses supplémentaires
+            <span class="text-muted text-sm">(séparées par des virgules)</span>
+          </label>
+          <input
+            id="ann-custom"
+            class="form-control"
+            type="text"
+            [value]="customRecipients()"
+            (input)="customRecipients.set($any($event.target).value)"
+            placeholder="contact@exemple.com, presse@exemple.com"
+          />
+        </div>
+
+        <div class="form-field">
+          <label class="toggle-row" for="ann-header">
+            <input
+              id="ann-header"
+              class="toggle-switch"
+              type="checkbox"
+              role="switch"
+              [attr.aria-checked]="includeHeader()"
+              [checked]="includeHeader()"
+              (change)="includeHeader.set($any($event.target).checked); schedulePreviewRefresh()"
+            />
+            <span class="toggle-track" aria-hidden="true"></span>
+            <span>Inclure l'en-tête du mail</span>
+          </label>
+        </div>
+
+        <div class="form-field">
+          <label class="toggle-row" for="ann-footer">
+            <input
+              id="ann-footer"
+              class="toggle-switch"
+              type="checkbox"
+              role="switch"
+              [attr.aria-checked]="includeFooter()"
+              [checked]="includeFooter()"
+              (change)="includeFooter.set($any($event.target).checked); schedulePreviewRefresh()"
+            />
+            <span class="toggle-track" aria-hidden="true"></span>
+            <span>Inclure le pied de page du mail</span>
+          </label>
+        </div>
+
+        <div class="form-field">
+          <label for="ann-body">Contenu HTML de l'annonce *</label>
+          <textarea
+            id="ann-body"
+            class="form-control code-editor"
+            rows="14"
+            spellcheck="false"
+            [value]="bodyHtml()"
+            (input)="bodyHtml.set($any($event.target).value); schedulePreviewRefresh()"
+            placeholder="<h2>Bonjour {userName}, …</h2>"
+          ></textarea>
+          <p class="text-muted text-sm mt-1">
+            Variables disponibles :
+            <code>{{ '&#123;userName}' }}</code>,
+            <code>{{ '&#123;userFirstName}' }}</code>,
+            <code>{{ '&#123;userLastName}' }}</code>,
+            <code>{{ '&#123;userEmail}' }}</code>,
+            <code>{{ '&#123;userPhone}' }}</code> et
+            <code>{{ '&#123;subject}' }}</code>.
+            L'en-tête et le pied de page sont ajoutés automatiquement
+            (<a routerLink="/admin/announcements/settings">réglages e-mail</a>).
+          </p>
+        </div>
+
+        <div class="form-field">
+          <label for="ann-attachment">Pièces jointes</label>
+          <input
+            id="ann-attachment"
+            class="form-control"
+            type="file"
+            (change)="onFileSelected($event)"
+            [disabled]="uploadingFile()"
+          />
+          <p *ngIf="uploadingFile()" class="text-muted text-sm">
+            Téléversement en cours…
+          </p>
+          <ul class="attachment-list" *ngIf="attachments().length">
+            <li *ngFor="let file of attachments(); let i = index">
+              <i class="ti ti-paperclip"></i>
+              <span>{{ file.fileName }}</span>
+              <span class="text-muted">{{ formatSize(file.size) }}</span>
+              <button
+                type="button"
+                class="btn btn--sm btn--ghost"
+                (click)="removeAttachment(i)"
+                aria-label="Retirer la pièce jointe"
+              >✕</button>
+            </li>
+          </ul>
+        </div>
+
+        <div class="form-field">
+          <label for="ann-schedule">Programmer l'envoi</label>
+          <input
+            id="ann-schedule"
+            class="form-control"
+            type="datetime-local"
+            [value]="scheduledAtInput()"
+            (change)="scheduledAtInput.set($any($event.target).value)"
+          />
+        </div>
+      </div>
+
+      <div class="form-actions mt-2">
+        <button
+          type="button"
+          class="btn btn--outline"
+          (click)="saveDraft()"
+          [disabled]="saving() || sending() || scheduling()"
+        >
+          {{ saving() ? 'Enregistrement…' : 'Enregistrer le brouillon' }}
+        </button>
+        <button
+          type="button"
+          class="btn btn--outline"
+          (click)="schedule()"
+          [disabled]="saving() || sending() || scheduling()"
+        >
+          {{ scheduling() ? 'Programmation…' : 'Programmer' }}
+        </button>
+        <button
+          type="button"
+          class="btn btn--primary"
+          (click)="sendNow()"
+          [disabled]="saving() || sending() || scheduling()"
+        >
+          {{ sending() ? 'Envoi…' : 'Envoyer maintenant' }}
+        </button>
+      </div>
+      <p
+        *ngIf="isEdit() && (status() === 'scheduled')"
+        class="text-muted text-sm mt-1"
+      >
+        Cette annonce est programmée pour le
+        {{ currentScheduledAt() ? (currentScheduledAt() | date: "d MMM y 'à' HH:mm") : '' }}.
+        Enregistrer puis re-programmer remplacera cette date.
+      </p>
+    </div>
+
+    <!-- Colonne aperçu -->
+    <div class="card preview-card">
+      <div class="preview-card__head">
+        <h2><i class="ti ti-eye"></i> Aperçu</h2>
+        <button
+          type="button"
+          class="btn btn--sm btn--ghost"
+          (click)="refreshPreview()"
+        >
+          Actualiser
+        </button>
+      </div>
+      <div class="preview-frame-wrap">
+        <iframe
+          *ngIf="trustedPreviewUrl; else previewEmpty"
+          [src]="trustedPreviewUrl"
+          sandbox=""
+          title="Aperçu de l'annonce"
+          class="preview-frame"
+        ></iframe>
+        <ng-template #previewEmpty>
+          <p class="empty-state">L'aperçu apparaîtra ici.</p>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+
+  <p *ngIf="loading()" class="text-muted mt-2">Chargement…</p>
+</div>
