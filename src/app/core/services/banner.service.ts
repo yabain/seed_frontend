@@ -11,7 +11,17 @@ export class BannerService {
     return this.api.get<Banner>('/banner');
   }
 
-  update(slides: BannerSlide[]): Observable<Banner> {
-    return this.api.put<Banner>('/banner', { slides });
+  update(
+    slides: BannerSlide[],
+    fixedText: string,
+    rotatingPhrases: string[],
+    rotatingImage: string,
+  ): Observable<Banner> {
+    return this.api.put<Banner>('/banner', {
+      slides,
+      fixedText,
+      rotatingPhrases,
+      rotatingImage,
+    });
   }
 }

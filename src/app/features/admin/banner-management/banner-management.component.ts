@@ -12,6 +12,14 @@ const EMPTY_SLIDES: BannerSlide[] = [
   { eyebrow: '', title: '', subtitle: '', image: '' },
 ];
 
+const DEFAULT_PHRASES = [
+  "semons les graines de l'innovation",
+  "révélons le potentiel des entrepreneurs",
+  "connectons les talents",
+  "bâtissons des entreprises durables",
+  "soutenons activement les femmes",
+];
+
 @Component({
   selector: 'app-banner-management',
   standalone: true,
@@ -22,8 +30,12 @@ const EMPTY_SLIDES: BannerSlide[] = [
 export class BannerManagementComponent implements OnInit {
   readonly activeTab = signal(0);
   readonly slides = signal<BannerSlide[]>(EMPTY_SLIDES.map((s) => ({ ...s })));
+  readonly fixedText = signal('');
+  readonly rotatingPhrases = signal<string[]>([]);
+  readonly rotatingImage = signal('');
   readonly loaded = signal(false);
-  readonly saving = signal(false);
+  readonly savingSlides = signal(false);
+  readonly savingRotating = signal(false);
 
   constructor(
     private readonly bannerService: BannerService,
@@ -46,6 +58,13 @@ export class BannerManagementComponent implements OnInit {
             image: source[index]?.image ?? defaults.image,
           })),
         );
+        this.fixedText.set(banner.fixedText ?? '');
+        this.rotatingPhrases.set(
+          banner.rotatingPhrases?.length
+            ? [...banner.rotatingPhrases]
+            : [...DEFAULT_PHRASES],
+        );
+        this.rotatingImage.set(banner.rotatingImage ?? '');
         this.loaded.set(true);
       },
       error: () => {
@@ -61,20 +80,56 @@ export class BannerManagementComponent implements OnInit {
     );
   }
 
-  save(index: number): void {
-    this.saving.set(true);
+  saveSlides(): void {
+    this.savingSlides.set(true);
+    this.bannerService
+      .update(this.slides(), this.fixedText(), this.rotatingPhrases(), this.rotatingImage())
+      .subscribe({
+        next: () => {
+          this.savingSlides.set(false);
+          this.toastService.success('Slides enregistrés avec succès.');
+        },
+        error: (err) => {
+          this.savingSlides.set(false);
+          this.toastService.error(
+            err.details?.join(' ') || err.message || "Erreur lors de l'enregistrement.",
+          );
+        },
+      });
+  }
 
-    this.bannerService.update(this.slides()).subscribe({
-      next: () => {
-        this.saving.set(false);
-        this.toastService.success(`Slide ${index + 1} enregistré avec succès.`);
-      },
-      error: (err) => {
-        this.saving.set(false);
-        this.toastService.error(
-          err.details?.join(' ') || err.message || 'Erreur lors de l’enregistrement.',
-        );
-      },
-    });
+  saveRotating(): void {
+    this.savingRotating.set(true);
+    this.bannerService
+      .update(this.slides(), this.fixedText(), this.rotatingPhrases(), this.rotatingImage())
+      .subscribe({
+        next: () => {
+          this.savingRotating.set(false);
+          this.toastService.success('Texte rotatif enregistré avec succès.');
+        },
+        error: (err) => {
+          this.savingRotating.set(false);
+          this.toastService.error(
+            err.details?.join(' ') || err.message || "Erreur lors de l'enregistrement.",
+          );
+        },
+      });
+  }
+
+  addPhrase(): void {
+    if (this.rotatingPhrases().length >= 10) return;
+    this.rotatingPhrases.update((p) => [...p, '']);
+  }
+
+  removePhrase(index: number): void {
+    this.rotatingPhrases.update((p) => p.filter((_, i) => i !== index));
+  }
+
+  updatePhrase(index: number, value: string): void {
+    this.rotatingPhrases.update((p) => p.map((item, i) => (i === index ? value : item)));
+  }
+
+  trackByIndex(index: number): number {
+    return index;
   }
 }

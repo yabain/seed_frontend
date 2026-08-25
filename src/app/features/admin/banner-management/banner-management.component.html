@@ -2,12 +2,12 @@
   <header class="page-head">
     <h1><i class="ti ti-photo"></i> Bannière</h1>
     <p class="text-muted">
-      Gérez les 3 slides de la bannière de la page d’accueil. Les images sont automatiquement
-      converties en WebP avant l’enregistrement.
+      Gérez les 3 slides de la bannière et la section « texte rotatif » de la page d'accueil.
+      Les images sont automatiquement converties en WebP avant l'enregistrement.
     </p>
   </header>
 
-  <!-- Onglets -->
+  <!-- Onglets slides -->
   <div class="showcase-tabs" *ngIf="loaded()">
     <button
       class="showcase-tab"
@@ -31,7 +31,7 @@
     <span class="skeleton skeleton-text skeleton-text--short"></span>
   </div>
 
-  <!-- Édition du slide actif -->
+  <!-- Édition Slide -->
   <section class="card mt-2" *ngIf="loaded()">
     <h2>Slide {{ activeTab() + 1 }}</h2>
 
@@ -77,17 +77,17 @@
         [(ngModel)]="slides()[activeTab()].subtitle"
         name="banner-subtitle"
         maxlength="500"
-        placeholder="Pour l’éducation, l’environnement et le développement des communautés."
+        placeholder="Pour l'éducation, l'environnement et le développement des communautés."
       ></textarea>
     </div>
 
     <div class="form-actions">
       <button
         class="btn btn--primary"
-        (click)="save(activeTab())"
-        [disabled]="saving()"
+        (click)="saveSlides()"
+        [disabled]="savingSlides()"
       >
-        {{ saving() ? 'Enregistrement…' : 'Enregistrer le slide' }}
+        {{ savingSlides() ? 'Enregistrement…' : 'Enregistrer les slides' }}
       </button>
     </div>
   </section>
@@ -95,7 +95,7 @@
   <section class="card mt-2" *ngIf="!loaded()">
     <h2>Slide 1</h2>
     <div class="form-field">
-      <label>Image de bannière (convertie en WebP puis importée dans « uploads »)</label>
+      <label>Image de bannière</label>
       <span class="skeleton skeleton-text skeleton-text--long"></span>
     </div>
     <div class="form-field">
@@ -115,7 +115,101 @@
     </div>
   </section>
 
-  <div *ngIf="!loaded()" class="card mt-2">
-    <p class="empty-state">Chargement de la bannière…</p>
-  </div>
+  <!-- ====== Section texte rotatif (séparée) ====== -->
+  <section class="card mt-2" *ngIf="loaded()">
+    <h2><i class="ti ti-text-rotation-none"></i> Texte rotatif</h2>
+    <p class="text-muted mb-2">
+      Cette section s'affiche juste après « À propos » sur la page d'accueil.
+      Le texte statique précède les phrases qui défilent automatiquement.
+    </p>
+
+    <div class="form-field">
+      <label>Phrase statique (préfixe)</label>
+      <input
+        class="form-control"
+        type="text"
+        [ngModel]="fixedText()"
+        (ngModelChange)="fixedText.set($event)"
+        name="rotating-fixed"
+        maxlength="200"
+        placeholder="Chez SEEDS, nous"
+      />
+      <span class="form-hint">
+        Utilisez <code>{{ '{' }}orgName{{ '}' }}</code> pour insérer le nom de l'organisation.
+      </span>
+    </div>
+
+    <div class="form-field">
+      <label>Phrases dynamiques (qui défilent)</label>
+      <div class="rotating-phrases">
+        <div class="rotating-phrase-row" *ngFor="let phrase of rotatingPhrases(); let i = index; trackBy: trackByIndex">
+          <input
+            class="form-control"
+            type="text"
+            [ngModel]="phrase"
+            (ngModelChange)="updatePhrase(i, $event)"
+            [name]="'phrase-' + i"
+            maxlength="200"
+            [placeholder]="'Phrase ' + (i + 1)"
+          />
+          <button
+            class="btn btn--icon btn--danger-ghost"
+            (click)="removePhrase(i)"
+            title="Supprimer"
+          >
+            <i class="ti ti-trash"></i>
+          </button>
+        </div>
+      </div>
+      <button
+        class="btn btn--secondary btn--sm mt-1"
+        (click)="addPhrase()"
+        [disabled]="rotatingPhrases().length >= 10"
+      >
+        <i class="ti ti-plus"></i> Ajouter une phrase
+      </button>
+      <span class="form-hint">
+        Maximum 10 phrases. Les phrases défilent automatiquement de bas en haut.
+      </span>
+    </div>
+
+    <div class="form-field">
+      <label>Image à droite de la section</label>
+      <app-admin-image-field
+        [image]="rotatingImage()"
+        (imageChange)="rotatingImage.set($event)"
+        variant="wide"
+        alt="Image texte rotatif"
+      />
+    </div>
+
+    <div class="form-actions">
+      <button
+        class="btn btn--primary"
+        (click)="saveRotating()"
+        [disabled]="savingRotating()"
+      >
+        {{ savingRotating() ? 'Enregistrement…' : 'Enregistrer le texte rotatif' }}
+      </button>
+    </div>
+  </section>
+
+  <section class="card mt-2" *ngIf="!loaded()">
+    <h2><i class="ti ti-text-rotation-none"></i> Texte rotatif</h2>
+    <div class="form-field">
+      <label>Phrase statique (préfixe)</label>
+      <span class="skeleton skeleton-text skeleton-text--long"></span>
+    </div>
+    <div class="form-field">
+      <label>Phrases dynamiques</label>
+      <span class="skeleton skeleton-text skeleton-text--long"></span>
+    </div>
+    <div class="form-field">
+      <label>Image à droite</label>
+      <span class="skeleton skeleton-text skeleton-text--long"></span>
+    </div>
+    <div class="form-actions">
+      <span class="skeleton skeleton-btn"></span>
+    </div>
+  </section>
 </div>

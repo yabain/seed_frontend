@@ -165,6 +165,9 @@ export interface BannerSlide {
 export interface Banner {
   _id?: string;
   slides: BannerSlide[];
+  fixedText?: string;
+  rotatingPhrases?: string[];
+  rotatingImage?: string;
 }
 
 export interface SiteAbout {

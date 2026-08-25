@@ -96,6 +96,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly eventsCanPrev = signal(false);
   readonly eventsCanNext = signal(false);
 
+  readonly fallbackMission = "Renforcer les communautés par l’éducation, l’emploi et un environnement protégé, pour un impact durable et mesurable.";
+  readonly fallbackVision = "Un monde où chaque communauté dispose des moyens d’un avenir prospère, résilient et respectueux de la planète.";
+
   readonly newsletterSubmitting = signal(false);
   readonly newsletterSuccess = signal('');
   readonly newsletterError = signal('');
@@ -170,24 +173,26 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 
-  phrases: string[] = [
+  readonly fixedText = signal('Chez SEEDS, nous');
+  readonly rotatingPhrases = signal<string[]>([
     "semons les graines de l'innovation",
     "révélons le potentiel des entrepreneurs",
     "connectons les talents",
     "bâtissons des entreprises durables",
     "soutenons activement les femmes",
-  ];
+  ]);
+  readonly rotatingImage = signal('/assets/img/germe.webp');
 
   currentStep = signal(0);
   isTransitioning = signal(true);
   private timer2: any;
 
   get totalSteps(): number {
-    return this.phrases.length;
+    return this.rotatingPhrases().length;
   }
 
   trackHeight(): number {
-    return this.phrases.length * 2;
+    return this.rotatingPhrases().length * 2;
   }
 
   centerPhraseIndex(): number {
@@ -213,7 +218,20 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     }, 5000);
 
     this.bannerService.getPublic().subscribe({
-      next: (banner) => this.banner.set(banner),
+      next: (banner) => {
+        this.banner.set(banner);
+
+        if (banner.fixedText) {
+          const orgName = this.siteConfig()?.orgName || 'SEEDS';
+          this.fixedText.set(banner.fixedText.replace('{orgName}', orgName));
+        }
+        if (banner.rotatingPhrases?.length) {
+          this.rotatingPhrases.set(banner.rotatingPhrases);
+        }
+        if (banner.rotatingImage) {
+          this.rotatingImage.set(banner.rotatingImage);
+        }
+      },
       error: () => this.banner.set(null),
       complete: () => this.buildSlides(),
     });

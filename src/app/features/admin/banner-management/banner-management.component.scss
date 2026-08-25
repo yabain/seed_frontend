@@ -79,3 +79,19 @@
   font-size: 0.85rem;
   margin-top: 0.4rem;
 }
+
+.rotating-phrases {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.rotating-phrase-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  input {
+    flex: 1;
+  }
+}
