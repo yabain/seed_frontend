@@ -1,0 +1,41 @@
+<main class="event-page" *ngIf="event() as e; else notFoundBlock">
+  <section class="event-hero" [class.event-hero--without-image]="!e.image">
+    <img *ngIf="e.image" class="event-hero__image" [src]="e.image" [alt]="e.title" />
+    <div class="event-hero__shade"></div>
+    <div class="container event-hero__content">
+      <a routerLink="/events" class="event-back"><i class="fa-solid fa-arrow-left"></i> Tous les événements</a>
+      <div class="event-hero__copy">
+        <span class="event-status" [ngClass]="statusClass(e.status)">{{ statusLabel(e.status) }}</span>
+        <h1>{{ e.title }}</h1>
+        <div class="event-hero__meta">
+          <span *ngIf="e.startDate"><i class="fa-regular fa-calendar"></i>{{ formatDateTime(e.startDate) }}</span>
+          <span *ngIf="e.location"><i class="fa-solid fa-location-dot"></i>{{ e.location }}</span>
+        </div>
+        <a *ngIf="e.registrationLink" [href]="e.registrationLink" target="_blank" rel="noopener" class="btn btn--primary event-hero__cta">Réserver ma place <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+      </div>
+    </div>
+  </section>
+  <div class="container event-layout">
+    <article class="event-content">
+      <section class="event-section event-section--intro" *ngIf="descriptionParagraphs().length">
+        <span class="section-label">L’événement</span><h2>À propos de ce rendez-vous</h2>
+        <div class="event-richtext"><p *ngFor="let p of descriptionParagraphs()">{{ p }}</p></div>
+      </section>
+      <section class="event-section event-program" *ngIf="programLines().length">
+        <div class="event-section__heading"><span class="event-section__icon"><i class="fa-solid fa-list-check"></i></span><div><span class="section-label">Temps forts</span><h2>Programme</h2></div></div>
+        <ol><li *ngFor="let line of programLines(); let index = index"><span>{{ index + 1 }}</span>{{ line }}</li></ol>
+      </section>
+      <section class="event-section" *ngIf="hasPanelists()">
+        <div class="event-section__heading"><span class="event-section__icon"><i class="fa-solid fa-users"></i></span><div><span class="section-label">Les voix de l’événement</span><h2>Nos intervenants</h2></div></div>
+        <div class="panelists-grid"><div class="panelist" *ngFor="let p of e.panelists"><img *ngIf="p.photo" [src]="p.photo" [alt]="p.name" class="panelist__photo" /><span *ngIf="!p.photo" class="panelist__photo panelist__photo--empty"><i class="fa-solid fa-user"></i></span><strong class="panelist__name">{{ p.name }}</strong><small *ngIf="p.title" class="panelist__title">{{ p.title }}</small></div></div>
+      </section>
+    </article>
+    <aside class="event-aside">
+      <section class="aside-card aside-card--date"><span class="aside-card__eyebrow">Informations pratiques</span><h2>À retenir</h2><div class="aside-item" *ngIf="e.startDate"><i class="fa-regular fa-calendar"></i><div><small>Début</small><strong>{{ formatDateTime(e.startDate) }}</strong></div></div><div class="aside-item" *ngIf="e.endDate"><i class="fa-regular fa-clock"></i><div><small>Fin</small><strong>{{ formatDateTime(e.endDate) }}</strong></div></div><div class="aside-item" *ngIf="e.location"><i class="fa-solid fa-location-dot"></i><div><small>Lieu</small><strong>{{ e.location }}</strong></div></div></section>
+      <section class="aside-card" *ngIf="e.phone1 || e.phone2 || e.email"><span class="aside-card__eyebrow">Besoin d’aide ?</span><h2>Nous contacter</h2><a *ngIf="e.email" class="contact-link" [href]="'mailto:' + e.email"><i class="fa-solid fa-envelope"></i>{{ e.email }}</a><a *ngIf="e.phone1" class="contact-link" [href]="'tel:' + e.phone1"><i class="fa-solid fa-phone"></i>{{ e.phone1 }}</a><a *ngIf="e.phone2" class="contact-link" [href]="'tel:' + e.phone2"><i class="fa-solid fa-phone"></i>{{ e.phone2 }}</a></section>
+      <section class="aside-card" *ngIf="hasSocialLinks()"><span class="aside-card__eyebrow">Suivre SEEDS</span><h2>Restons connectés</h2><div class="social-links"><a *ngIf="e.socialLinks?.facebook" [href]="e.socialLinks!.facebook" target="_blank" rel="noopener" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a><a *ngIf="e.socialLinks?.x" [href]="e.socialLinks!.x" target="_blank" rel="noopener" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a><a *ngIf="e.socialLinks?.youtube" [href]="e.socialLinks!.youtube" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a><a *ngIf="e.socialLinks?.linkedin" [href]="e.socialLinks!.linkedin" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a></div></section>
+    </aside>
+  </div>
+  <section class="event-closing"><div class="container"><div><span class="section-label">À vous de jouer</span><h2>Envie de participer ?</h2><p>Retrouvez toutes les initiatives et rencontres SEEDS.</p></div><a routerLink="/events" class="btn btn--outline">Explorer les événements</a></div></section>
+</main>
+<ng-template #notFoundBlock><div class="container empty-state" *ngIf="notFound()"><h2>Événement introuvable</h2><p>Cet événement n'existe pas ou n'est plus disponible.</p><a routerLink="/events" class="btn btn--outline">Voir tous les événements</a></div></ng-template>

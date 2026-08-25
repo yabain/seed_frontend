@@ -7,13 +7,15 @@ import type { SiteConfig, SiteSegments } from '../../../core/models/models';
 export type SegmentKey = keyof SiteSegments;
 
 const SEGMENT_DESCRIPTIONS: Record<SegmentKey, string> = {
-  news: 'Affiche ou masque la section « Actualités » sur la page d’accueil ainsi que le lien du menu.',
+  news: 'Affiche ou masque la section « Actualités » sur la page d\'accueil ainsi que le lien du menu.',
   resources:
     'Affiche ou masque la section « Ressources » sur la landing page ainsi que le lien du menu.',
   programs:
-    'Affiche ou masque la section « Programmes » sur la page d’accueil ainsi que le lien du menu.',
+    'Affiche ou masque la section « Programmes » sur la page d\'accueil ainsi que le lien du menu.',
   partners:
-    'Affiche ou masque la section « Partenaires » sur la page d’accueil ainsi que le lien du menu.',
+    'Affiche ou masque la section « Partenaires » sur la page d\'accueil ainsi que le lien du menu.',
+  events:
+    'Affiche ou masque la section « Événements » sur la page d\'accueil ainsi que le lien du menu.',
 };
 
 @Component({

@@ -20,6 +20,9 @@
             "outputPath": "dist/seed-frontend",
             "index": "src/index.html",
             "browser": "src/main.ts",
+            "allowedCommonJsDependencies": [
+              "apexcharts"
+            ],
             "polyfills": [
               "zone.js"
             ],
@@ -40,13 +43,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "600kb",
-                  "maximumError": "1.5mb"
+                  "maximumWarning": "1.5mb",
+                  "maximumError": "3mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "15kb",
-                  "maximumError": "30kb"
+                  "maximumWarning": "25kb",
+                  "maximumError": "50kb"
                 }
               ],
               "fileReplacements": [

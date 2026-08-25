@@ -179,6 +179,7 @@ export interface SiteSegments {
   resources: boolean;
   programs: boolean;
   partners: boolean;
+  events: boolean;
 }
 
 export interface SiteConfig {
@@ -286,4 +287,40 @@ export interface AuditLogsResult {
     hasPrevPage: boolean;
     hasNextPage: boolean;
   };
+}
+
+export type EventStatus = 'soon' | 'currently' | 'ended';
+
+export interface EventPanelist {
+  photo?: string;
+  name: string;
+  title?: string;
+}
+
+export interface EventSocialLinks {
+  facebook?: string;
+  x?: string;
+  youtube?: string;
+  linkedin?: string;
+}
+
+export interface SeedEvent {
+  _id: string;
+  title: string;
+  description?: string;
+  image?: string;
+  startDate: string;
+  endDate: string;
+  status: EventStatus;
+  location?: string;
+  program?: string;
+  socialLinks?: EventSocialLinks;
+  phone1?: string;
+  phone2?: string;
+  email?: string;
+  panelists?: EventPanelist[];
+  registrationLink?: string;
+  isVisibleOnLanding: boolean;
+  createdAt: string;
+  updatedAt?: string;
 }

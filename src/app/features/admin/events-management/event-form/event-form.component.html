@@ -1,0 +1,197 @@
+<div class="admin-page">
+  <header class="page-head">
+    <h1><i class="ti ti-calendar-event"></i> {{ editing() ? 'Modifier l\'événement' : 'Nouvel événement' }}</h1>
+    <div class="page-head__actions">
+      <button type="button" class="btn btn--ghost" (click)="cancel()">
+        <i class="ti ti-arrow-left"></i> Retour à la liste
+      </button>
+    </div>
+  </header>
+
+  <div class="card mt-2" *ngIf="loading()">
+    <div class="event-form">
+      <aside class="event-form__side">
+        <label class="event-form__side-title">Image de couverture</label>
+        <span class="skeleton skeleton-thumb"></span>
+      </aside>
+      <div class="event-form__fields">
+        <div class="form-field"><span class="skeleton skeleton-text skeleton-text--long"></span></div>
+        <div class="form-grid">
+          <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+          <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+        </div>
+        <div class="form-field"><span class="skeleton skeleton-text skeleton-text--long"></span></div>
+        <div class="form-field"><span class="skeleton skeleton-text skeleton-text--long"></span></div>
+        <div class="form-actions">
+          <span class="skeleton skeleton-btn"></span>
+          <span class="skeleton skeleton-btn"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mt-2" *ngIf="!loading()">
+    <div class="event-form">
+      <aside class="event-form__side">
+        <label class="event-form__side-title">Image de couverture</label>
+        <p class="text-muted event-form__side-hint">
+          Cliquez ou Drag and Drop pour importer une image (max 5 Mo)
+        </p>
+        <app-admin-image-field
+          [image]="form.image"
+          variant="wide"
+          (imageChange)="setImage($event)"
+          alt="Aperçu couverture"
+        />
+      </aside>
+
+      <div class="event-form__fields">
+        <div class="form-field">
+          <label>Titre *</label>
+          <input
+            class="form-control"
+            type="text"
+            [(ngModel)]="form.title"
+            placeholder="Titre de l'événement"
+          />
+        </div>
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Date de début *</label>
+            <input class="form-control" type="datetime-local" [(ngModel)]="form.startDate" />
+          </div>
+          <div class="form-field">
+            <label>Date de fin *</label>
+            <input class="form-control" type="datetime-local" [(ngModel)]="form.endDate" />
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label>Lieu</label>
+          <input class="form-control" type="text" [(ngModel)]="form.location" placeholder="Ex: Douala, Cameroun" />
+        </div>
+
+        <div class="form-field">
+          <label>Description</label>
+          <textarea
+            class="form-control"
+            rows="4"
+            [(ngModel)]="form.description"
+            placeholder="Description de l'événement…"
+          ></textarea>
+        </div>
+
+        <div class="form-field">
+          <label>Programme</label>
+          <textarea
+            class="form-control"
+            rows="4"
+            [(ngModel)]="form.program"
+            placeholder="Programme ou ordre du jour…"
+          ></textarea>
+        </div>
+
+        <!-- Contact -->
+        <div class="form-section-title">Contact</div>
+        <div class="form-grid form-grid--3">
+          <div class="form-field">
+            <label>Téléphone 1</label>
+            <input class="form-control" type="tel" [(ngModel)]="form.phone1" />
+          </div>
+          <div class="form-field">
+            <label>Téléphone 2</label>
+            <input class="form-control" type="tel" [(ngModel)]="form.phone2" />
+          </div>
+          <div class="form-field">
+            <label>Email</label>
+            <input class="form-control" type="email" [(ngModel)]="form.email" />
+          </div>
+        </div>
+
+        <!-- Réseaux sociaux -->
+        <div class="form-section-title">Réseaux sociaux</div>
+        <div class="form-grid form-grid--2">
+          <div class="form-field">
+            <label><i class="fa-brands fa-facebook"></i> Facebook</label>
+            <input class="form-control" type="url" [(ngModel)]="form.socialLinks.facebook" placeholder="https://facebook.com/..." />
+          </div>
+          <div class="form-field">
+            <label><i class="fa-brands fa-x-twitter"></i> X / Twitter</label>
+            <input class="form-control" type="url" [(ngModel)]="form.socialLinks.x" placeholder="https://x.com/..." />
+          </div>
+          <div class="form-field">
+            <label><i class="fa-brands fa-youtube"></i> YouTube</label>
+            <input class="form-control" type="url" [(ngModel)]="form.socialLinks.youtube" placeholder="https://youtube.com/..." />
+          </div>
+          <div class="form-field">
+            <label><i class="fa-brands fa-linkedin"></i> LinkedIn</label>
+            <input class="form-control" type="url" [(ngModel)]="form.socialLinks.linkedin" placeholder="https://linkedin.com/..." />
+          </div>
+        </div>
+
+        <!-- Lien d'inscription -->
+        <div class="form-field">
+          <label>Lien d'inscription</label>
+          <input class="form-control" type="url" [(ngModel)]="form.registrationLink" placeholder="https://eventbrite.com/..." />
+        </div>
+
+        <!-- Panélistes -->
+        <div class="form-section-title">
+          Panélistes
+          <button type="button" class="btn btn--sm btn--outline" (click)="addPanelist()">
+            <i class="fa-solid fa-plus"></i> Ajouter
+          </button>
+        </div>
+
+        <div class="panelists" *ngIf="form.panelists.length; else noPanelists">
+          <div class="panelist-card" *ngFor="let panelist of form.panelists; let i = index; trackBy: trackByIndex">
+            <div class="panelist-card__header">
+              <span class="panelist-card__number">#{{ i + 1 }}</span>
+              <button type="button" class="btn btn--sm btn--danger" (click)="removePanelist(i)">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+            <div class="panelist-card__fields">
+              <div class="panelist-card__photo">
+                <app-admin-image-field
+                  [image]="panelist.photo"
+                  (imageChange)="setPanelistPhoto(i, $event)"
+                  alt="Photo panéliste"
+                />
+              </div>
+              <div class="panelist-card__info">
+                <div class="form-field">
+                  <label>Nom *</label>
+                  <input class="form-control" type="text" [(ngModel)]="panelist.name" placeholder="Nom complet" />
+                </div>
+                <div class="form-field">
+                  <label>Titre / Fonction</label>
+                  <input class="form-control" type="text" [(ngModel)]="panelist.title" placeholder="Ex: CEO, Expert..." />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ng-template #noPanelists>
+          <p class="text-muted text-sm">Aucun panéliste. Cliquez sur « Ajouter » pour en ajouter un.</p>
+        </ng-template>
+
+        <!-- Visibilité landing -->
+        <div class="form-field">
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="form.isVisibleOnLanding" />
+            Afficher sur la page d'accueil
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn--primary" [disabled]="saving()" (click)="save()">
+            {{ saving() ? 'Enregistrement…' : 'Enregistrer' }}
+          </button>
+          <button class="btn btn--ghost" type="button" (click)="cancel()">Annuler</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

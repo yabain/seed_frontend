@@ -130,7 +130,7 @@
       </div>
 
       <div class="image-wrapper">
-        <img src="/assets/img/germe.png" alt="Main 3D" class="overflow-image" />
+        <img src="/assets/img/germe.webp" alt="Main 3D" class="overflow-image" />
       </div>
 
     </div>
@@ -141,7 +141,7 @@
 
       <!-- Visual Column -->
       <div class="features-visual reveal reveal--from-left">
-        <img src="../../../assets/img/seed_6.png" alt="DEEDS Img" class="features-img" loading="lazy" />
+        <img src="../../../assets/img/seed_6.webp" alt="DEEDS Img" class="features-img" loading="lazy" />
       </div>
 
       <!-- Content Column -->
@@ -209,6 +209,59 @@
 
         </ul>
 
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ÉVÉNEMENTS ================= -->
+  <section class="lq-section lq-eventsx" id="evenements" *ngIf="(siteConfig()?.segments?.events ?? true) && events().length">
+    <div class="container">
+      <div class="lq-eventsx__head reveal">
+        <div class="lq-eventsx__heading">
+          <span class="lq-eyebrow lq-eyebrow--solid">
+            <i class="fa-solid fa-spa"></i>
+            Événements</span>
+          <h2>Nos prochains événements</h2>
+          <p>Retrouvez nos événements à venir et passés de {{ siteConfig()?.orgName || 'SEEDS' }}.</p>
+        </div>
+
+        <div class="lq-eventsx__nav" *ngIf="events().length; else noEventsNav">
+          <button class="lq-eventsx__arrow" type="button" (click)="scrollEvents(-1)" [disabled]="!eventsCanPrev()"
+            aria-label="Événements précédents">
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <button class="lq-eventsx__arrow" type="button" (click)="scrollEvents(1)" [disabled]="!eventsCanNext()"
+            aria-label="Événements suivants">
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+        <ng-template #noEventsNav><span></span></ng-template>
+      </div>
+    </div>
+
+      <div class="lq-eventsx__viewport reveal" *ngIf="events().length" (scroll)="updateEventsArrows()">
+      <div class="lq-eventsx__track">
+        <article class="lq-newsx__card" *ngFor="let item of events()">
+          <a class="lq-newsx__media" [routerLink]="['/events', item._id]"
+            [attr.aria-label]="'Voir : ' + item.title">
+            <img *ngIf="item.image" [src]="item.image" [alt]="item.title" loading="lazy" />
+            <span *ngIf="!item.image" class="lq-newsx__placeholder">
+              <i class="fa-solid fa-calendar-days"></i>
+            </span>
+            <span class="lq-newsx__badge">{{ eventStatusLabel(item.status) }}</span>
+            <span class="lq-newsx__date">{{ formatShortDate(item.startDate) }}</span>
+          </a>
+
+          <div class="lq-newsx__body">
+            <h3>{{ item.title }}</h3>
+            <p class="lq-eventsx__location" *ngIf="item.location">
+              <i class="fa-solid fa-location-dot"></i> {{ item.location }}
+            </p>
+            <a class="lq-newsx__cta" [routerLink]="['/events', item._id]">
+              Voir les détails <i class="fa-solid fa-arrow-right"></i>
+            </a>
+          </div>
+        </article>
       </div>
     </div>
   </section>

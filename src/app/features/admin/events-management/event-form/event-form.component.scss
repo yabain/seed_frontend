@@ -1,0 +1,135 @@
+.event-form {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.event-form__side {
+  position: sticky;
+  top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding-right: 1.5rem;
+  border-right: 1px solid var(--color-gray-200);
+}
+
+.event-form__side-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.event-form__side-hint {
+  font-size: 0.82rem;
+  margin-bottom: 0.75rem;
+}
+
+.event-form__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+.form-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-gray-200, #e2e8f0);
+  margin-top: 0.5rem;
+}
+
+.form-grid--2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-grid--3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+
+  input[type='checkbox'] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--color-primary, #14b8a6);
+  }
+}
+
+.panelists {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.panelist-card {
+  border: 1px solid var(--color-gray-200, #e2e8f0);
+  border-radius: 10px;
+  padding: 1rem;
+  background: var(--color-gray-50, #f8fafc);
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+
+  &__number {
+    font-weight: 600;
+    color: var(--color-gray-500, #64748b);
+  }
+
+  &__fields {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 1rem;
+    align-items: start;
+  }
+
+  &__photo {
+    :host ::ng-deep app-admin-image-field .image-field {
+      min-height: 120px;
+    }
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .event-form {
+    grid-template-columns: 1fr;
+  }
+
+  .event-form__side {
+    position: static;
+    border-right: none;
+    padding-right: 0;
+  }
+
+  .form-grid--2,
+  .form-grid--3 {
+    grid-template-columns: 1fr;
+  }
+
+  .panelist-card__fields {
+    grid-template-columns: 1fr;
+  }
+}

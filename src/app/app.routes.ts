@@ -290,6 +290,37 @@ export const appRoutes: Routes = [
             './features/admin/announcements-management/announcement-detail.component'
           ).then((m) => m.AnnouncementDetailComponent),
       },
+      {
+        path: 'events',
+        data: { roles: CONTENT_ROLES },
+        loadComponent: () =>
+          import('./features/admin/events-management/events-management.component').then(
+            (m) => m.EventsManagementComponent,
+          ),
+      },
+      {
+        path: 'events/new',
+        loadComponent: () =>
+          import('./features/admin/events-management/event-form/event-form.component').then(
+            (m) => m.EventFormComponent,
+          ),
+      },
+      {
+        path: 'events/:id',
+        data: { roles: CONTENT_ROLES },
+        loadComponent: () =>
+          import('./features/admin/events-management/event-detail/event-detail.component').then(
+            (m) => m.EventDetailComponent,
+          ),
+      },
+      {
+        path: 'events/:id/edit',
+        data: { roles: ['admin', 'superadmin'] },
+        loadComponent: () =>
+          import('./features/admin/events-management/event-form/event-form.component').then(
+            (m) => m.EventFormComponent,
+          ),
+      },
     ],
   },
   {
@@ -328,6 +359,18 @@ export const appRoutes: Routes = [
         path: 'resources',
         loadComponent: () =>
           import('./features/resources/resources.component').then((m) => m.ResourcesComponent),
+      },
+      {
+        path: 'events',
+        loadComponent: () =>
+          import('./features/events/events-list.component').then((m) => m.EventsListComponent),
+      },
+      {
+        path: 'events/:id',
+        loadComponent: () =>
+          import('./features/events/event-detail/event-detail.component').then(
+            (m) => m.EventDetailPublicComponent,
+          ),
       },
       {
         path: 'contact',

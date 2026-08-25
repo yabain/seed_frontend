@@ -10,8 +10,8 @@
       <span class="brand-text" *ngIf="!siteConfig()?.logo"><strong>{{ siteConfig()?.orgName || '' }}</strong><small>{{ siteConfig()?.tagline || '' }}</small></span>
     </a>
 
-    <h1>Espace administrateur</h1>
-    <p class="text-muted" *ngIf="!requiresTwoFactor()">Connectez-vous pour gérer la plateforme.</p>
+    <h1>Connexion</h1>
+    <p class="text-muted" *ngIf="!requiresTwoFactor()">Connectez-vous à la plateforme.</p>
     <p class="text-muted" *ngIf="requiresTwoFactor()">
       Un code de vérification a été envoyé à <strong>{{ emailFor2FA() }}</strong>.
     </p>

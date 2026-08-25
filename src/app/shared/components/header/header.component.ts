@@ -33,6 +33,7 @@ export class HeaderComponent {
     { label: 'Nos Actions', path: '/programs', segment: 'programs' },
     { label: 'Partenaires', path: '/partners', segment: 'partners' },
     { label: 'Ressources', path: '/resources', segment: 'resources' },
+    { label: 'Événements', path: '/events', segment: 'events' },
     { label: 'Contact', path: '/contact' },
   ];
 

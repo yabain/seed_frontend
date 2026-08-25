@@ -65,7 +65,7 @@ export class LoginComponent implements OnInit {
           this.requiresTwoFactor.set(true);
           this.emailFor2FA.set(response.email);
         } else {
-          const redirect = this.route.snapshot.queryParamMap.get('redirect') || '/admin/dashboard';
+          const redirect = this.route.snapshot.queryParamMap.get('redirect') || '/admin';
           void this.router.navigateByUrl(redirect);
         }
       },
@@ -90,7 +90,7 @@ export class LoginComponent implements OnInit {
     this.authService.verifyTwoFactor(this.emailFor2FA(), code).subscribe({
       next: () => {
         this.submitting.set(false);
-        const redirect = this.route.snapshot.queryParamMap.get('redirect') || '/admin/dashboard';
+        const redirect = this.route.snapshot.queryParamMap.get('redirect') || '/admin';
         void this.router.navigateByUrl(redirect);
       },
       error: (err: ErrorMessage) => {

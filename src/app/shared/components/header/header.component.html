@@ -26,7 +26,7 @@
         routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: link.path === '/' }"
       >{{ link.label }}</a>
-      <a routerLink="/admin" class="btn btn--outline btn--sm nav-admin">Admin</a>
+      <a routerLink="/admin" class="btn btn--outline btn--sm nav-admin">Connexion</a>
     </nav>
 
     <button
@@ -46,6 +46,6 @@
       routerLinkActive="active"
       (click)="closeMenu()"
     >{{ link.label }}</a>
-    <a routerLink="/admin" class="btn btn--outline btn--block" (click)="closeMenu()">Admin</a>
+    <a routerLink="/admin" class="btn btn--outline btn--block" (click)="closeMenu()">Connexion</a>
   </div>
 </header>

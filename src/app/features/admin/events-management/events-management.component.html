@@ -1,0 +1,124 @@
+<div class="admin-page">
+  <header class="page-head page-head--between">
+    <div class="page-head__text">
+      <h1><i class="ti ti-calendar-event"></i> Gestion des événements</h1>
+      <p class="text-muted">Créez, modifiez ou supprimez les événements du site.</p>
+    </div>
+    <app-segment-visibility *ngIf="isAdmin" segment="events" />
+  </header>
+
+  <div class="toolbar">
+    <input
+      class="form-control search"
+      type="search"
+      [value]="searchQuery()"
+      (input)="onSearch($any($event.target).value)"
+      placeholder="Rechercher par titre ou lieu…"
+    />
+    <a *ngIf="isAdmin" class="btn btn--outline" routerLink="/admin/events/new">+ Nouvel événement</a>
+  </div>
+
+  <div class="card mt-2 table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Titre</th>
+          <th>Lieu</th>
+          <th>Statut</th>
+          <th>Dates</th>
+          <th>Landing</th>
+          <th class="text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let _ of loading() ? [1,2,3,4,5] : []" class="skeleton-row">
+          <td><span class="skeleton skeleton-thumb"></span></td>
+          <td><span class="skeleton skeleton-text skeleton-text--long"></span></td>
+          <td><span class="skeleton skeleton-text"></span></td>
+          <td><span class="skeleton skeleton-badge"></span></td>
+          <td><span class="skeleton skeleton-text"></span></td>
+          <td><span class="skeleton skeleton-btn"></span></td>
+          <td>
+            <div class="row-actions">
+              <span class="skeleton skeleton-btn"></span>
+              <span class="skeleton skeleton-btn"></span>
+            </div>
+          </td>
+        </tr>
+        <tr
+          *ngFor="let item of !loading() ? result().items : []"
+          class="clickable"
+          (click)="open(item)"
+        >
+          <td class="event-thumb">
+            <img *ngIf="item.image" [src]="item.image" [alt]="item.title" />
+            <span *ngIf="!item.image" class="event-thumb__empty">
+              <i class="fa-regular fa-calendar"></i>
+            </span>
+          </td>
+          <td class="font-bold">{{ item.title }}</td>
+          <td>{{ item.location || '—' }}</td>
+          <td>
+            <span
+              class="badge"
+              [class.badge--blue]="item.status === 'soon'"
+              [class.badge--green]="item.status === 'currently'"
+              [class.badge--gray]="item.status === 'ended'"
+            >
+              {{ statusLabel(item.status) }}
+            </span>
+          </td>
+          <td>{{ formatDate(item.startDate) }} – {{ formatDate(item.endDate) }}</td>
+          <td (click)="$event.stopPropagation()">
+            <button
+              class="toggle-btn"
+              [class.toggle-btn--on]="item.isVisibleOnLanding"
+              (click)="toggleVisibility(item)"
+              [attr.aria-label]="item.isVisibleOnLanding ? 'Masquer' : 'Afficher'"
+            >
+              <span class="toggle-btn__track">
+                <span class="toggle-btn__thumb"></span>
+              </span>
+            </button>
+          </td>
+          <td (click)="$event.stopPropagation()">
+            <div class="row-actions">
+              <a class="btn btn--sm btn--ghost" [routerLink]="['/admin/events', item._id, 'edit']">Modifier</a>
+              <button class="btn btn--sm btn--danger" (click)="remove(item)">Supprimer</button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="!loading() && !result().items.length">
+          <td colspan="7"><p class="empty-state">Aucun événement.</p></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination" *ngIf="!loading()">
+    <div class="pagination__size">
+      <label class="pagination__label" for="events-limit">Par page</label>
+      <select
+        id="events-limit"
+        class="form-control"
+        [value]="limit()"
+        (change)="onLimitChange($any($event.target).value)"
+      >
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+    </div>
+    <div class="pagination__nav">
+      <button class="btn btn--ghost btn--sm" (click)="previousPage()" [disabled]="!hasPrev()">
+        <i class="fa-solid fa-arrow-left"></i> Précédent
+      </button>
+      <span class="pagination__info">Page {{ page() }} / {{ totalPages() }} · {{ result().total }} événements</span>
+      <button class="btn btn--ghost btn--sm" (click)="nextPage()" [disabled]="!hasNext()">
+        Suivant <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+</div>

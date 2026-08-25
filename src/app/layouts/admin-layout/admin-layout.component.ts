@@ -77,6 +77,12 @@ export class AdminLayoutComponent implements OnInit {
           icon: 'ti ti-plant-2',
           roles: CONTENT_ROLES,
         },
+        {
+          label: 'Événements',
+          path: '/admin/events',
+          icon: 'ti ti-calendar-event',
+          roles: CONTENT_ROLES,
+        },
       ],
     },
     {

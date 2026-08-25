@@ -983,11 +983,8 @@
 /* ---------- CTA / Newsletter (section pleine couleur) ---------- */
 .lq-cta {
   padding-bottom: 7rem;
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--color-primary) 30%, #010b09) 0%,
-    color-mix(in srgb, var(--color-primary) 16%, #010b09) 70%
-  );
+  background: url('../../../assets/img/seeds_bg.jpg') center / cover no-repeat;
+  background-attachment: fixed;
 }
 
 .lq-cta__panel {
@@ -1834,5 +1831,134 @@ $radius-circle: 50%;
   &:focus-visible {
     outline: 2px solid var(--color-primary);
     outline-offset: 3px;
+  }
+}
+
+/* ---------- Événements ---------- */
+.lq-eventsx {
+  position: relative;
+  background:
+    radial-gradient(640px 400px at 8% 8%, color-mix(in srgb, var(--color-primary) 16%, transparent), transparent 62%),
+    radial-gradient(720px 460px at 90% 18%, color-mix(in srgb, var(--color-primary) 13%, transparent), transparent 60%),
+    radial-gradient(520px 360px at 70% 88%, color-mix(in srgb, var(--color-primary) 11%, transparent), transparent 62%),
+    #ffffff;
+
+  &__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 2.4rem;
+  }
+
+  &__heading {
+    max-width: 640px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    h2 {
+      color: var(--ink);
+    }
+
+    p {
+      color: var(--ink-soft);
+      font-size: 1.02rem;
+      line-height: 1.7;
+      margin: 0;
+    }
+  }
+
+  &__nav {
+    display: flex;
+    gap: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  &__arrow {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--teal-bright);
+    color: var(--teal-bright);
+    background: transparent;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover:not(:disabled) {
+      background: var(--teal-bright);
+      color: #ffffff;
+      box-shadow: 0 10px 22px var(--teal-glow);
+      transform: translateY(-2px);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.35;
+      border-color: var(--ink-faint);
+      color: var(--ink-faint);
+    }
+  }
+
+  &__viewport {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: clamp(1.5rem, 1vw, 1.5rem) 1.5rem clamp(3.5rem, 2vw, 3.5rem);
+    padding-inline-start: 0.75rem;
+
+    @media (min-width: 576px) {
+      padding-inline-start: calc((100vw - 540px) / 2 + 0.75rem);
+    }
+
+    @media (min-width: 768px) {
+      padding-inline-start: calc((100vw - 720px) / 2 + 0.75rem);
+    }
+
+    @media (min-width: 992px) {
+      padding-inline-start: calc((100vw - 960px) / 2 + 0.75rem);
+    }
+
+    @media (min-width: 1200px) {
+      padding-inline-start: calc((100vw - 1140px) / 2 + 0.75rem);
+    }
+
+    @media (min-width: 1400px) {
+      padding-inline-start: calc((100vw - 1320px) / 2 + 0.75rem);
+    }
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &__track {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  &__location {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.3rem;
+    color: var(--ink-soft);
+    font-size: 0.85rem;
+
+    i {
+      color: var(--teal-bright);
+    }
+  }
+
+  @media (max-width: 900px) {
+    &__head {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
   }
 }

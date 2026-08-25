@@ -18,7 +18,8 @@ import { BannerService } from '../../core/services/banner.service';
 import { AboutService } from '../../core/services/about.service';
 import { SiteConfigService } from '../../core/services/site-config.service';
 import { ProspectsService } from '../../core/services/prospects.service';
-import type { News, Partner, Program, Banner, SiteAbout } from '../../core/models/models';
+import { EventsService } from '../../core/services/events.service';
+import type { News, Partner, Program, Banner, SiteAbout, SeedEvent } from '../../core/models/models';
 
 interface Figure {
   value: string;
@@ -91,6 +92,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly banner = signal<Banner | null>(null);
   readonly about = signal<SiteAbout | null>(null);
   readonly loading = signal(true);
+  readonly events = signal<SeedEvent[]>([]);
+  readonly eventsCanPrev = signal(false);
+  readonly eventsCanNext = signal(false);
 
   readonly newsletterSubmitting = signal(false);
   readonly newsletterSuccess = signal('');
@@ -198,6 +202,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly aboutService: AboutService,
     private readonly siteConfigService: SiteConfigService,
     private readonly prospectsService: ProspectsService,
+    private readonly eventsService: EventsService,
     private readonly elementRef: ElementRef,
   ) { }
 
@@ -249,6 +254,18 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.buildSlides();
         this.startMarqueeAutoScroll();
       },
+    });
+
+    this.eventsService.getLatest(10).subscribe({
+      next: (items) => {
+        this.events.set(items);
+        requestAnimationFrame(() => {
+          this.setupReveal();
+          this.resetEventsScroll();
+          this.updateEventsArrows();
+        });
+      },
+      error: () => this.events.set([]),
     });
 
     this.buildSlides();
@@ -393,12 +410,15 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   @HostListener('window:resize')
   onResize(): void {
     this.updateNewsArrows();
+    this.updateEventsArrows();
   }
 
   @HostListener('window:pageshow')
   onPageShow(): void {
     this.resetNewsScroll();
     this.updateNewsArrows();
+    this.resetEventsScroll();
+    this.updateEventsArrows();
   }
 
   scrollNews(direction: 1 | -1): void {
@@ -439,6 +459,55 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private newsViewport(): HTMLElement | null {
     return (this.elementRef.nativeElement as Element).querySelector<HTMLElement>('.lq-newsx__viewport');
+  }
+
+  scrollEvents(direction: 1 | -1): void {
+    const viewport = this.eventsViewport();
+    if (!viewport) {
+      return;
+    }
+    const card = viewport.querySelector<HTMLElement>('.lq-newsx__card');
+    const gap = 24;
+    const step = (card?.offsetWidth ?? viewport.clientWidth) + gap;
+    viewport.scrollBy({ left: direction * step, behavior: 'smooth' });
+  }
+
+  updateEventsArrows(): void {
+    const viewport = this.eventsViewport();
+    if (!viewport) {
+      this.eventsCanPrev.set(false);
+      this.eventsCanNext.set(false);
+      return;
+    }
+    const max = viewport.scrollWidth - viewport.clientWidth;
+    this.eventsCanPrev.set(viewport.scrollLeft > 8);
+    this.eventsCanNext.set(viewport.scrollLeft < max - 8);
+  }
+
+  resetEventsScroll(): void {
+    const viewport = this.eventsViewport();
+    if (viewport) {
+      viewport.scrollLeft = 0;
+    }
+    setTimeout(() => {
+      const vp = this.eventsViewport();
+      if (vp) {
+        vp.scrollLeft = 0;
+      }
+    }, 120);
+  }
+
+  private eventsViewport(): HTMLElement | null {
+    return (this.elementRef.nativeElement as Element).querySelector<HTMLElement>('.lq-eventsx__viewport');
+  }
+
+  eventStatusLabel(status: string): string {
+    const labels: Record<string, string> = {
+      soon: 'Bientôt',
+      currently: 'En cours',
+      ended: 'Terminé',
+    };
+    return labels[status] || status;
   }
 
   private setupReveal(): void {
