@@ -168,6 +168,22 @@ export interface Banner {
   fixedText?: string;
   rotatingPhrases?: string[];
   rotatingImage?: string;
+  rotatingVisible?: boolean;
+}
+
+export interface FeatureItem {
+  icon?: string;
+  name: string;
+  details: string;
+}
+
+export interface FeaturesSection {
+  _id?: string;
+  eyebrow?: string;
+  title?: string;
+  description?: string;
+  features: FeatureItem[];
+  visible?: boolean;
 }
 
 export interface SiteAbout {

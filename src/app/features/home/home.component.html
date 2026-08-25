@@ -155,7 +155,7 @@
   </section>
 
   <!-- ================= BANNIÈRE AVEC TEXTE ROTATIF ================= -->
-  <div class="banner-wrapper">
+  <div class="banner-wrapper" *ngIf="rotatingVisible()">
     <div class="banner-card">
 
       <!-- Zone Contenu Texte -->
@@ -187,7 +187,7 @@
     </div>
   </div>
 
-  <section class="features-section">
+  <section class="features-section" *ngIf="featuresVisible()">
     <div class="features-container">
 
       <!-- Visual Column -->
@@ -200,18 +200,16 @@
 
         <header class="features-header">
         <span class="lq-eyebrow lq-eyebrow--solid">
-          <i class="fa-solid fa-spa"></i> Pourquoi {{ siteConfig()?.orgName || 'SEEDS' }}</span>
-          <h2 class="features-title">Un partenaire investi dans votre croissance</h2>
+          <i class="fa-solid fa-spa"></i> {{ featuresEyebrow() }}</span>
+          <h2 class="features-title">{{ featuresTitle() }}</h2>
           <p class="features-description">
-            Nous allons au-delà d'un accompagnement classique pour établir un partenariat solide. Notre reconnaissance
-            officielle et notre engagement tout au long de votre parcours entrepreneurial font de nous un acteur de
-            référence.
+            {{ featuresDescription() }}
           </p>
         </header>
 
         <!-- Feature List -->
         <ul class="features-list">
-
+          @for (feature of featuresItems(); track $index) {
           <li class="feature-item reveal reveal--from-right">
             <div class="feature-icon-wrapper">
               <svg class="feature-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -222,42 +220,11 @@
               </svg>
             </div>
             <div class="feature-text">
-              <h3 class="feature-name">Abolition des frontières du savoir</h3>
-              <p class="feature-details">Un partage d'expériences direct entre experts internationaux et entrepreneurs locaux.</p>
+              <h3 class="feature-name">{{ feature.name }}</h3>
+              <p class="feature-details">{{ feature.details }}</p>
             </div>
           </li>
-
-          <li class="feature-item reveal reveal--from-right">
-            <div class="feature-icon-wrapper">
-              <svg class="feature-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <circle cx="12" cy="12" r="6"></circle>
-                <circle cx="12" cy="12" r="2"></circle>
-              </svg>
-            </div>
-            <div class="feature-text">
-              <h3 class="feature-name">Leadership serviteur & éthique </h3>
-              <p class="feature-details">Placer l'humain, l'intégrité et l'impact communautaire au cœur de chaque décision.</p>
-            </div>
-          </li>
-
-          <li class="feature-item reveal reveal--from-right">
-            <div class="feature-icon-wrapper">
-              <svg class="feature-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <circle cx="12" cy="12" r="6"></circle>
-                <circle cx="12" cy="12" r="2"></circle>
-              </svg>
-            </div>
-            <div class="feature-text">
-              <h3 class="feature-name">Engagement durable</h3>
-              <p class="feature-details">Suivi post-incubation pour assurer la pérennité et le succès de votre projet.
-              </p>
-            </div>
-          </li>
-
+          }
         </ul>
 
       </div>
@@ -272,8 +239,8 @@
           <span class="lq-eyebrow lq-eyebrow--solid">
             <i class="fa-solid fa-spa"></i>
             Événements</span>
-          <h2>Nos prochains événements</h2>
-          <p>Retrouvez nos événements à venir et passés de {{ siteConfig()?.orgName || 'SEEDS' }}.</p>
+          <h2>Nos rendez-vous</h2>
+          <p>Retrouvez nos événements à venir et passés.</p>
         </div>
 
         <div class="lq-eventsx__nav" *ngIf="events().length; else noEventsNav">

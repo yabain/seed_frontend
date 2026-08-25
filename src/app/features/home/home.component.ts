@@ -15,11 +15,12 @@ import { NewsService } from '../../core/services/news.service';
 import { ProgramsService } from '../../core/services/programs.service';
 import { PartnersService } from '../../core/services/partners.service';
 import { BannerService } from '../../core/services/banner.service';
+import { FeaturesSectionService } from '../../core/services/features-section.service';
 import { AboutService } from '../../core/services/about.service';
 import { SiteConfigService } from '../../core/services/site-config.service';
 import { ProspectsService } from '../../core/services/prospects.service';
 import { EventsService } from '../../core/services/events.service';
-import type { News, Partner, Program, Banner, SiteAbout, SeedEvent } from '../../core/models/models';
+import type { News, Partner, Program, Banner, SiteAbout, SeedEvent, FeaturesSection, FeatureItem } from '../../core/models/models';
 
 interface Figure {
   value: string;
@@ -182,6 +183,17 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     "soutenons activement les femmes",
   ]);
   readonly rotatingImage = signal('/assets/img/germe.webp');
+  readonly rotatingVisible = signal(true);
+
+  readonly featuresEyebrow = signal('Pourquoi SEEDS');
+  readonly featuresTitle = signal('Un partenaire investi dans votre croissance');
+  readonly featuresDescription = signal('Nous allons au-delà d\'un accompagnement classique pour établir un partenariat solide. Notre reconnaissance officielle et notre engagement tout au long de votre parcours entrepreneurial font de nous un acteur de référence.');
+  readonly featuresItems = signal<FeatureItem[]>([
+    { icon: '', name: 'Abolition des frontières du savoir', details: 'Un partage d\'expériences direct entre experts internationaux et entrepreneurs locaux.' },
+    { icon: '', name: 'Leadership serviteur & éthique', details: 'Placer l\'humain, l\'intégrité et l\'impact communautaire au cœur de chaque décision.' },
+    { icon: '', name: 'Engagement durable', details: 'Suivi post-incubation pour assurer la pérennité et le succès de votre projet.' },
+  ]);
+  readonly featuresVisible = signal(true);
 
   currentStep = signal(0);
   isTransitioning = signal(true);
@@ -204,6 +216,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly programsService: ProgramsService,
     private readonly partnersService: PartnersService,
     private readonly bannerService: BannerService,
+    private readonly featuresSectionService: FeaturesSectionService,
     private readonly aboutService: AboutService,
     private readonly siteConfigService: SiteConfigService,
     private readonly prospectsService: ProspectsService,
@@ -231,6 +244,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         if (banner.rotatingImage) {
           this.rotatingImage.set(banner.rotatingImage);
         }
+        this.rotatingVisible.set(banner.rotatingVisible ?? true);
       },
       error: () => this.banner.set(null),
       complete: () => this.buildSlides(),
@@ -239,6 +253,17 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.aboutService.getPublic().subscribe({
       next: (about) => this.about.set(about),
       error: () => this.about.set(null),
+    });
+
+    this.featuresSectionService.getPublic().subscribe({
+      next: (section) => {
+        if (section.eyebrow) this.featuresEyebrow.set(section.eyebrow);
+        if (section.title) this.featuresTitle.set(section.title);
+        if (section.description) this.featuresDescription.set(section.description);
+        if (section.features?.length) this.featuresItems.set(section.features);
+        this.featuresVisible.set(section.visible ?? true);
+      },
+      error: () => {},
     });
 
     this.newsService.getLatest(10).subscribe({

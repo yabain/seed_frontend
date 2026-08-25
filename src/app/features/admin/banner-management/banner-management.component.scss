@@ -95,3 +95,96 @@
     flex: 1;
   }
 }
+
+.form-field--toggle {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.toggle-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.toggle-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+
+  &:focus-visible + .toggle-label .toggle-slider {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 30%, transparent);
+  }
+}
+
+.toggle-label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--color-gray-700);
+}
+
+.toggle-slider {
+  width: 48px;
+  height: 26px;
+  border-radius: 13px;
+  background: var(--color-gray-300);
+  transition: background 0.25s ease;
+  flex-shrink: 0;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--color-white);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition: transform 0.25s ease;
+  }
+}
+
+.toggle-input:checked + .toggle-label .toggle-slider {
+  background: var(--color-primary);
+
+  &::after {
+    transform: translateX(22px);
+  }
+}
+
+.toggle-text {
+  font-size: 0.9rem;
+  min-width: 60px;
+  text-transform: capitalize;
+}
+
+.features-list-admin {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.feature-admin-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.feature-admin-fields {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.feature-admin-fields input,
+.feature-admin-fields textarea {
+  width: 100%;
+}

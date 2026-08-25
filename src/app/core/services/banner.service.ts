@@ -16,12 +16,14 @@ export class BannerService {
     fixedText: string,
     rotatingPhrases: string[],
     rotatingImage: string,
+    rotatingVisible: boolean,
   ): Observable<Banner> {
     return this.api.put<Banner>('/banner', {
       slides,
       fixedText,
       rotatingPhrases,
       rotatingImage,
+      rotatingVisible,
     });
   }
 }

@@ -123,6 +123,25 @@
       Le texte statique précède les phrases qui défilent automatiquement.
     </p>
 
+    <div class="form-field form-field--toggle">
+      <label>Visibilité sur la page d'accueil</label>
+      <div class="toggle-wrapper">
+        <input
+          type="checkbox"
+          id="rotating-visible"
+          class="toggle-input"
+          [ngModel]="rotatingVisible()"
+          (ngModelChange)="toggleVisibility($event)"
+          name="rotating-visible"
+        />
+        <label for="rotating-visible" class="toggle-label">
+          <span class="toggle-slider"></span>
+          <span class="toggle-text">{{ rotatingVisible() ? 'Visible' : 'Masqué' }}</span>
+        </label>
+      </div>
+      <span class="form-hint">Activez pour afficher la section « Texte rotatif » sur la landing page.</span>
+    </div>
+
     <div class="form-field">
       <label>Phrase statique (préfixe)</label>
       <input
@@ -206,6 +225,150 @@
     </div>
     <div class="form-field">
       <label>Image à droite</label>
+      <span class="skeleton skeleton-text skeleton-text--long"></span>
+    </div>
+    <div class="form-actions">
+      <span class="skeleton skeleton-btn"></span>
+    </div>
+  </section>
+
+  <!-- ====== Section Partenaires / Features ====== -->
+  <section class="card mt-2" *ngIf="loaded()">
+    <h2><i class="ti ti-handshake"></i> Section « Un partenaire investi dans votre croissance »</h2>
+    <p class="text-muted mb-2">
+      Cette section s'affiche après le texte rotatif sur la page d'accueil.
+    </p>
+
+    <div class="form-field form-field--toggle">
+      <label>Visibilité sur la page d'accueil</label>
+      <div class="toggle-wrapper">
+        <input
+          type="checkbox"
+          id="features-visible"
+          class="toggle-input"
+          [ngModel]="featuresVisible()"
+          (ngModelChange)="toggleFeaturesVisibility($event)"
+          name="features-visible"
+        />
+        <label for="features-visible" class="toggle-label">
+          <span class="toggle-slider"></span>
+          <span class="toggle-text">{{ featuresVisible() ? 'Visible' : 'Masqué' }}</span>
+        </label>
+      </div>
+      <span class="form-hint">Activez pour afficher cette section sur la landing page.</span>
+    </div>
+
+    <div class="form-field">
+      <label>Texte du badge supérieur (eyebrow)</label>
+      <input
+        class="form-control"
+        type="text"
+        [ngModel]="featuresEyebrow()"
+        (ngModelChange)="featuresEyebrow.set($event)"
+        name="features-eyebrow"
+        maxlength="200"
+        placeholder="Pourquoi SEEDS"
+      />
+    </div>
+
+    <div class="form-field">
+      <label>Titre principal</label>
+      <input
+        class="form-control"
+        type="text"
+        [ngModel]="featuresTitle()"
+        (ngModelChange)="featuresTitle.set($event)"
+        name="features-title"
+        maxlength="300"
+        placeholder="Un partenaire investi dans votre croissance"
+      />
+    </div>
+
+    <div class="form-field">
+      <label>Description</label>
+      <textarea
+        class="form-control"
+        rows="3"
+        [ngModel]="featuresDescription()"
+        (ngModelChange)="featuresDescription.set($event)"
+        name="features-description"
+        maxlength="1000"
+        placeholder="Nous allons au-delà d'un accompagnement classique..."
+      ></textarea>
+    </div>
+
+    <div class="form-field">
+      <label>Fonctionnalités (cartes)</label>
+      <div class="features-list-admin">
+        <div class="feature-admin-row" *ngFor="let feature of featuresItems(); let i = index; trackBy: trackByIndex">
+          <div class="feature-admin-fields">
+            <input
+              class="form-control"
+              type="text"
+              [ngModel]="feature.name"
+              (ngModelChange)="updateFeatureName(i, $event)"
+              [name]="'feature-name-' + i"
+              maxlength="200"
+              [placeholder]="'Titre fonctionnalité ' + (i + 1)"
+            />
+            <textarea
+              class="form-control"
+              rows="2"
+              [ngModel]="feature.details"
+              (ngModelChange)="updateFeatureDetails(i, $event)"
+              [name]="'feature-details-' + i"
+              maxlength="500"
+              [placeholder]="'Description fonctionnalité ' + (i + 1)"
+            ></textarea>
+          </div>
+          <button
+            class="btn btn--icon btn--danger-ghost"
+            (click)="removeFeature(i)"
+            title="Supprimer"
+            [disabled]="featuresItems().length <= 1"
+          >
+            <i class="ti ti-trash"></i>
+          </button>
+        </div>
+      </div>
+      <button
+        class="btn btn--secondary btn--sm mt-1"
+        (click)="addFeature()"
+      >
+        <i class="ti ti-plus"></i> Ajouter une fonctionnalité
+      </button>
+      <span class="form-hint">
+        Chaque fonctionnalité s'affiche sous forme de carte avec icône, titre et description.
+      </span>
+    </div>
+
+    <div class="form-actions">
+      <button
+        class="btn btn--primary"
+        (click)="saveFeatures()"
+        [disabled]="savingFeatures()"
+      >
+        {{ savingFeatures() ? 'Enregistrement…' : 'Enregistrer la section partenaires' }}
+      </button>
+    </div>
+  </section>
+
+  <section class="card mt-2" *ngIf="!loaded()">
+    <h2><i class="ti ti-handshake"></i> Section Partenaires</h2>
+    <div class="form-field">
+      <label>Badge supérieur</label>
+      <span class="skeleton skeleton-text skeleton-text--long"></span>
+    </div>
+    <div class="form-field">
+      <label>Titre</label>
+      <span class="skeleton skeleton-text skeleton-text--long"></span>
+    </div>
+    <div class="form-field">
+      <label>Description</label>
+      <span class="skeleton skeleton-text skeleton-text--long"></span>
+    </div>
+    <div class="form-field">
+      <label>Fonctionnalités</label>
       <span class="skeleton skeleton-text skeleton-text--long"></span>
     </div>
     <div class="form-actions">

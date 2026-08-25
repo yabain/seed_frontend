@@ -2,9 +2,10 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BannerService } from '../../../core/services/banner.service';
+import { FeaturesSectionService } from '../../../core/services/features-section.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { AdminImageFieldComponent } from '../../../shared/components/admin-image-field/admin-image-field.component';
-import type { BannerSlide } from '../../../core/models/models';
+import type { BannerSlide, FeatureItem, FeaturesSection } from '../../../core/models/models';
 
 const EMPTY_SLIDES: BannerSlide[] = [
   { eyebrow: '', title: '', subtitle: '', image: '' },
@@ -20,6 +21,24 @@ const DEFAULT_PHRASES = [
   "soutenons activement les femmes",
 ];
 
+const DEFAULT_FEATURES: FeatureItem[] = [
+  {
+    icon: '',
+    name: 'Abolition des frontières du savoir',
+    details: 'Un partage d\'expériences direct entre experts internationaux et entrepreneurs locaux.',
+  },
+  {
+    icon: '',
+    name: 'Leadership serviteur & éthique',
+    details: 'Placer l\'humain, l\'intégrité et l\'impact communautaire au cœur de chaque décision.',
+  },
+  {
+    icon: '',
+    name: 'Engagement durable',
+    details: 'Suivi post-incubation pour assurer la pérennité et le succès de votre projet.',
+  },
+];
+
 @Component({
   selector: 'app-banner-management',
   standalone: true,
@@ -33,12 +52,21 @@ export class BannerManagementComponent implements OnInit {
   readonly fixedText = signal('');
   readonly rotatingPhrases = signal<string[]>([]);
   readonly rotatingImage = signal('');
+  readonly rotatingVisible = signal(true);
+  readonly featuresEyebrow = signal('');
+  readonly featuresTitle = signal('');
+  readonly featuresDescription = signal('');
+  readonly featuresItems = signal<FeatureItem[]>(DEFAULT_FEATURES.map((f) => ({ ...f })));
+  readonly featuresVisible = signal(true);
   readonly loaded = signal(false);
   readonly savingSlides = signal(false);
   readonly savingRotating = signal(false);
+  readonly savingVisibility = signal(false);
+  readonly savingFeatures = signal(false);
 
   constructor(
     private readonly bannerService: BannerService,
+    private readonly featuresSectionService: FeaturesSectionService,
     private readonly toastService: ToastService,
   ) {}
 
@@ -65,11 +93,29 @@ export class BannerManagementComponent implements OnInit {
             : [...DEFAULT_PHRASES],
         );
         this.rotatingImage.set(banner.rotatingImage ?? '');
+        this.rotatingVisible.set(banner.rotatingVisible ?? true);
         this.loaded.set(true);
       },
       error: () => {
         this.loaded.set(true);
         this.toastService.error('Impossible de charger la bannière.');
+      },
+    });
+
+    this.featuresSectionService.getPublic().subscribe({
+      next: (section) => {
+        this.featuresEyebrow.set(section.eyebrow ?? '');
+        this.featuresTitle.set(section.title ?? '');
+        this.featuresDescription.set(section.description ?? '');
+        this.featuresItems.set(
+          section.features?.length
+            ? section.features.map((f) => ({ ...f }))
+            : DEFAULT_FEATURES.map((f) => ({ ...f })),
+        );
+        this.featuresVisible.set(section.visible ?? true);
+      },
+      error: () => {
+        this.toastService.error('Impossible de charger la section partenaires.');
       },
     });
   }
@@ -83,7 +129,7 @@ export class BannerManagementComponent implements OnInit {
   saveSlides(): void {
     this.savingSlides.set(true);
     this.bannerService
-      .update(this.slides(), this.fixedText(), this.rotatingPhrases(), this.rotatingImage())
+      .update(this.slides(), this.fixedText(), this.rotatingPhrases(), this.rotatingImage(), this.rotatingVisible())
       .subscribe({
         next: () => {
           this.savingSlides.set(false);
@@ -101,7 +147,7 @@ export class BannerManagementComponent implements OnInit {
   saveRotating(): void {
     this.savingRotating.set(true);
     this.bannerService
-      .update(this.slides(), this.fixedText(), this.rotatingPhrases(), this.rotatingImage())
+      .update(this.slides(), this.fixedText(), this.rotatingPhrases(), this.rotatingImage(), this.rotatingVisible())
       .subscribe({
         next: () => {
           this.savingRotating.set(false);
@@ -131,5 +177,95 @@ export class BannerManagementComponent implements OnInit {
 
   trackByIndex(index: number): number {
     return index;
+  }
+
+  toggleVisibility(value: boolean): void {
+    this.rotatingVisible.set(value);
+    this.savingVisibility.set(true);
+    this.bannerService
+      .update(this.slides(), this.fixedText(), this.rotatingPhrases(), this.rotatingImage(), value)
+      .subscribe({
+        next: () => {
+          this.savingVisibility.set(false);
+          this.toastService.success(value ? 'Section visible' : 'Section masquée');
+        },
+        error: (err) => {
+          this.savingVisibility.set(false);
+          this.rotatingVisible.set(!value);
+          this.toastService.error(
+            err.details?.join(' ') || err.message || "Erreur lors du changement de visibilité.",
+          );
+        },
+      });
+  }
+
+  addFeature(): void {
+    this.featuresItems.update((items) => [...items, { icon: '', name: '', details: '' }]);
+  }
+
+  removeFeature(index: number): void {
+    this.featuresItems.update((items) => items.filter((_, i) => i !== index));
+  }
+
+  updateFeatureName(index: number, value: string): void {
+    this.featuresItems.update((items) =>
+      items.map((item, i) => (i === index ? { ...item, name: value } : item)),
+    );
+  }
+
+  updateFeatureDetails(index: number, value: string): void {
+    this.featuresItems.update((items) =>
+      items.map((item, i) => (i === index ? { ...item, details: value } : item)),
+    );
+  }
+
+  saveFeatures(): void {
+    this.savingFeatures.set(true);
+    this.featuresSectionService
+      .update(
+        this.featuresEyebrow(),
+        this.featuresTitle(),
+        this.featuresDescription(),
+        this.featuresItems(),
+        this.featuresVisible(),
+      )
+      .subscribe({
+        next: () => {
+          this.savingFeatures.set(false);
+          this.toastService.success('Section partenaires enregistrée avec succès.');
+        },
+        error: (err) => {
+          this.savingFeatures.set(false);
+          this.toastService.error(
+            err.details?.join(' ') || err.message || "Erreur lors de l'enregistrement.",
+          );
+        },
+      });
+  }
+
+  toggleFeaturesVisibility(value: boolean): void {
+    this.featuresVisible.set(value);
+    this.savingFeatures.set(true);
+    this.featuresSectionService
+      .update(
+        this.featuresEyebrow(),
+        this.featuresTitle(),
+        this.featuresDescription(),
+        this.featuresItems(),
+        value,
+      )
+      .subscribe({
+        next: () => {
+          this.savingFeatures.set(false);
+          this.toastService.success(value ? 'Section visible' : 'Section masquée');
+        },
+        error: (err) => {
+          this.savingFeatures.set(false);
+          this.featuresVisible.set(!value);
+          this.toastService.error(
+            err.details?.join(' ') || err.message || "Erreur lors du changement de visibilité.",
+          );
+        },
+      });
   }
 }
