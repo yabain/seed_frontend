@@ -295,13 +295,13 @@
         <p>Quatre axes d’action concrets pour répondre aux besoins des communautés.</p>
       </div>
 
-      <div class="lq-cards lq-cards--4">
+      <!-- <div class="lq-cards lq-cards--4">
         <article class="lq-glass lq-card lq-card--feature reveal" *ngFor="let feature of features">
           <span class="lq-card__icon"><i [class]="feature.icon"></i></span>
           <h3>{{ feature.title }}</h3>
           <p>{{ feature.text }}</p>
         </article>
-      </div>
+      </div> -->
     </div>
   </section>
 
@@ -328,7 +328,7 @@
             <i class="fa-solid fa-spa"></i>
             Actualités</span>
           <h2>Nos dernières nouvelles</h2>
-          <p>Suivez l’actualité et les réalisations de {{ siteConfig()?.orgName || 'SEEDS' }} sur le terrain.</p>
+          <p>Suivez notre actualité et nos réalisations.</p>
         </div>
 
         <div class="lq-newsx__nav" *ngIf="latestNews().length; else noNav">
