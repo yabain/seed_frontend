@@ -59,7 +59,7 @@
   </section>
 
   <!-- ================= À PROPOS / MISSION / VISION ================= -->
-  <section class="lq-section" id="apropos">
+  <section class="lq-section lq-about" id="apropos">
     <div class="container">
       <div class="lq-section__head reveal">
         <span class="lq-eyebrow lq-eyebrow--solid">
@@ -71,8 +71,8 @@
         </p>
       </div>
 
-      <div class="lq-cards">
-        <article class="lq-glass lq-card lq-card--illustration reveal">
+      <div class="lq-about__cards">
+        <article class="lq-glass lq-card lq-card--illustration lq-about__card lq-about__card--mission reveal">
           <div class="lq-card__illu">
             <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="100" cy="100" r="80" fill="url(#mission-grad)" opacity="0.12"/>
@@ -90,12 +90,13 @@
               </defs>
             </svg>
           </div>
+          <span class="lq-about__label">Notre boussole</span>
           <h3>Notre mission</h3>
           <p>
             {{ about()?.mission || fallbackMission }}
           </p>
         </article>
-        <article class="lq-glass lq-card lq-card--illustration reveal">
+        <article class="lq-glass lq-card lq-card--illustration lq-about__card lq-about__card--vision reveal">
           <div class="lq-card__illu">
             <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
               <ellipse cx="100" cy="100" rx="80" ry="50" transform="rotate(-30 100 100)" fill="url(#vision-grad)" opacity="0.1"/>
@@ -114,12 +115,13 @@
               </defs>
             </svg>
           </div>
+          <span class="lq-about__label">Notre horizon</span>
           <h3>Notre vision</h3>
           <p>
             {{ about()?.vision || fallbackVision }}
           </p>
         </article>
-        <article class="lq-glass lq-card lq-card--illustration reveal">
+        <article class="lq-glass lq-card lq-card--illustration lq-about__card lq-about__card--values reveal">
           <div class="lq-card__illu">
             <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="72" cy="78" r="18" fill="url(#val-grad)" opacity="0.18"/>
@@ -143,6 +145,7 @@
               </defs>
             </svg>
           </div>
+          <span class="lq-about__label">Ce qui nous guide</span>
           <h3>Nos valeurs</h3>
           <ul class="lq-card__list">
             <li><i class="ti ti-circle-check"></i> {{ about()?.values?.[0] || 'Solidarité et inclusivité' }}</li>
