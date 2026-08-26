@@ -186,6 +186,20 @@ export interface FeaturesSection {
   visible?: boolean;
 }
 
+export interface CountryItem {
+  image?: string;
+  title: string;
+  subtitle?: string;
+}
+
+export interface CountriesSection {
+  _id?: string;
+  title?: string;
+  backgroundImage?: string;
+  countries: CountryItem[];
+  visible?: boolean;
+}
+
 export interface SiteAbout {
   _id?: string;
   mission: string;

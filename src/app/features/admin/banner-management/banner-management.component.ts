@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BannerService } from '../../../core/services/banner.service';
 import { FeaturesSectionService } from '../../../core/services/features-section.service';
+import { CountriesSectionService } from '../../../core/services/countries-section.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { AdminImageFieldComponent } from '../../../shared/components/admin-image-field/admin-image-field.component';
-import type { BannerSlide, FeatureItem, FeaturesSection } from '../../../core/models/models';
+import type { BannerSlide, FeatureItem, FeaturesSection, CountryItem, CountriesSection } from '../../../core/models/models';
 
 const EMPTY_SLIDES: BannerSlide[] = [
   { eyebrow: '', title: '', subtitle: '', image: '' },
@@ -39,6 +40,29 @@ const DEFAULT_FEATURES: FeatureItem[] = [
   },
 ];
 
+const DEFAULT_COUNTRIES: CountryItem[] = [
+  {
+    image: '/assets/flags/cameroon.avif',
+    title: 'Cameroon',
+    subtitle: '',
+  },
+  {
+    image: '/assets/flags/benin.avif',
+    title: 'Benin',
+    subtitle: '',
+  },
+  {
+    image: '/assets/flags/gabon.avif',
+    title: 'Gabon',
+    subtitle: '',
+  },
+  {
+    image: '/assets/flags/togo.avif',
+    title: 'Togo',
+    subtitle: '',
+  },
+];
+
 @Component({
   selector: 'app-banner-management',
   standalone: true,
@@ -58,15 +82,21 @@ export class BannerManagementComponent implements OnInit {
   readonly featuresDescription = signal('');
   readonly featuresItems = signal<FeatureItem[]>(DEFAULT_FEATURES.map((f) => ({ ...f })));
   readonly featuresVisible = signal(true);
+  readonly countriesTitle = signal('4 Countries');
+  readonly countriesBackgroundImage = signal('');
+  readonly countriesItems = signal<CountryItem[]>(DEFAULT_COUNTRIES.map((c) => ({ ...c })));
+  readonly countriesVisible = signal(true);
   readonly loaded = signal(false);
   readonly savingSlides = signal(false);
   readonly savingRotating = signal(false);
   readonly savingVisibility = signal(false);
   readonly savingFeatures = signal(false);
+  readonly savingCountries = signal(false);
 
   constructor(
     private readonly bannerService: BannerService,
     private readonly featuresSectionService: FeaturesSectionService,
+    private readonly countriesSectionService: CountriesSectionService,
     private readonly toastService: ToastService,
   ) {}
 
@@ -116,6 +146,22 @@ export class BannerManagementComponent implements OnInit {
       },
       error: () => {
         this.toastService.error('Impossible de charger la section partenaires.');
+      },
+    });
+
+    this.countriesSectionService.getPublic().subscribe({
+      next: (section) => {
+        this.countriesTitle.set(section.title ?? '4 Countries');
+        this.countriesBackgroundImage.set(section.backgroundImage ?? '');
+        this.countriesItems.set(
+          section.countries?.length
+            ? section.countries.map((c) => ({ ...c }))
+            : DEFAULT_COUNTRIES.map((c) => ({ ...c })),
+        );
+        this.countriesVisible.set(section.visible ?? true);
+      },
+      error: () => {
+        this.toastService.error('Impossible de charger la section pays.');
       },
     });
   }
@@ -262,6 +308,80 @@ export class BannerManagementComponent implements OnInit {
         error: (err) => {
           this.savingFeatures.set(false);
           this.featuresVisible.set(!value);
+          this.toastService.error(
+            err.details?.join(' ') || err.message || "Erreur lors du changement de visibilité.",
+          );
+        },
+      });
+  }
+
+  addCountry(): void {
+    this.countriesItems.update((items) => [...items, { image: '', title: '', subtitle: '' }]);
+  }
+
+  removeCountry(index: number): void {
+    this.countriesItems.update((items) => items.filter((_, i) => i !== index));
+  }
+
+  updateCountryTitle(index: number, value: string): void {
+    this.countriesItems.update((items) =>
+      items.map((item, i) => (i === index ? { ...item, title: value } : item)),
+    );
+  }
+
+  updateCountrySubtitle(index: number, value: string): void {
+    this.countriesItems.update((items) =>
+      items.map((item, i) => (i === index ? { ...item, subtitle: value } : item)),
+    );
+  }
+
+  setCountryImage(index: number, url: string): void {
+    this.countriesItems.update((items) =>
+      items.map((item, i) => (i === index ? { ...item, image: url } : item)),
+    );
+  }
+
+  saveCountries(): void {
+    this.savingCountries.set(true);
+    this.countriesSectionService
+      .update(
+        this.countriesTitle(),
+        this.countriesBackgroundImage(),
+        this.countriesItems(),
+        this.countriesVisible(),
+      )
+      .subscribe({
+        next: () => {
+          this.savingCountries.set(false);
+          this.toastService.success('Section pays enregistrée avec succès.');
+        },
+        error: (err) => {
+          this.savingCountries.set(false);
+          this.toastService.error(
+            err.details?.join(' ') || err.message || "Erreur lors de l'enregistrement.",
+          );
+        },
+      });
+  }
+
+  toggleCountriesVisibility(value: boolean): void {
+    this.countriesVisible.set(value);
+    this.savingCountries.set(true);
+    this.countriesSectionService
+      .update(
+        this.countriesTitle(),
+        this.countriesBackgroundImage(),
+        this.countriesItems(),
+        value,
+      )
+      .subscribe({
+        next: () => {
+          this.savingCountries.set(false);
+          this.toastService.success(value ? 'Section visible' : 'Section masquée');
+        },
+        error: (err) => {
+          this.savingCountries.set(false);
+          this.countriesVisible.set(!value);
           this.toastService.error(
             err.details?.join(' ') || err.message || "Erreur lors du changement de visibilité.",
           );

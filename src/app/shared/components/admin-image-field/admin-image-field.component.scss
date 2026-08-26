@@ -58,6 +58,12 @@
   aspect-ratio: 1 / 1;
 }
 
+/* Deux actions sont visibles sur un aperçu carré : préserver une hauteur
+   suffisante entre le bouton de remplacement et celui de suppression. */
+.admin-image-field.is-square {
+  min-width: 112px;
+}
+
 .admin-image-field__area.dragging .admin-image-field__preview {
   border-color: var(--color-primary);
   background: color-mix(in srgb, var(--color-primary) 12%, var(--color-gray-50));

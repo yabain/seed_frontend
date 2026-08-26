@@ -117,30 +117,17 @@
 
   <!-- ====== Section texte rotatif (séparée) ====== -->
   <section class="card mt-2" *ngIf="loaded()">
-    <h2><i class="ti ti-text-rotation-none"></i> Texte rotatif</h2>
+    <header class="section-editor-head">
+      <h2><i class="ti ti-text-rotation-none"></i> Texte rotatif</h2>
+      <div class="toggle-wrapper">
+        <input type="checkbox" id="rotating-visible" class="toggle-input" [ngModel]="rotatingVisible()" (ngModelChange)="toggleVisibility($event)" name="rotating-visible" />
+        <label for="rotating-visible" class="toggle-label"><span class="toggle-slider"></span><span class="toggle-text">{{ rotatingVisible() ? 'Visible' : 'Masqué' }}</span></label>
+      </div>
+    </header>
     <p class="text-muted mb-2">
       Cette section s'affiche juste après « À propos » sur la page d'accueil.
       Le texte statique précède les phrases qui défilent automatiquement.
     </p>
-
-    <div class="form-field form-field--toggle">
-      <label>Visibilité sur la page d'accueil</label>
-      <div class="toggle-wrapper">
-        <input
-          type="checkbox"
-          id="rotating-visible"
-          class="toggle-input"
-          [ngModel]="rotatingVisible()"
-          (ngModelChange)="toggleVisibility($event)"
-          name="rotating-visible"
-        />
-        <label for="rotating-visible" class="toggle-label">
-          <span class="toggle-slider"></span>
-          <span class="toggle-text">{{ rotatingVisible() ? 'Visible' : 'Masqué' }}</span>
-        </label>
-      </div>
-      <span class="form-hint">Activez pour afficher la section « Texte rotatif » sur la landing page.</span>
-    </div>
 
     <div class="form-field">
       <label>Phrase statique (préfixe)</label>
@@ -234,29 +221,16 @@
 
   <!-- ====== Section Partenaires / Features ====== -->
   <section class="card mt-2" *ngIf="loaded()">
-    <h2><i class="ti ti-handshake"></i> Section « Un partenaire investi dans votre croissance »</h2>
+    <header class="section-editor-head">
+      <h2><i class="ti ti-handshake"></i> Section « Un partenaire investi dans votre croissance »</h2>
+      <div class="toggle-wrapper">
+        <input type="checkbox" id="features-visible" class="toggle-input" [ngModel]="featuresVisible()" (ngModelChange)="toggleFeaturesVisibility($event)" name="features-visible" />
+        <label for="features-visible" class="toggle-label"><span class="toggle-slider"></span><span class="toggle-text">{{ featuresVisible() ? 'Visible' : 'Masqué' }}</span></label>
+      </div>
+    </header>
     <p class="text-muted mb-2">
       Cette section s'affiche après le texte rotatif sur la page d'accueil.
     </p>
-
-    <div class="form-field form-field--toggle">
-      <label>Visibilité sur la page d'accueil</label>
-      <div class="toggle-wrapper">
-        <input
-          type="checkbox"
-          id="features-visible"
-          class="toggle-input"
-          [ngModel]="featuresVisible()"
-          (ngModelChange)="toggleFeaturesVisibility($event)"
-          name="features-visible"
-        />
-        <label for="features-visible" class="toggle-label">
-          <span class="toggle-slider"></span>
-          <span class="toggle-text">{{ featuresVisible() ? 'Visible' : 'Masqué' }}</span>
-        </label>
-      </div>
-      <span class="form-hint">Activez pour afficher cette section sur la landing page.</span>
-    </div>
 
     <div class="form-field">
       <label>Texte du badge supérieur (eyebrow)</label>
@@ -353,22 +327,105 @@
     </div>
   </section>
 
-  <section class="card mt-2" *ngIf="!loaded()">
-    <h2><i class="ti ti-handshake"></i> Section Partenaires</h2>
-    <div class="form-field">
-      <label>Badge supérieur</label>
-      <span class="skeleton skeleton-text skeleton-text--long"></span>
+  <!-- ====== Section Pays ====== -->
+  <section class="card mt-2 countries-editor" *ngIf="loaded()">
+    <header class="countries-editor__head">
+      <div class="countries-editor__title">
+        <span class="countries-editor__icon"><i class="ti ti-world"></i></span>
+        <div>
+          <span class="countries-editor__eyebrow">Landing page · après les partenaires</span>
+          <h2>Section « 4 Countries »</h2>
+          <p>Présentez les pays et communautés dans lesquels SEEDS agit.</p>
+        </div>
+      </div>
+      <div class="toggle-wrapper">
+        <input type="checkbox" id="countries-visible" class="toggle-input" [ngModel]="countriesVisible()" (ngModelChange)="toggleCountriesVisibility($event)" name="countries-visible" />
+        <label for="countries-visible" class="toggle-label"><span class="toggle-slider"></span><span class="toggle-text">{{ countriesVisible() ? 'Visible' : 'Masqué' }}</span></label>
+      </div>
+    </header>
+
+    <div class="countries-editor__settings">
+      <div class="form-field">
+        <label>Titre de la section</label>
+        <input
+          class="form-control"
+          type="text"
+          [ngModel]="countriesTitle()"
+          (ngModelChange)="countriesTitle.set($event)"
+          name="countries-title"
+          maxlength="300"
+          placeholder="4 Countries"
+        />
+      </div>
+      <div class="form-field">
+        <label>Image d'arrière-plan</label>
+        <app-admin-image-field
+          [image]="countriesBackgroundImage()"
+          (imageChange)="countriesBackgroundImage.set($event)"
+          variant="wide"
+          alt="Arrière-plan section pays"
+        />
+      </div>
     </div>
+
+    <div class="form-field countries-editor__countries">
+      <div class="countries-editor__countries-head">
+        <div><label>Pays affichés</label><span class="form-hint">Chaque carte associe un visuel, un pays et un court message.</span></div>
+        <span class="countries-editor__count">{{ countriesItems().length }} pays</span>
+      </div>
+      <div class="countries-list-admin">
+        <div class="country-admin-row" *ngFor="let country of countriesItems(); let i = index; trackBy: trackByIndex">
+          <span class="country-admin-row__number">{{ i + 1 }}</span>
+          <div class="country-admin-fields">
+            <div class="country-admin-fields__image"><app-admin-image-field [image]="country.image" (imageChange)="setCountryImage(i, $event)" variant="square" [alt]="'Drapeau ' + country.title" /></div>
+            <div class="country-admin-fields__content">
+              <label [for]="'country-title-' + i">Nom du pays</label>
+              <input class="form-control" type="text" [ngModel]="country.title" (ngModelChange)="updateCountryTitle(i, $event)" [name]="'country-title-' + i" [id]="'country-title-' + i" maxlength="200" [placeholder]="'Nom du pays ' + (i + 1)" />
+              <label [for]="'country-subtitle-' + i">Sous-titre</label>
+              <input class="form-control" type="text" [ngModel]="country.subtitle" (ngModelChange)="updateCountrySubtitle(i, $event)" [name]="'country-subtitle-' + i" [id]="'country-subtitle-' + i" maxlength="500" [placeholder]="'Sous-titre ' + (i + 1)" />
+            </div>
+          </div>
+          <button
+            class="btn btn--icon btn--danger-ghost"
+            (click)="removeCountry(i)"
+            title="Supprimer"
+            [disabled]="countriesItems().length <= 1"
+          >
+            <i class="ti ti-trash"></i>
+          </button>
+        </div>
+      </div>
+      <button
+        class="btn btn--secondary btn--sm countries-editor__add"
+        (click)="addCountry()"
+      >
+        <i class="ti ti-plus"></i> Ajouter un pays
+      </button>
+    </div>
+
+    <div class="form-actions">
+      <button
+        class="btn btn--primary"
+        (click)="saveCountries()"
+        [disabled]="savingCountries()"
+      >
+        {{ savingCountries() ? 'Enregistrement…' : 'Enregistrer la section pays' }}
+      </button>
+    </div>
+  </section>
+
+  <section class="card mt-2" *ngIf="!loaded()">
+    <h2><i class="ti ti-globe"></i> Section Pays</h2>
     <div class="form-field">
       <label>Titre</label>
       <span class="skeleton skeleton-text skeleton-text--long"></span>
     </div>
     <div class="form-field">
-      <label>Description</label>
+      <label>Image d'arrière-plan</label>
       <span class="skeleton skeleton-text skeleton-text--long"></span>
     </div>
     <div class="form-field">
-      <label>Fonctionnalités</label>
+      <label>Pays</label>
       <span class="skeleton skeleton-text skeleton-text--long"></span>
     </div>
     <div class="form-actions">

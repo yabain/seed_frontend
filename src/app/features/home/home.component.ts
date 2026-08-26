@@ -16,11 +16,12 @@ import { ProgramsService } from '../../core/services/programs.service';
 import { PartnersService } from '../../core/services/partners.service';
 import { BannerService } from '../../core/services/banner.service';
 import { FeaturesSectionService } from '../../core/services/features-section.service';
+import { CountriesSectionService } from '../../core/services/countries-section.service';
 import { AboutService } from '../../core/services/about.service';
 import { SiteConfigService } from '../../core/services/site-config.service';
 import { ProspectsService } from '../../core/services/prospects.service';
 import { EventsService } from '../../core/services/events.service';
-import type { News, Partner, Program, Banner, SiteAbout, SeedEvent, FeaturesSection, FeatureItem } from '../../core/models/models';
+import type { News, Partner, Program, Banner, SiteAbout, SeedEvent, FeaturesSection, FeatureItem, CountriesSection, CountryItem } from '../../core/models/models';
 
 interface Figure {
   value: string;
@@ -195,6 +196,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   ]);
   readonly featuresVisible = signal(true);
 
+  readonly countriesTitle = signal('4 Countries');
+  readonly countriesBackgroundImage = signal('');
+  readonly countriesItems = signal<CountryItem[]>([]);
+  readonly countriesVisible = signal(true);
+
   currentStep = signal(0);
   isTransitioning = signal(true);
   private timer2: any;
@@ -217,6 +223,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly partnersService: PartnersService,
     private readonly bannerService: BannerService,
     private readonly featuresSectionService: FeaturesSectionService,
+    private readonly countriesSectionService: CountriesSectionService,
     private readonly aboutService: AboutService,
     private readonly siteConfigService: SiteConfigService,
     private readonly prospectsService: ProspectsService,
@@ -262,6 +269,16 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         if (section.description) this.featuresDescription.set(section.description);
         if (section.features?.length) this.featuresItems.set(section.features);
         this.featuresVisible.set(section.visible ?? true);
+      },
+      error: () => {},
+    });
+
+    this.countriesSectionService.getPublic().subscribe({
+      next: (section) => {
+        if (section.title) this.countriesTitle.set(section.title);
+        if (section.backgroundImage) this.countriesBackgroundImage.set(section.backgroundImage);
+        if (section.countries?.length) this.countriesItems.set(section.countries);
+        this.countriesVisible.set(section.visible ?? true);
       },
       error: () => {},
     });

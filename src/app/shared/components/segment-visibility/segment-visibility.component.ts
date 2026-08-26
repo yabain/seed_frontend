@@ -39,8 +39,19 @@ export class SegmentVisibilityComponent {
 
   toggle(): void {
     const next = !this.checked();
+    // L'API reçoit toujours l'état complet. Cela évite qu'une mise à jour
+    // partielle d'un segment réinitialise les autres valeurs de visibilité.
+    const segments: SiteSegments = {
+      news: true,
+      resources: true,
+      programs: true,
+      partners: true,
+      events: true,
+      ...(this.siteConfigService.config()?.segments ?? {}),
+      [this.segment()]: next,
+    };
     const payload: Partial<SiteConfig> = {
-      segments: { [this.segment()]: next } as unknown as SiteSegments,
+      segments,
     };
     this.siteConfigService.update(payload).subscribe({
       error: () =>

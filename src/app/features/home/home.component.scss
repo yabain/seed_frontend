@@ -664,10 +664,18 @@
 
   .container { position: relative; }
 
+  &__intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(260px, .8fr);
+    align-items: center;
+    gap: clamp(2rem, 6vw, 6rem);
+    margin-bottom: clamp(2.25rem, 5vw, 4.25rem);
+  }
+
   .lq-section__head {
     position: relative;
     max-width: 780px;
-    margin-bottom: clamp(2.25rem, 5vw, 4.25rem);
+    margin-bottom: 0;
 
     h2 {
       max-width: 680px;
@@ -682,6 +690,54 @@
       font-size: 1.06rem;
     }
   }
+}
+
+.lq-about__visual {
+  position: relative;
+  width: min(100%, 370px);
+  justify-self: end;
+  margin: 0;
+  padding: 1.2rem;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 18%, transparent);
+  border-radius: 50% 50% 44% 56% / 58% 45% 55% 42%;
+  background: radial-gradient(circle at 42% 42%, color-mix(in srgb, var(--color-primary) 9%, white), transparent 67%);
+
+  svg { display: block; width: 100%; height: auto; }
+
+  .lq-about__orbit { transform-origin: 200px 181px; animation: lqAboutOrbit 22s linear infinite; }
+  .lq-about__leaf { transform-box: fill-box; transform-origin: bottom center; }
+  .lq-about__leaf--left { animation: lqAboutLeafLeft 3.8s ease-in-out infinite; }
+  .lq-about__leaf--right { animation: lqAboutLeafRight 4.2s ease-in-out -.7s infinite; }
+  .lq-about__hand { transform-box: fill-box; }
+  .lq-about__hand--top { transform-origin: center; animation: lqAboutHandTop 5s ease-in-out infinite; }
+  .lq-about__hand--bottom { transform-origin: center; animation: lqAboutHandBottom 5s ease-in-out -.8s infinite; }
+  .lq-about__core { transform-origin: 200px 221px; animation: lqAboutPulse 3s ease-in-out infinite; }
+
+  figcaption {
+    position: absolute;
+    right: 0;
+    bottom: .25rem;
+    padding: .38rem .75rem;
+    border: 1px solid color-mix(in srgb, var(--color-primary) 18%, transparent);
+    border-radius: 99px;
+    background: rgba(255, 255, 255, .88);
+    color: var(--color-primary-dark, var(--color-primary));
+    box-shadow: 0 8px 20px rgba(14, 77, 68, .08);
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .03em;
+  }
+}
+
+@keyframes lqAboutOrbit { to { transform: rotate(360deg); } }
+@keyframes lqAboutLeafLeft { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-5deg) translateY(-2px); } }
+@keyframes lqAboutLeafRight { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(5deg) translateY(-3px); } }
+@keyframes lqAboutHandTop { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+@keyframes lqAboutHandBottom { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(2px); } }
+@keyframes lqAboutPulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.12); opacity: .82; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .lq-about__visual *, .lq-about__visual { animation: none !important; }
 }
 
 .lq-about__cards {
@@ -775,6 +831,8 @@
 }
 
 @media (max-width: 700px) {
+  .lq-about__intro { grid-template-columns: 1fr; gap: 1.5rem; }
+  .lq-about__visual { width: min(100%, 310px); justify-self: center; }
   .lq-about__cards { grid-template-columns: 1fr; }
 
   .lq-about__card {

@@ -61,18 +61,37 @@
   <!-- ================= À PROPOS / MISSION / VISION ================= -->
   <section class="lq-section lq-about" id="apropos">
     <div class="container">
-      <div class="lq-section__head reveal">
-        <span class="lq-eyebrow lq-eyebrow--solid">
-          <i class="fa-solid fa-spa"></i> À propos</span>
-        <h2>
-          {{ siteConfig()?.tagline || '' }}</h2>
-        <p>
-          {{ siteConfig()?.description || '' }}
-        </p>
+      <div class="lq-about__intro">
+        <div class="lq-section__head reveal reveal--from-left">
+          <span class="lq-eyebrow lq-eyebrow--solid">
+            <i class="fa-solid fa-spa"></i> À propos</span>
+          <h2>
+            {{ siteConfig()?.tagline || '' }}</h2>
+          <p>
+            {{ siteConfig()?.description || '' }}
+          </p>
+        </div>
+
+        <figure class="lq-about__visual reveal reveal--from-right" aria-hidden="true">
+          <svg viewBox="0 0 400 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="201" cy="181" r="130" fill="url(#about-halo)" opacity=".14"/>
+            <circle class="lq-about__orbit" cx="201" cy="181" r="108" stroke="url(#about-line)" stroke-width="1.5" stroke-dasharray="5 9" opacity=".42"/>
+            <path d="M92 245C115 281 154 299 198 297C249 295 292 266 311 221" stroke="url(#about-line)" stroke-width="4" stroke-linecap="round" opacity=".62"/>
+            <path class="lq-about__hand lq-about__hand--top" d="M111 224C136 210 159 205 181 210C197 214 205 226 218 229C239 235 261 226 281 212C294 203 309 207 313 220C320 244 300 268 271 279C235 293 201 284 174 269L139 248C124 240 113 235 104 235C92 235 85 243 89 252C94 263 108 270 120 275" fill="url(#about-hand)" stroke="url(#about-line)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path class="lq-about__hand lq-about__hand--bottom" d="M303 251C278 244 256 247 238 258C224 266 217 278 202 282C181 288 159 278 141 263C129 253 115 255 108 267C98 286 114 308 141 317C176 329 210 315 234 296L263 272C275 262 286 257 298 260C310 263 315 273 308 281" fill="url(#about-hand)" stroke="url(#about-line)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M201 221V134" stroke="url(#about-line)" stroke-width="7" stroke-linecap="round"/>
+            <path class="lq-about__leaf lq-about__leaf--left" d="M200 174C164 170 140 146 137 111C170 110 198 130 201 163" fill="url(#about-leaf)" stroke="url(#about-line)" stroke-width="4" stroke-linejoin="round"/>
+            <path class="lq-about__leaf lq-about__leaf--right" d="M203 156C213 119 240 94 277 98C273 135 247 159 204 167" fill="url(#about-leaf)" stroke="url(#about-line)" stroke-width="4" stroke-linejoin="round"/>
+            <circle class="lq-about__core" cx="200" cy="221" r="17" fill="url(#about-core)"/><circle cx="200" cy="221" r="5" fill="white"/>
+            <circle cx="109" cy="120" r="7" fill="url(#about-line)" opacity=".4"/><circle cx="303" cy="85" r="7" fill="url(#about-line)" opacity=".35"/><circle cx="325" cy="187" r="6" fill="url(#about-line)" opacity=".4"/>
+            <defs><linearGradient id="about-halo" x1="71" y1="51" x2="330" y2="310" gradientUnits="userSpaceOnUse"><stop stop-color="#14B8A6"/><stop offset="1" stop-color="#0D9488"/></linearGradient><linearGradient id="about-line" x1="93" y1="90" x2="309" y2="315" gradientUnits="userSpaceOnUse"><stop stop-color="#14B8A6"/><stop offset="1" stop-color="#0F766E"/></linearGradient><linearGradient id="about-hand" x1="104" y1="210" x2="315" y2="313" gradientUnits="userSpaceOnUse"><stop stop-color="#CCFBF1"/><stop offset="1" stop-color="#5EEAD4"/></linearGradient><linearGradient id="about-leaf" x1="139" y1="100" x2="278" y2="175" gradientUnits="userSpaceOnUse"><stop stop-color="#99F6E4"/><stop offset="1" stop-color="#2DD4BF"/></linearGradient><linearGradient id="about-core" x1="184" y1="205" x2="216" y2="237" gradientUnits="userSpaceOnUse"><stop stop-color="#14B8A6"/><stop offset="1" stop-color="#0F766E"/></linearGradient></defs>
+          </svg>
+          <!-- <figcaption>Accompagner les communautés.</figcaption> -->
+        </figure>
       </div>
 
       <div class="lq-about__cards">
-        <article class="lq-glass lq-card lq-card--illustration lq-about__card lq-about__card--mission reveal">
+        <article class="lq-glass lq-card lq-card--illustration lq-about__card lq-about__card--mission reveal reveal--from-left">
           <div class="lq-card__illu">
             <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="100" cy="100" r="80" fill="url(#mission-grad)" opacity="0.12"/>
@@ -96,7 +115,7 @@
             {{ about()?.mission || fallbackMission }}
           </p>
         </article>
-        <article class="lq-glass lq-card lq-card--illustration lq-about__card lq-about__card--vision reveal">
+        <article class="lq-glass lq-card lq-card--illustration lq-about__card lq-about__card--vision reveal reveal--from-right">
           <div class="lq-card__illu">
             <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
               <ellipse cx="100" cy="100" rx="80" ry="50" transform="rotate(-30 100 100)" fill="url(#vision-grad)" opacity="0.1"/>
@@ -121,7 +140,7 @@
             {{ about()?.vision || fallbackVision }}
           </p>
         </article>
-        <article class="lq-glass lq-card lq-card--illustration lq-about__card lq-about__card--values reveal">
+        <!-- <article class="lq-glass lq-card lq-card--illustration lq-about__card lq-about__card--values reveal">
           <div class="lq-card__illu">
             <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="72" cy="78" r="18" fill="url(#val-grad)" opacity="0.18"/>
@@ -152,7 +171,7 @@
             <li><i class="ti ti-circle-check"></i> {{ about()?.values?.[1] || 'Transparence et redevabilité' }}</li>
             <li><i class="ti ti-circle-check"></i> {{ about()?.values?.[2] || 'Durabilité environnementale' }}</li>
           </ul>
-        </article>
+        </article> -->
       </div>
     </div>
   </section>
@@ -287,37 +306,39 @@
     </div>
   </section>
 
-  <!-- ================= DOMAINES D'INTERVENTION ================= -->
+<!-- ================= DOMAINES D'INTERVENTION ================= -->
+  <!--
   <section class="lq-section" id="domaines">
     <div class="container">
       <div class="lq-section__head reveal">
         <span class="lq-eyebrow lq-eyebrow--solid">
           <i class="fa-solid fa-spa"></i>
-          Domaines d’intervention</span>
+          Domaines d'intervention</span>
         <h2>Ce que nous faisons</h2>
-        <p>Quatre axes d’action concrets pour répondre aux besoins des communautés.</p>
+        <p>Quatre axes d'action concrets pour répondre aux besoins des communautés.</p>
       </div>
 
-      <!-- <div class="lq-cards lq-cards--4">
+      <div class="lq-cards lq-cards--4">
         <article class="lq-glass lq-card lq-card--feature reveal" *ngFor="let feature of features">
           <span class="lq-card__icon"><i [class]="feature.icon"></i></span>
           <h3>{{ feature.title }}</h3>
           <p>{{ feature.text }}</p>
         </article>
-      </div> -->
+      </div>
     </div>
   </section>
+  -->
 
   <!-- ================= PAYS ================= -->
-  <section class="lq-section lq-stats">
+  <section class="lq-section lq-stats" *ngIf="countriesVisible()">
     <div class="lq-stats__head reveal reveal--from-top">
-      <h1 class="lq-stats__title">4 Countries</h1>
+      <h1 class="lq-stats__title">{{ countriesTitle() }}</h1>
     </div>
     <div class="container lq-cards lq-cards--4">
-      <div class="lq-glass lq-stat reveal reveal--pop" *ngFor="let country of countries">
-        <img [src]="country.flagUrl" style="margin-bottom: 10px">
-        <strong>{{ country.name }}</strong>
-        <!-- <small>{{ figure.label }}</small> -->
+      <div class="lq-glass lq-stat reveal reveal--pop" *ngFor="let country of countriesItems()">
+        <img *ngIf="country.image" [src]="country.image" style="margin-bottom: 10px" [alt]="country.title">
+        <strong>{{ country.title }}</strong>
+        <small *ngIf="country.subtitle">{{ country.subtitle }}</small>
       </div>
     </div>
   </section>
