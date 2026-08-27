@@ -671,7 +671,7 @@
 /* ---------- À propos : composition éditoriale ---------- */
 .lq-about {
   overflow: hidden;
-  padding: clamp(4.5rem, 8vw, 7.5rem) 0;
+  padding: clamp(4.5rem, 8vw, 4.5rem) 0;
 
   &::before {
     content: '';

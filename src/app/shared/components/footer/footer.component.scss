@@ -8,9 +8,9 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: url('/assets/img/world-map.svg') center / min(1050px, 94%) auto no-repeat;
-    opacity: 0.65;
-    animation: footer-map-float 16s ease-in-out infinite alternate;
+    background: url('/assets/BlankMap-World_gray.svg.webp') center / min(1050px, 94%) auto no-repeat;
+    opacity: 0.24;
+    mix-blend-mode: screen;
     pointer-events: none;
     z-index: 0;
   }
@@ -18,11 +18,6 @@
   &::after {
     content: none;
   }
-}
-
-@keyframes footer-map-float {
-  from { transform: translate3d(-1.2%, 0, 0) scale(1); }
-  to { transform: translate3d(1.2%, -1.5%, 0) scale(1.035); }
 }
 
 .footer-grid {
@@ -176,8 +171,4 @@
     justify-content: center;
     text-align: center;
   }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .site-footer::before { animation: none; }
 }
