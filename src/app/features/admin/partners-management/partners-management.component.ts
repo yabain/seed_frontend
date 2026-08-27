@@ -4,12 +4,13 @@ import { Router, RouterLink } from '@angular/router';
 import { PartnersService } from '../../../core/services/partners.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { SegmentVisibilityComponent } from '../../../shared/components/segment-visibility/segment-visibility.component';
+import { LandingSectionEditorComponent } from '../../../shared/components/landing-section-editor/landing-section-editor.component';
 import type { Partner } from '../../../core/models/models';
 
 @Component({
   selector: 'app-partners-management',
   standalone: true,
-  imports: [CommonModule, RouterLink, SegmentVisibilityComponent],
+  imports: [CommonModule, RouterLink, SegmentVisibilityComponent, LandingSectionEditorComponent],
   templateUrl: './partners-management.component.html',
   styleUrls: ['../management.scss', './partners-management.component.scss'],
 })

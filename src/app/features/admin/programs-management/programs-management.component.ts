@@ -5,12 +5,13 @@ import { ProgramsService } from '../../../core/services/programs.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { SegmentVisibilityComponent } from '../../../shared/components/segment-visibility/segment-visibility.component';
+import { LandingSectionEditorComponent } from '../../../shared/components/landing-section-editor/landing-section-editor.component';
 import type { Program } from '../../../core/models/models';
 
 @Component({
   selector: 'app-programs-management',
   standalone: true,
-  imports: [CommonModule, RouterLink, SegmentVisibilityComponent],
+  imports: [CommonModule, RouterLink, SegmentVisibilityComponent, LandingSectionEditorComponent],
   templateUrl: './programs-management.component.html',
   styleUrl: '../management.scss',
 })

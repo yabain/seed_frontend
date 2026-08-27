@@ -1,0 +1,21 @@
+<section class="landing-section-editor card mt-2" *ngIf="isAdmin">
+  <button type="button" class="landing-section-editor__toggle" (click)="toggle()" [attr.aria-expanded]="expanded()">
+    <span><i class="ti ti-forms"></i> Textes de la section sur la landing</span>
+    <i class="ti" [class.ti-chevron-down]="!expanded()" [class.ti-chevron-up]="expanded()"></i>
+  </button>
+  <div class="landing-section-editor__body" *ngIf="expanded()">
+    <div class="form-field">
+      <label [for]="section + '-eyebrow'">Sous-titre / badge</label>
+      <input class="form-control" [id]="section + '-eyebrow'" [(ngModel)]="content.eyebrow" [name]="section + '-eyebrow'" maxlength="100" />
+    </div>
+    <div class="form-field">
+      <label [for]="section + '-title'">Titre</label>
+      <input class="form-control" [id]="section + '-title'" [(ngModel)]="content.title" [name]="section + '-title'" maxlength="200" />
+    </div>
+    <div class="form-field">
+      <label [for]="section + '-description'">Paragraphe</label>
+      <textarea class="form-control" rows="3" [id]="section + '-description'" [(ngModel)]="content.description" [name]="section + '-description'" maxlength="500"></textarea>
+    </div>
+    <button class="btn btn--primary" (click)="save()" [disabled]="saving()">{{ saving() ? 'Enregistrement…' : 'Enregistrer les textes' }}</button>
+  </div>
+</section>

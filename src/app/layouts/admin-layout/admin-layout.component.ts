@@ -89,7 +89,6 @@ export class AdminLayoutComponent implements OnInit {
       caption: 'Showcase',
       items: [
         { label: 'Bannière', path: '/admin/banner', icon: 'ti ti-photo' },
-        { label: 'Sections landing', path: '/admin/landing-sections', icon: 'ti ti-layout-grid' },
         { label: 'Partenaires', path: '/admin/partners', icon: 'ti ti-users-group' },
         { label: 'À propos', path: '/admin/about', icon: 'ti ti-info-circle' },
       ],

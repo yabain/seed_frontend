@@ -6,13 +6,14 @@ import { NewsService } from '../../../core/services/news.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { SegmentVisibilityComponent } from '../../../shared/components/segment-visibility/segment-visibility.component';
+import { LandingSectionEditorComponent } from '../../../shared/components/landing-section-editor/landing-section-editor.component';
 import type { ErrorMessage } from '../../../core/interceptors/error.interceptor';
 import type { News, Paginated } from '../../../core/models/models';
 
 @Component({
   selector: 'app-news-management',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, SegmentVisibilityComponent],
+  imports: [CommonModule, FormsModule, RouterLink, SegmentVisibilityComponent, LandingSectionEditorComponent],
   templateUrl: './news-management.component.html',
   styleUrls: ['../management.scss', './news-management.component.scss'],
 })

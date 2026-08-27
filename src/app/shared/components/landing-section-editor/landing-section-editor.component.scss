@@ -1,0 +1,5 @@
+.landing-section-editor { padding: 0; overflow: hidden; }
+.landing-section-editor__toggle { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 1rem 1.25rem; border: 0; background: transparent; color: var(--color-gray-800); font: inherit; font-weight: 700; text-align: left; cursor: pointer; }
+.landing-section-editor__toggle span { display: inline-flex; align-items: center; gap: .5rem; }
+.landing-section-editor__toggle span i { color: var(--color-primary); }
+.landing-section-editor__body { padding: 0 1.25rem 1.25rem; border-top: 1px solid var(--color-gray-200); }
