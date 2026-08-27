@@ -19,6 +19,19 @@
   color: var(--ink);
   background: #ffffff;
 
+  .cursor-glow {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, var(--teal-glow) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 0;
+  }
+
   * {
     box-sizing: border-box;
   }
@@ -475,6 +488,16 @@
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
+
+.lq-partners__head {
+  max-width: 720px;
+  margin: 0 auto 1.5rem;
+  padding: 0 1.25rem;
+  text-align: center;
+}
+
+.lq-partners__head h2 { margin: .55rem 0; }
+.lq-partners__head p { margin: 0; color: var(--color-gray-600); }
 
 .lq-marquee {
   overflow: hidden;

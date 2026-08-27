@@ -185,6 +185,14 @@ export const appRoutes: Routes = [
           ),
       },
       {
+        path: 'landing-sections',
+        data: { roles: ['admin', 'superadmin'] },
+        loadComponent: () =>
+          import('./features/admin/landing-sections-management/landing-sections-management.component').then(
+            (m) => m.LandingSectionsManagementComponent,
+          ),
+      },
+      {
         path: 'messages',
         loadComponent: () =>
           import('./features/admin/messages-management/messages-management.component').then(

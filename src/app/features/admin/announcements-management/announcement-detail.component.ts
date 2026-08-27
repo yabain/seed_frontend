@@ -26,6 +26,7 @@ export class AnnouncementDetailComponent implements OnInit, OnDestroy {
   readonly previewLoading = signal(false);
   readonly showAllDeliveries = signal(false);
   readonly trustedPreviewUrl = signal<SafeResourceUrl | null>(null);
+  readonly deliverySearch = signal('');
 
   private objectUrl: string | null = null;
   private rawHtml = '';
@@ -84,7 +85,6 @@ export class AnnouncementDetailComponent implements OnInit, OnDestroy {
     );
   }
 
-  /** Ouvre l'aperçu complet dans un nouvel onglet. */
   openInNewTab(): void {
     if (!this.rawHtml) {
       this.toastService.error("Aperçu indisponible.");
@@ -96,7 +96,6 @@ export class AnnouncementDetailComponent implements OnInit, OnDestroy {
     setTimeout(() => URL.revokeObjectURL(url), 60_000);
   }
 
-  /** Copie le code source brut du corps du mail dans le presse-papier. */
   async copySource(): Promise<void> {
     const body = this.announcement()?.bodyHtml ?? '';
     if (!body) {
@@ -109,7 +108,6 @@ export class AnnouncementDetailComponent implements OnInit, OnDestroy {
         'Code source du mail copié dans le presse-papier.',
       );
     } catch {
-      // Repli pour les contextes sans Clipboard API.
       const textarea = document.createElement('textarea');
       textarea.value = body;
       textarea.style.position = 'fixed';
@@ -128,6 +126,31 @@ export class AnnouncementDetailComponent implements OnInit, OnDestroy {
     }
   }
 
+  duplicate(): void {
+    const a = this.announcement();
+    if (!a) return;
+    this.announcementsService.duplicate(a.id).subscribe({
+      next: (created) => {
+        this.toastService.success('Annonce dupliquée.');
+        void this.router.navigate(['/admin/announcements', created.id, 'detail']);
+      },
+      error: () => this.toastService.error('Échec de la duplication.'),
+    });
+  }
+
+  remove(): void {
+    const a = this.announcement();
+    if (!a) return;
+    if (!confirm('Supprimer cette annonce définitivement ?')) return;
+    this.announcementsService.delete(a.id).subscribe({
+      next: () => {
+        this.toastService.success('Annonce supprimée.');
+        void this.router.navigate(['/admin/announcements']);
+      },
+      error: () => this.toastService.error('Échec de la suppression.'),
+    });
+  }
+
   ngOnDestroy(): void {
     if (this.objectUrl) {
       URL.revokeObjectURL(this.objectUrl);
@@ -137,11 +160,24 @@ export class AnnouncementDetailComponent implements OnInit, OnDestroy {
 
   get visibleDeliveries() {
     const deliveries = this.announcement()?.deliveries ?? [];
-    return this.showAllDeliveries() ? deliveries : deliveries.slice(0, 25);
+    const search = this.deliverySearch().toLowerCase().trim();
+    const filtered = search
+      ? deliveries.filter(
+          (d) =>
+            d.email.toLowerCase().includes(search) ||
+            (d.userName || '').toLowerCase().includes(search),
+        )
+      : deliveries;
+    return this.showAllDeliveries() ? filtered : filtered.slice(0, 25);
   }
 
   toggleShowAll(): void {
     this.showAllDeliveries.update((v) => !v);
+  }
+
+  onDeliverySearch(value: string): void {
+    this.deliverySearch.set(value);
+    this.showAllDeliveries.set(false);
   }
 
   deliveryClass(status?: string): string {
@@ -152,6 +188,17 @@ export class AnnouncementDetailComponent implements OnInit, OnDestroy {
         return 'badge badge--red';
       default:
         return 'badge badge--gray';
+    }
+  }
+
+  deliveryIcon(status?: string): string {
+    switch (status) {
+      case 'sent':
+        return 'ti ti-check';
+      case 'failed':
+        return 'ti ti-x';
+      default:
+        return 'ti ti-clock';
     }
   }
 
@@ -178,6 +225,21 @@ export class AnnouncementDetailComponent implements OnInit, OnDestroy {
         return 'badge badge--red';
       default:
         return 'badge badge--gray';
+    }
+  }
+
+  statusIcon(status?: string): string {
+    switch (status) {
+      case 'sent':
+        return 'ti ti-check';
+      case 'sending':
+        return 'ti ti-loader';
+      case 'scheduled':
+        return 'ti ti-clock';
+      case 'failed':
+        return 'ti ti-alert-triangle';
+      default:
+        return 'ti ti-pencil';
     }
   }
 

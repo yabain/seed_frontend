@@ -1,151 +1,285 @@
 <div class="admin-page">
+  <!-- Header -->
   <header class="page-head page-head--between">
     <div class="page-head__text">
-      <h1><i class="ti ti-speakerphone"></i> Détail de l'annonce</h1>
-    </div>
-    <a class="btn btn--ghost" routerLink="/admin/announcements">← Retour</a>
-  </header>
-
-  <p *ngIf="loading()" class="text-muted mt-2">Chargement…</p>
-
-  <ng-container *ngIf="!loading() && announcement() as a">
-    <div class="card mt-2 detail-card">
-      <div class="detail-head">
-        <div>
-          <h2>{{ a.subject }}</h2>
-          <span [class]="statusClass(a.status)">{{ a.statusLabel }}</span>
-        </div>
+      <div class="detail-breadcrumb">
+        <a routerLink="/admin/announcements" class="detail-breadcrumb__link">
+          <i class="ti ti-arrow-left"></i> Annonces
+        </a>
       </div>
-
-      <dl class="meta-grid mt-2">
-        <div>
-          <dt>Destinataires</dt>
-          <dd>{{ a.groupLabel }}</dd>
-        </div>
-        <div *ngIf="a.customRecipients?.length">
-          <dt>Adresses supplémentaires</dt>
-          <dd>{{ a.customRecipients.join(', ') }}</dd>
-        </div>
-        <div>
-          <dt>Créée le</dt>
-          <dd>{{ formatDate(a.createdAt) }}</dd>
-        </div>
-        <div>
-          <dt>Programmée pour</dt>
-          <dd>{{ formatDate(a.scheduledAt) }}</dd>
-        </div>
-        <div>
-          <dt>Envoyée le</dt>
-          <dd>{{ formatDate(a.sentAt) }}</dd>
-        </div>
-        <div *ngIf="a.attachments?.length">
-          <dt>Pièces jointes</dt>
-          <dd>{{ a.attachments!.length }} fichier(s)</dd>
-        </div>
-        <div>
-          <dt>Blocs du mail</dt>
-          <dd>
-            {{ a.includeHeader === false ? 'Sans en-tête' : 'Avec en-tête' }} ·
-            {{ a.includeFooter === false ? 'sans pied de page' : 'avec pied de page' }}
-          </dd>
-        </div>
-        <div *ngIf="a.error">
-          <dt>Erreur</dt>
-          <dd class="text-danger">{{ a.error }}</dd>
-        </div>
-      </dl>
-
-      <div
-        class="progress-line mt-2"
-        *ngIf="a.counts && a.counts.total"
-      >
-        <strong>{{ a.counts.sent }}</strong> envoyé(s) sur
-        {{ a.counts.total }}
-        <span *ngIf="a.counts.pending"> · {{ a.counts.pending }} en attente</span>
-        <span *ngIf="a.counts.failed" class="text-danger">
-          · {{ a.counts.failed }} en échec
+      <h1 class="detail-title" *ngIf="!loading() && announcement() as a">
+        {{ a.subject }}
+      </h1>
+      <div class="detail-subtitle" *ngIf="!loading() && announcement() as a">
+        <span [class]="statusClass(a.status)">
+          <i [class]="statusIcon(a.status)"></i>
+          {{ a.statusLabel }}
+        </span>
+        <span class="detail-subtitle__sep">·</span>
+        <span class="detail-subtitle__group">{{ a.groupLabel }}</span>
+        <span class="detail-subtitle__sep" *ngIf="a.sentAt">·</span>
+        <span class="detail-subtitle__date" *ngIf="a.sentAt">
+          Envoyée {{ formatDate(a.sentAt) }}
         </span>
       </div>
     </div>
+    <div class="page-head__actions" *ngIf="!loading() && announcement() as a">
+      <a
+        class="btn btn--outline btn--sm"
+        [routerLink]="['/admin/announcements', a.id, 'edit']"
+        *ngIf="a.status === 'draft' || a.status === 'failed'"
+      >
+        <i class="ti ti-pencil"></i> Modifier
+      </a>
+      <button
+        class="btn btn--ghost btn--sm"
+        (click)="duplicate()"
+        *ngIf="a.status === 'draft' || a.status === 'failed' || a.status === 'sent'"
+      >
+        <i class="ti ti-copy"></i> Dupliquer
+      </button>
+      <button
+        class="btn btn--ghost btn--sm btn--danger"
+        (click)="remove()"
+        *ngIf="a.status !== 'sending'"
+      >
+        <i class="ti ti-trash"></i>
+      </button>
+    </div>
+  </header>
 
-    <!-- Aperçu de l'annonce -->
-    <div class="card preview-card mt-2">
-      <div class="preview-card__head">
-        <h2><i class="ti ti-eye"></i> Aperçu de l'annonce</h2>
-        <div class="preview-card__actions">
+  <!-- Loading -->
+  <div *ngIf="loading()" class="detail-skeleton">
+    <div class="skeleton skeleton-text skeleton-text--long" style="height: 28px; width: 60%;"></div>
+    <div class="skeleton skeleton-text" style="height: 16px; width: 40%; margin-top: 8px;"></div>
+    <div class="detail-skeleton__grid">
+      <div class="skeleton skeleton-metric-card"></div>
+      <div class="skeleton skeleton-metric-card"></div>
+      <div class="skeleton skeleton-metric-card"></div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <ng-container *ngIf="!loading() && announcement() as a">
+    <!-- Stats Row -->
+    <div class="detail-stats" *ngIf="a.counts && a.counts.total">
+      <div class="stat-chip stat-chip--total">
+        <span class="stat-chip__value">{{ a.counts.total }}</span>
+        <span class="stat-chip__label">Total</span>
+      </div>
+      <div class="stat-chip stat-chip--green">
+        <span class="stat-chip__value">{{ a.counts.sent }}</span>
+        <span class="stat-chip__label">Envoyés</span>
+      </div>
+      <div class="stat-chip" *ngIf="a.counts.pending">
+        <span class="stat-chip__value">{{ a.counts.pending }}</span>
+        <span class="stat-chip__label">En attente</span>
+      </div>
+      <div class="stat-chip stat-chip--red" *ngIf="a.counts.failed">
+        <span class="stat-chip__value">{{ a.counts.failed }}</span>
+        <span class="stat-chip__label">Échecs</span>
+      </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="detail-progress" *ngIf="a.counts && a.counts.total">
+      <div class="detail-progress__bar">
+        <div
+          class="detail-progress__fill"
+          [style.width.%]="(a.counts.sent / a.counts.total) * 100"
+          [class.detail-progress__fill--complete]="a.counts.pending === 0 && a.counts.failed === 0"
+          [class.detail-progress__fill--partial]="a.counts.pending > 0 || a.counts.failed > 0"
+        ></div>
+      </div>
+      <div class="detail-progress__labels">
+        <span>{{ a.counts.sent }} / {{ a.counts.total }} envoyés</span>
+        <span *ngIf="a.counts.failed" class="text-danger">{{ a.counts.failed }} échec(s)</span>
+      </div>
+    </div>
+
+    <!-- Error Alert -->
+    <div class="alert alert--error mt-2" *ngIf="a.error">
+      <i class="ti ti-alert-triangle"></i>
+      <span>{{ a.error }}</span>
+    </div>
+
+    <!-- Two Column Layout -->
+    <div class="detail-grid mt-2">
+      <!-- Left Column: Metadata + Preview -->
+      <div class="detail-grid__main">
+        <!-- Preview Card -->
+        <div class="card detail-preview">
+          <div class="detail-preview__head">
+            <h2><i class="ti ti-eye"></i> Aperçu du mail</h2>
+            <div class="detail-preview__actions">
+              <button
+                type="button"
+                class="btn btn--ghost btn--sm"
+                (click)="openInNewTab()"
+                [disabled]="previewLoading()"
+              >
+                <i class="ti ti-external-link"></i> Nouvel onglet
+              </button>
+              <button
+                type="button"
+                class="btn btn--outline btn--sm"
+                (click)="copySource()"
+              >
+                <i class="ti ti-copy"></i> Copier
+              </button>
+            </div>
+          </div>
+          <div class="detail-preview__frame">
+            <iframe
+              *ngIf="trustedPreviewUrl(); else previewEmpty"
+              [src]="trustedPreviewUrl()"
+              sandbox=""
+              title="Aperçu de l'annonce"
+              class="detail-preview__iframe"
+            ></iframe>
+            <ng-template #previewEmpty>
+              <div class="detail-preview__empty">
+                <i class="ti ti-mail-open"></i>
+                <p>{{ previewLoading() ? "Génération de l'aperçu…" : "Aperçu indisponible" }}</p>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+
+        <!-- Deliveries Table -->
+        <div class="card detail-deliveries mt-2">
+          <div class="detail-deliveries__head">
+            <h2>
+              <i class="ti ti-users"></i> Destinataires
+              <span class="detail-deliveries__count" *ngIf="a.deliveries?.length">
+                ({{ a.deliveries!.length }})
+              </span>
+            </h2>
+            <div class="detail-deliveries__filter" *ngIf="(a.deliveries?.length ?? 0) > 10">
+              <input
+                type="search"
+                class="form-control form-control--sm"
+                placeholder="Rechercher…"
+                [value]="deliverySearch()"
+                (input)="onDeliverySearch($any($event.target).value)"
+              />
+            </div>
+          </div>
+
+          <div class="detail-deliveries__table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Adresse e-mail</th>
+                  <th>Nom</th>
+                  <th>Statut</th>
+                  <th class="text-center">Tentatives</th>
+                  <th>Envoyé le</th>
+                  <th>Erreur</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let d of visibleDeliveries">
+                  <td>
+                    <div class="detail-deliveries__email">
+                      <i class="ti ti-mail text-muted"></i>
+                      {{ d.email }}
+                    </div>
+                  </td>
+                  <td>{{ d.userName || '—' }}</td>
+                  <td>
+                    <span [class]="deliveryClass(d.status)">
+                      <i [class]="deliveryIcon(d.status)"></i>
+                      {{ deliveryLabel(d.status) }}
+                    </span>
+                  </td>
+                  <td class="text-center">{{ d.attempts }}</td>
+                  <td>{{ formatDate(d.sentAt) }}</td>
+                  <td class="text-danger text-sm">{{ d.error || '—' }}</td>
+                </tr>
+                <tr *ngIf="!(a.deliveries)?.length">
+                  <td colspan="6">
+                    <div class="detail-deliveries__empty">
+                      <i class="ti ti-inbox"></i>
+                      <p>Aucun destinataire enregistré</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
           <button
             type="button"
-            class="btn btn--outline btn--sm"
-            (click)="openInNewTab()"
-            [disabled]="previewLoading()"
+            class="btn btn--ghost btn--sm mt-2"
+            *ngIf="(a.deliveries?.length ?? 0) > 25"
+            (click)="toggleShowAll()"
           >
-            <i class="ti ti-external-link"></i> Voir
-          </button>
-          <button
-            type="button"
-            class="btn btn--primary btn--sm"
-            (click)="copySource()"
-          >
-            <i class="ti ti-copy"></i> Copier la source
+            <i [class]="showAllDeliveries() ? 'ti ti-chevrons-up' : 'ti ti-chevrons-down'"></i>
+            {{ showAllDeliveries() ? 'Afficher moins' : 'Afficher tous les destinataires' }}
           </button>
         </div>
       </div>
-      <div class="preview-frame-wrap">
-        <iframe
-          *ngIf="trustedPreviewUrl(); else previewEmpty"
-          [src]="trustedPreviewUrl()"
-          sandbox=""
-          title="Aperçu de l'annonce"
-          class="preview-frame"
-        ></iframe>
-        <ng-template #previewEmpty>
-          <p class="empty-state">
-            {{ previewLoading() ? "Génération de l'aperçu…" : "Aperçu indisponible." }}
-          </p>
-        </ng-template>
+
+      <!-- Right Column: Meta Info -->
+      <div class="detail-grid__side">
+        <div class="card detail-meta">
+          <h3 class="detail-meta__title">
+            <i class="ti ti-info-circle"></i> Informations
+          </h3>
+
+          <div class="detail-meta__list">
+            <div class="detail-meta__item">
+              <span class="detail-meta__label">Créée le</span>
+              <span class="detail-meta__value">{{ formatDate(a.createdAt) }}</span>
+            </div>
+            <div class="detail-meta__item" *ngIf="a.scheduledAt">
+              <span class="detail-meta__label">Programmée pour</span>
+              <span class="detail-meta__value">{{ formatDate(a.scheduledAt) }}</span>
+            </div>
+            <div class="detail-meta__item" *ngIf="a.sentAt">
+              <span class="detail-meta__label">Envoyée le</span>
+              <span class="detail-meta__value">{{ formatDate(a.sentAt) }}</span>
+            </div>
+            <div class="detail-meta__item">
+              <span class="detail-meta__label">Dernière exécution</span>
+              <span class="detail-meta__value">{{ formatDate(a.lastRunAt) }}</span>
+            </div>
+          </div>
+
+          <div class="detail-meta__divider"></div>
+
+          <div class="detail-meta__list">
+            <div class="detail-meta__item">
+              <span class="detail-meta__label">Destinataires</span>
+              <span class="detail-meta__value">{{ a.groupLabel }}</span>
+            </div>
+            <div class="detail-meta__item" *ngIf="a.customRecipients?.length">
+              <span class="detail-meta__label">Adresses supplémentaires</span>
+              <span class="detail-meta__value detail-meta__value--list">
+                <span *ngFor="let r of a.customRecipients">{{ r }}</span>
+              </span>
+            </div>
+            <div class="detail-meta__item">
+              <span class="detail-meta__label">Blocs du mail</span>
+              <span class="detail-meta__value">
+                <span class="detail-meta__tag" [class.detail-meta__tag--off]="a.includeHeader === false">
+                  {{ a.includeHeader === false ? 'Sans en-tête' : 'Avec en-tête' }}
+                </span>
+                <span class="detail-meta__tag" [class.detail-meta__tag--off]="a.includeFooter === false">
+                  {{ a.includeFooter === false ? 'Sans pied de page' : 'Avec pied de page' }}
+                </span>
+              </span>
+            </div>
+            <div class="detail-meta__item" *ngIf="a.attachments?.length">
+              <span class="detail-meta__label">Pièces jointes</span>
+              <span class="detail-meta__value">
+                {{ a.attachments!.length }} fichier(s)
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-
-    <!-- Destinataires -->
-    <div class="card mt-2 table-wrap">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Adresse e-mail</th>
-            <th>Nom</th>
-            <th>Statut</th>
-            <th>Tentatives</th>
-            <th>Envoyé le</th>
-            <th>Erreur</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let d of visibleDeliveries">
-            <td>{{ d.email }}</td>
-            <td>{{ d.userName || '—' }}</td>
-            <td>
-              <span [class]="deliveryClass(d.status)">{{ deliveryLabel(d.status) }}</span>
-            </td>
-            <td>{{ d.attempts }}</td>
-            <td>{{ formatDate(d.sentAt) }}</td>
-            <td class="text-danger text-sm">{{ d.error || '' }}</td>
-          </tr>
-          <tr *ngIf="!(announcement()?.deliveries)?.length">
-            <td colspan="6">
-              <p class="empty-state">Aucun destinataire enregistré.</p>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <button
-      type="button"
-      class="btn btn--ghost mt-2"
-      *ngIf="(announcement()?.deliveries?.length ?? 0) > 25"
-      (click)="toggleShowAll()"
-    >
-      {{ showAllDeliveries() ? 'Afficher moins' : 'Afficher tous les destinataires' }}
-    </button>
   </ng-container>
 </div>

@@ -113,6 +113,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly showScrollTop = signal(false);
 
   @ViewChild('marqueeContainer') marqueeContainer!: ElementRef<HTMLDivElement>;
+  @ViewChild('cursorGlow') cursorGlow!: ElementRef<HTMLDivElement>;
 
   private marqueeRaf: number = 0;
   private marqueePaused = false;
@@ -465,6 +466,15 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   scrollTop(): void {
     window.scrollTo({ top: 0, behavior: this.reduceMotion ? 'auto' : 'smooth' });
+  }
+
+  onSceneMouseMove(e: MouseEvent): void {
+    const glow = this.cursorGlow?.nativeElement;
+    if (!glow) return;
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    glow.style.left = `${e.clientX - rect.left}px`;
+    glow.style.top = `${e.clientY - rect.top}px`;
+    glow.style.opacity = '1';
   }
 
   @HostListener('window:resize')

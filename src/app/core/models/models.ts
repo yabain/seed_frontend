@@ -215,6 +215,19 @@ export interface SiteSegments {
   events: boolean;
 }
 
+export interface LandingSectionText {
+  eyebrow?: string;
+  title?: string;
+  description?: string;
+}
+
+export interface LandingSections {
+  events?: LandingSectionText;
+  news?: LandingSectionText;
+  programs?: LandingSectionText;
+  partners?: LandingSectionText;
+}
+
 export interface SiteConfig {
   _id: string;
   orgName: string;
@@ -233,6 +246,7 @@ export interface SiteConfig {
   secondaryColor?: string;
   social?: SiteSocial;
   segments?: SiteSegments;
+  landingSections?: LandingSections;
 }
 
 export interface StatsSummary {

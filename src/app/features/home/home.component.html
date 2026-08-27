@@ -1,4 +1,5 @@
-<div class="lq-scene">
+<div class="lq-scene" (mousemove)="onSceneMouseMove($event)">
+  <div class="cursor-glow" #cursorGlow aria-hidden="true"></div>
   <!-- ================= LOADER INITIAL ================= -->
   <div class="lq-loader" [class.is-done]="!loading()" [attr.aria-hidden]="!loading()">
     <div class="lq-loader__inner">
@@ -260,9 +261,9 @@
         <div class="lq-eventsx__heading">
           <span class="lq-eyebrow lq-eyebrow--solid">
             <i class="fa-solid fa-spa"></i>
-            Événements</span>
-          <h2>Nos rendez-vous</h2>
-          <p>Retrouvez nos événements à venir et passés.</p>
+            {{ siteConfig()?.landingSections?.events?.eyebrow || 'Événements' }}</span>
+          <h2>{{ siteConfig()?.landingSections?.events?.title || 'Nos rendez-vous' }}</h2>
+          <p>{{ siteConfig()?.landingSections?.events?.description || 'Retrouvez nos événements à venir et passés.' }}</p>
         </div>
 
         <div class="lq-eventsx__nav" *ngIf="events().length; else noEventsNav">
@@ -350,9 +351,9 @@
         <div class="lq-newsx__heading">
           <span class="lq-eyebrow lq-eyebrow--solid">
             <i class="fa-solid fa-spa"></i>
-            Actualités</span>
-          <h2>Nos dernières nouvelles</h2>
-          <p>Suivez notre actualité et nos réalisations.</p>
+            {{ siteConfig()?.landingSections?.news?.eyebrow || 'Actualités' }}</span>
+          <h2>{{ siteConfig()?.landingSections?.news?.title || 'Nos dernières nouvelles' }}</h2>
+          <p>{{ siteConfig()?.landingSections?.news?.description || 'Suivez notre actualité et nos réalisations.' }}</p>
         </div>
 
         <div class="lq-newsx__nav" *ngIf="latestNews().length; else noNav">
@@ -407,9 +408,9 @@
     <div class="container">
       <div class="lq-section__head reveal">
         <span class="lq-eyebrow lq-eyebrow--solid">
-          <i class="fa-solid fa-spa"></i>Nos actions</span>
-        <h2>Programmes et projets actifs</h2>
-        <p>Des initiatives concrètes portées avec nos partenaires.</p>
+          <i class="fa-solid fa-spa"></i>{{ siteConfig()?.landingSections?.programs?.eyebrow || 'Nos actions' }}</span>
+        <h2>{{ siteConfig()?.landingSections?.programs?.title || 'Programmes et projets actifs' }}</h2>
+        <p>{{ siteConfig()?.landingSections?.programs?.description || 'Des initiatives concrètes portées avec nos partenaires.' }}</p>
       </div>
 
       <div class="lq-cards lq-cards--4" *ngIf="programs().length; else noPrograms">
@@ -491,6 +492,11 @@
   <!-- ================= MARQUEE PARTENAIRES ================= -->
   <section class="lq-partners" aria-label="Nos partenaires" *ngIf="siteConfig()?.segments?.partners ?? true"
     (mouseenter)="pauseMarquee()" (mouseleave)="resumeMarquee()">
+    <div class="lq-partners__head" *ngIf="siteConfig()?.landingSections?.partners?.eyebrow || siteConfig()?.landingSections?.partners?.title || siteConfig()?.landingSections?.partners?.description">
+      <span class="lq-eyebrow lq-eyebrow--solid" *ngIf="siteConfig()?.landingSections?.partners?.eyebrow">{{ siteConfig()?.landingSections?.partners?.eyebrow }}</span>
+      <h2 *ngIf="siteConfig()?.landingSections?.partners?.title">{{ siteConfig()?.landingSections?.partners?.title }}</h2>
+      <p *ngIf="siteConfig()?.landingSections?.partners?.description">{{ siteConfig()?.landingSections?.partners?.description }}</p>
+    </div>
     <div class="lq-marquee" #marqueeContainer>
       <div class="lq-marquee__track">
         <div class="lq-marquee__group">
