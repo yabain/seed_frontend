@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { SiteConfigService } from '../../../core/services/site-config.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { BannerService } from '../../../core/services/banner.service';
 import type { ErrorMessage } from '../../../core/interceptors/error.interceptor';
 
 @Component({
@@ -17,6 +18,7 @@ import type { ErrorMessage } from '../../../core/interceptors/error.interceptor'
 export class ForgotPasswordComponent implements OnInit {
   readonly submitting = signal(false);
   readonly sent = signal(false);
+  readonly authBackgroundImage = signal('');
 
   readonly siteConfig = this.siteConfigService.config;
 
@@ -29,10 +31,12 @@ export class ForgotPasswordComponent implements OnInit {
     private readonly authService: AuthService,
     private readonly siteConfigService: SiteConfigService,
     private readonly toastService: ToastService,
+    private readonly bannerService: BannerService,
   ) {}
 
   ngOnInit(): void {
     this.siteConfigService.load();
+    this.bannerService.getPublic().subscribe({ next: (banner) => this.authBackgroundImage.set(banner.authBackgroundImage ?? '') });
   }
 
   submit(): void {

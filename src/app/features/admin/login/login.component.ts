@@ -5,6 +5,7 @@ import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { SiteConfigService } from '../../../core/services/site-config.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { BannerService } from '../../../core/services/banner.service';
 import type { ErrorMessage } from '../../../core/interceptors/error.interceptor';
 
 @Component({
@@ -20,6 +21,7 @@ export class LoginComponent implements OnInit {
   readonly requiresTwoFactor = signal(false);
   readonly emailFor2FA = signal('');
   readonly showPassword = signal(false);
+  readonly authBackgroundImage = signal('');
 
   togglePassword(): void {
     this.showPassword.update((value) => !value);
@@ -43,10 +45,12 @@ export class LoginComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly siteConfigService: SiteConfigService,
     private readonly toastService: ToastService,
+    private readonly bannerService: BannerService,
   ) {}
 
   ngOnInit(): void {
     this.siteConfigService.load();
+    this.bannerService.getPublic().subscribe({ next: (banner) => this.authBackgroundImage.set(banner.authBackgroundImage ?? '') });
   }
 
   submitCredentials(): void {
@@ -65,8 +69,7 @@ export class LoginComponent implements OnInit {
           this.requiresTwoFactor.set(true);
           this.emailFor2FA.set(response.email);
         } else {
-          const redirect = this.route.snapshot.queryParamMap.get('redirect') || '/admin';
-          void this.router.navigateByUrl(redirect);
+          void this.router.navigateByUrl('/admin/dashboard');
         }
       },
       error: (err: ErrorMessage) => {
@@ -90,8 +93,7 @@ export class LoginComponent implements OnInit {
     this.authService.verifyTwoFactor(this.emailFor2FA(), code).subscribe({
       next: () => {
         this.submitting.set(false);
-        const redirect = this.route.snapshot.queryParamMap.get('redirect') || '/admin';
-        void this.router.navigateByUrl(redirect);
+        void this.router.navigateByUrl('/admin/dashboard');
       },
       error: (err: ErrorMessage) => {
         this.submitting.set(false);

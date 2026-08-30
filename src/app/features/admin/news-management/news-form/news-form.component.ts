@@ -30,7 +30,7 @@ export class NewsFormComponent implements OnInit {
     status: 'draft' as 'draft' | 'published',
     image: '',
     tags: '',
-    author: this.siteConfig()?.orgName?.trim() || 'SEED',
+    author: this.siteConfig()?.orgName?.trim() || 'Organisation',
     categories: [] as string[],
   };
 
@@ -65,7 +65,7 @@ export class NewsFormComponent implements OnInit {
           this.form.status = item.status;
           this.form.image = item.image ?? '';
           this.form.tags = (item.tags ?? []).join(', ');
-          this.form.author = item.author || this.siteConfig()?.orgName?.trim() || 'SEED';
+          this.form.author = item.author || this.siteConfig()?.orgName?.trim() || 'Organisation';
           this.form.categories = item.categories ?? [];
           this.loading.set(false);
         },
@@ -107,7 +107,7 @@ export class NewsFormComponent implements OnInit {
       content: this.form.content,
       status: this.form.status,
       image: this.form.image,
-      author: this.form.author || this.siteConfig()?.orgName?.trim() || 'SEED',
+      author: this.form.author || this.siteConfig()?.orgName?.trim() || 'Organisation',
       tags: this.form.tags
         .split(',')
         .map((t) => t.trim())

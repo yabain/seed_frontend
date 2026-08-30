@@ -81,13 +81,25 @@
       ></textarea>
     </div>
 
+    <div class="form-field">
+      <h3><i class="ti ti-chart-bar"></i> Chiffres affichés dans la bannière</h3>
+      <p class="text-muted mb-2">Modifiez les trois indicateurs visibles dans la carte de la landing page.</p>
+      <div class="form-field" *ngFor="let figure of figures(); let i = index">
+        <label>Indicateur {{ i + 1 }}</label>
+        <div class="two-columns">
+          <input class="form-control" type="text" [(ngModel)]="figure.value" [name]="'figure-value-' + i" maxlength="30" placeholder="50+" />
+          <input class="form-control" type="text" [(ngModel)]="figure.label" [name]="'figure-label-' + i" maxlength="100" placeholder="Libellé" />
+        </div>
+      </div>
+    </div>
+
     <div class="form-actions">
       <button
         class="btn btn--primary"
         (click)="saveSlides()"
         [disabled]="savingSlides()"
       >
-        {{ savingSlides() ? 'Enregistrement…' : 'Enregistrer les slides' }}
+        {{ savingSlides() ? 'Enregistrement…' : 'Enregistrer la bannière' }}
       </button>
     </div>
   </section>
@@ -138,7 +150,7 @@
         (ngModelChange)="fixedText.set($event)"
         name="rotating-fixed"
         maxlength="200"
-        placeholder="Chez SEEDS, nous"
+        placeholder="Chez Yaba-In, nous"
       />
       <span class="form-hint">
         Utilisez <code>{{ '{' }}orgName{{ '}' }}</code> pour insérer le nom de l'organisation.
@@ -241,7 +253,7 @@
         (ngModelChange)="featuresEyebrow.set($event)"
         name="features-eyebrow"
         maxlength="200"
-        placeholder="Pourquoi SEEDS"
+        placeholder="Pourquoi Yaba-In"
       />
     </div>
 
@@ -269,6 +281,11 @@
         maxlength="1000"
         placeholder="Nous allons au-delà d'un accompagnement classique..."
       ></textarea>
+    </div>
+
+    <div class="form-field">
+      <label>Image de la section</label>
+      <app-admin-image-field [image]="featuresImage()" (imageChange)="featuresImage.set($event)" variant="wide" alt="Image section partenaire investi dans votre croissance" />
     </div>
 
     <div class="form-field">
@@ -334,8 +351,8 @@
         <span class="countries-editor__icon"><i class="ti ti-world"></i></span>
         <div>
           <span class="countries-editor__eyebrow">Landing page · après les partenaires</span>
-          <h2>Section « 4 Countries »</h2>
-          <p>Présentez les pays et communautés dans lesquels SEEDS agit.</p>
+          <h2>Section Ex :« Countries »</h2>
+          <p>Présentez les pays et communautés dans lesquels l'organisation agit.</p>
         </div>
       </div>
       <div class="toggle-wrapper">
@@ -431,5 +448,34 @@
     <div class="form-actions">
       <span class="skeleton skeleton-btn"></span>
     </div>
+  </section>
+
+  <section class="card mt-2" *ngIf="loaded()">
+    <h2><i class="ti ti-lock"></i> Arrière-plan des pages d’authentification</h2>
+    <p class="text-muted mb-2">Image affichée derrière les pages Connexion, Mot de passe oublié et Réinitialisation.</p>
+    <app-admin-image-field [image]="authBackgroundImage()" (imageChange)="authBackgroundImage.set($event)" variant="wide" alt="Arrière-plan authentification" />
+    <div class="form-actions">
+      <button class="btn btn--primary" (click)="saveLandingExtras()" [disabled]="savingLandingExtras()">{{ savingLandingExtras() ? 'Enregistrement…' : 'Enregistrer' }}</button>
+    </div>
+  </section>
+
+  <section class="card mt-2" *ngIf="loaded()">
+    <header class="section-editor-head">
+      <h2><i class="ti ti-video"></i> Section vidéo</h2>
+      <div class="toggle-wrapper">
+        <input type="checkbox" id="video-highlight-visible" class="toggle-input" [(ngModel)]="videoHighlight.visible" name="video-highlight-visible" />
+        <label for="video-highlight-visible" class="toggle-label"><span class="toggle-slider"></span><span class="toggle-text">{{ videoHighlight.visible ? 'Visible' : 'Masquée' }}</span></label>
+      </div>
+    </header>
+    <p class="text-muted mb-2">Cette section est affichée juste avant les programmes. Son fond utilise automatiquement la couleur primaire du site.</p>
+    <div class="form-field"><label>Badge</label><input class="form-control" [(ngModel)]="videoHighlight.eyebrow" name="video-highlight-eyebrow" maxlength="100" /></div>
+    <div class="form-field"><label>Titre</label><input class="form-control" [(ngModel)]="videoHighlight.title" name="video-highlight-title" maxlength="300" /></div>
+    <div class="form-field"><label>Description</label><textarea class="form-control" rows="4" [(ngModel)]="videoHighlight.description" name="video-highlight-description" maxlength="1500"></textarea></div>
+    <div class="form-field"><label>Lien YouTube ou Facebook de la vidéo</label><input class="form-control" type="url" [(ngModel)]="videoHighlight.videoUrl" name="video-highlight-video-url" placeholder="https://www.youtube.com/watch?v=… ou https://www.facebook.com/…" /></div>
+    <div class="two-columns">
+      <div class="form-field"><label>Libellé du bouton</label><input class="form-control" [(ngModel)]="videoHighlight.buttonLabel" name="video-highlight-button-label" maxlength="100" /></div>
+      <div class="form-field"><label>Lien du bouton</label><input class="form-control" [(ngModel)]="videoHighlight.buttonLink" name="video-highlight-button-link" maxlength="1000" placeholder="/programs ou https://…" /></div>
+    </div>
+    <div class="form-actions"><button class="btn btn--primary" (click)="saveVideoHighlight()" [disabled]="savingVideoHighlight()">{{ savingVideoHighlight() ? 'Enregistrement…' : 'Enregistrer la section vidéo' }}</button></div>
   </section>
 </div>

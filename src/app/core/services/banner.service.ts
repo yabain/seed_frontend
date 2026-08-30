@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiGatewayService } from './api-gateway.service';
-import type { Banner, BannerSlide } from '../models/models';
+import type { Banner, BannerFigure, BannerSlide } from '../models/models';
 
 @Injectable({ providedIn: 'root' })
 export class BannerService {
@@ -17,6 +17,8 @@ export class BannerService {
     rotatingPhrases: string[],
     rotatingImage: string,
     rotatingVisible: boolean,
+    figures: BannerFigure[],
+    authBackgroundImage: string,
   ): Observable<Banner> {
     return this.api.put<Banner>('/banner', {
       slides,
@@ -24,6 +26,8 @@ export class BannerService {
       rotatingPhrases,
       rotatingImage,
       rotatingVisible,
+      figures,
+      authBackgroundImage,
     });
   }
 }

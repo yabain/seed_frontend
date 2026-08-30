@@ -42,7 +42,7 @@
               class="fa-solid fa-arrow-right"></i></a>
         </div>
         <div class="lq-hero__stats">
-          <span class="lq-hero__stat" *ngFor="let figure of figures | slice:0:3">
+          <span class="lq-hero__stat" *ngFor="let figure of figures()">
             <strong>{{ figure.value }}</strong>
             <small>{{ figure.label }}</small>
           </span>
@@ -215,7 +215,7 @@
 
       <!-- Visual Column -->
       <div class="features-visual reveal reveal--from-left">
-        <img src="../../../assets/img/seed_6.webp" alt="DEEDS Img" class="features-img" loading="lazy" />
+        <img [src]="featuresImage()" alt="Partenaire investi dans votre croissance" class="features-img" loading="lazy" />
       </div>
 
       <!-- Content Column -->
@@ -331,7 +331,8 @@
   -->
 
   <!-- ================= PAYS ================= -->
-  <section class="lq-section lq-stats" *ngIf="countriesVisible()">
+  <section class="lq-section lq-stats" *ngIf="countriesVisible()"
+    [style.background-image]="countriesBackgroundImage() ? 'linear-gradient(rgba(10, 55, 50, .78), rgba(10, 55, 50, .78)), url(' + countriesBackgroundImage() + ')' : null">
     <div class="lq-stats__head reveal reveal--from-top">
       <h1 class="lq-stats__title">{{ countriesTitle() }}</h1>
     </div>
@@ -404,6 +405,19 @@
   </section>
 
   <!-- ================= PROGRAMMES ================= -->
+  <section class="lq-video-highlight" *ngIf="videoHighlight()?.visible && videoHighlight()?.videoUrl">
+    <div class="lq-video-highlight__frame" aria-hidden="true"></div>
+    <div class="lq-video-highlight__copy">
+      <span class="lq-video-highlight__eyebrow" *ngIf="videoHighlight()?.eyebrow">{{ videoHighlight()?.eyebrow }}</span>
+      <h2>{{ videoHighlight()?.title }}</h2>
+      <p>{{ videoHighlight()?.description }}</p>
+      <a *ngIf="videoHighlight()?.buttonLabel && videoHighlight()?.buttonLink" [href]="videoHighlight()?.buttonLink" class="btn lq-video-highlight__button">{{ videoHighlight()?.buttonLabel }} <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+    <div class="lq-video-highlight__media">
+      <iframe *ngIf="videoHighlightEmbedUrl() as embedUrl" [src]="embedUrl" title="Vidéo de présentation" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+  </section>
+
   <section class="lq-section" id="programmes" *ngIf="siteConfig()?.segments?.programs ?? true">
     <div class="container">
       <div class="lq-section__head reveal">

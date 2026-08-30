@@ -1,4 +1,4 @@
-<div class="login-layout">
+<div class="login-layout" [style.background-image]="authBackgroundImage() ? 'url(' + authBackgroundImage() + ')' : null">
   <div class="login-panel">
     <a routerLink="/" class="brand">
       <img

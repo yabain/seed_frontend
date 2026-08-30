@@ -15,6 +15,7 @@ export class FeaturesSectionService {
     eyebrow: string,
     title: string,
     description: string,
+    image: string,
     features: FeatureItem[],
     visible: boolean,
   ): Observable<FeaturesSection> {
@@ -22,6 +23,7 @@ export class FeaturesSectionService {
       eyebrow,
       title,
       description,
+      image,
       features,
       visible,
     });

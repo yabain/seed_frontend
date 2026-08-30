@@ -251,5 +251,7 @@
 .country-admin-fields { flex: 1; display: grid; grid-template-columns: 124px minmax(0, 1fr); gap: 0.75rem; min-width: 0; }
 .country-admin-fields__image { min-width: 124px; }.country-admin-fields__image app-admin-image-field { display: block; min-width: 124px; }.country-admin-fields__content { display: grid; gap: .35rem; }.country-admin-fields__content label { margin: 0.05rem 0 0; color: var(--color-gray-600); font-size: .72rem; font-weight: 700; }.country-admin-fields__content input + label { margin-top: .35rem; }
 
+.two-columns { display: grid; grid-template-columns: minmax(100px, .35fr) 1fr; gap: .75rem; }
+
 @media (max-width: 900px) { .countries-list-admin { grid-template-columns: 1fr; } }
 @media (max-width: 640px) { .section-editor-head, .countries-editor__head { align-items: flex-start; flex-direction: column; gap: .8rem; }.countries-editor__settings { grid-template-columns: 1fr; }.countries-editor__countries-head { align-items: flex-start; flex-direction: column; }.country-admin-fields { grid-template-columns: 112px minmax(0, 1fr); }.country-admin-fields__image, .country-admin-fields__image app-admin-image-field { min-width: 112px; }.country-admin-row { padding: .8rem; } }

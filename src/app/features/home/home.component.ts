@@ -9,6 +9,7 @@ import {
   signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NewsService } from '../../core/services/news.service';
@@ -17,11 +18,12 @@ import { PartnersService } from '../../core/services/partners.service';
 import { BannerService } from '../../core/services/banner.service';
 import { FeaturesSectionService } from '../../core/services/features-section.service';
 import { CountriesSectionService } from '../../core/services/countries-section.service';
+import { VideoHighlightSectionService } from '../../core/services/video-highlight-section.service';
 import { AboutService } from '../../core/services/about.service';
 import { SiteConfigService } from '../../core/services/site-config.service';
 import { ProspectsService } from '../../core/services/prospects.service';
 import { EventsService } from '../../core/services/events.service';
-import type { News, Partner, Program, Banner, SiteAbout, SeedEvent, FeaturesSection, FeatureItem, CountriesSection, CountryItem } from '../../core/models/models';
+import type { News, Partner, Program, Banner, BannerFigure, SiteAbout, SeedEvent, FeaturesSection, FeatureItem, CountriesSection, CountryItem, VideoHighlightSection } from '../../core/models/models';
 
 interface Figure {
   value: string;
@@ -97,6 +99,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly events = signal<SeedEvent[]>([]);
   readonly eventsCanPrev = signal(false);
   readonly eventsCanNext = signal(false);
+  readonly videoHighlight = signal<VideoHighlightSection | null>(null);
+  readonly videoHighlightEmbedUrl = signal<SafeResourceUrl | null>(null);
 
   readonly fallbackMission = "Renforcer les communautés par l’éducation, l’emploi et un environnement protégé, pour un impact durable et mesurable.";
   readonly fallbackVision = "Un monde où chaque communauté dispose des moyens d’un avenir prospère, résilient et respectueux de la planète.";
@@ -119,12 +123,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private marqueePaused = false;
   private heroEl: HTMLElement | null = null;
 
-  readonly figures: Figure[] = [
-    { value: '50+', label: 'Projets soutenus', icon: 'fa-solid fa-layer-group' },
-    { value: '300+', label: 'Emplois crée en Afrique', icon: 'fa-solid fa-users' },
-    { value: '30+', label: 'Mentors expert', icon: 'fa-solid fa-handshake' },
-    { value: '80+', label: 'Fondateurs dévoués', icon: 'fa-solid fa-seedling' },
-  ];
+  readonly figures = signal<BannerFigure[]>([
+    { value: '50+', label: 'Projets soutenus' },
+    { value: '300+', label: 'Emplois créés en Afrique' },
+    { value: '30+', label: 'Mentors experts' },
+  ]);
 
   readonly features: Feature[] = [
     {
@@ -176,7 +179,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 
-  readonly fixedText = signal('Chez SEEDS, nous');
+  readonly fixedText = signal('Chez nous, nous');
   readonly rotatingPhrases = signal<string[]>([
     "semons les graines de l'innovation",
     "révélons le potentiel des entrepreneurs",
@@ -187,9 +190,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly rotatingImage = signal('/assets/img/germe.webp');
   readonly rotatingVisible = signal(true);
 
-  readonly featuresEyebrow = signal('Pourquoi SEEDS');
+  readonly featuresEyebrow = signal('Pourquoi nous choisir');
   readonly featuresTitle = signal('Un partenaire investi dans votre croissance');
   readonly featuresDescription = signal('Nous allons au-delà d\'un accompagnement classique pour établir un partenariat solide. Notre reconnaissance officielle et notre engagement tout au long de votre parcours entrepreneurial font de nous un acteur de référence.');
+  readonly featuresImage = signal('/assets/img/seed_6.webp');
   readonly featuresItems = signal<FeatureItem[]>([
     { icon: '', name: 'Abolition des frontières du savoir', details: 'Un partage d\'expériences direct entre experts internationaux et entrepreneurs locaux.' },
     { icon: '', name: 'Leadership serviteur & éthique', details: 'Placer l\'humain, l\'intégrité et l\'impact communautaire au cœur de chaque décision.' },
@@ -225,11 +229,13 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly bannerService: BannerService,
     private readonly featuresSectionService: FeaturesSectionService,
     private readonly countriesSectionService: CountriesSectionService,
+    private readonly videoHighlightSectionService: VideoHighlightSectionService,
     private readonly aboutService: AboutService,
     private readonly siteConfigService: SiteConfigService,
     private readonly prospectsService: ProspectsService,
     private readonly eventsService: EventsService,
     private readonly elementRef: ElementRef,
+    private readonly sanitizer: DomSanitizer,
   ) { }
 
   ngOnInit(): void {
@@ -243,7 +249,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.banner.set(banner);
 
         if (banner.fixedText) {
-          const orgName = this.siteConfig()?.orgName || 'SEEDS';
+          const orgName = this.siteConfig()?.orgName || 'Organisation';
           this.fixedText.set(banner.fixedText.replace('{orgName}', orgName));
         }
         if (banner.rotatingPhrases?.length) {
@@ -253,6 +259,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           this.rotatingImage.set(banner.rotatingImage);
         }
         this.rotatingVisible.set(banner.rotatingVisible ?? true);
+        if (banner.figures?.length) this.figures.set(banner.figures.slice(0, 3));
       },
       error: () => this.banner.set(null),
       complete: () => this.buildSlides(),
@@ -268,6 +275,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         if (section.eyebrow) this.featuresEyebrow.set(section.eyebrow);
         if (section.title) this.featuresTitle.set(section.title);
         if (section.description) this.featuresDescription.set(section.description);
+        if (section.image) this.featuresImage.set(section.image);
         if (section.features?.length) this.featuresItems.set(section.features);
         this.featuresVisible.set(section.visible ?? true);
       },
@@ -282,6 +290,17 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.countriesVisible.set(section.visible ?? true);
       },
       error: () => {},
+    });
+
+    this.videoHighlightSectionService.getPublic().subscribe({
+      next: (section) => {
+        this.videoHighlight.set(section);
+        this.videoHighlightEmbedUrl.set(this.toVideoEmbedUrl(section.videoUrl));
+      },
+      error: () => {
+        this.videoHighlight.set(null);
+        this.videoHighlightEmbedUrl.set(null);
+      },
     });
 
     this.newsService.getLatest(10).subscribe({
@@ -334,6 +353,23 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.reduceMotion) {
       this.timer = setInterval(() => this.next(), SLIDE_INTERVAL);
     }
+  }
+
+  private toVideoEmbedUrl(url?: string): SafeResourceUrl | null {
+    if (!url) return null;
+    try {
+      const parsed = new URL(url);
+      const host = parsed.hostname.replace('www.', '');
+      let embed = '';
+      if (host === 'youtu.be') embed = `https://www.youtube-nocookie.com/embed/${parsed.pathname.slice(1)}`;
+      else if (host.endsWith('youtube.com')) {
+        const id = parsed.searchParams.get('v') || parsed.pathname.split('/').filter(Boolean).pop();
+        if (id) embed = `https://www.youtube-nocookie.com/embed/${id}`;
+      } else if (host.endsWith('facebook.com') || host.endsWith('fb.watch')) {
+        embed = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false`;
+      }
+      return embed ? this.sanitizer.bypassSecurityTrustResourceUrl(embed) : null;
+    } catch { return null; }
   }
 
   nextGroup(): void {

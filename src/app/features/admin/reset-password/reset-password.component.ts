@@ -11,6 +11,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { SiteConfigService } from '../../../core/services/site-config.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { BannerService } from '../../../core/services/banner.service';
 import type { ErrorMessage } from '../../../core/interceptors/error.interceptor';
 
 function passwordsMatchValidator(group: AbstractControl): ValidationErrors | null {
@@ -34,6 +35,7 @@ export class ResetPasswordComponent implements OnInit {
   readonly token = signal<string | null>(null);
   readonly showPassword = signal(false);
   readonly showConfirmPassword = signal(false);
+  readonly authBackgroundImage = signal('');
 
   togglePassword(): void {
     this.showPassword.update((value) => !value);
@@ -60,10 +62,12 @@ export class ResetPasswordComponent implements OnInit {
     private readonly authService: AuthService,
     private readonly siteConfigService: SiteConfigService,
     private readonly toastService: ToastService,
+    private readonly bannerService: BannerService,
   ) {}
 
   ngOnInit(): void {
     this.siteConfigService.load();
+    this.bannerService.getPublic().subscribe({ next: (banner) => this.authBackgroundImage.set(banner.authBackgroundImage ?? '') });
     const token = this.route.snapshot.queryParamMap.get('token');
     if (token) {
       this.token.set(token);

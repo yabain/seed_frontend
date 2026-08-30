@@ -1,5 +1,5 @@
 /* ============================================================
-   SEED — Landing Liquid Glass (Glassmorphism futuriste)
+   Landing Liquid Glass (Glassmorphism futuriste)
    ============================================================ */
 
 .lq-scene {
@@ -498,6 +498,34 @@
 
 .lq-partners__head h2 { margin: .55rem 0; }
 .lq-partners__head p { margin: 0; color: var(--color-gray-600); }
+
+.lq-video-highlight { position: relative; display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(340px, 1fr); min-height: 430px; overflow: hidden; color: #fff; background: var(--color-primary, #14b8a6); }
+.lq-video-highlight__frame { position: absolute; z-index: 2; top: 12%; bottom: 12%; left: max(3%, calc((100% - 1720px) / 2)); width: min(77%, 1280px); border: 2px solid rgba(255, 255, 255, .88); pointer-events: none; }
+.lq-video-highlight__copy { position: relative; z-index: 3; display: flex; flex-direction: column; justify-content: center; max-width: 760px; padding: clamp(3rem, 7vw, 7rem); }
+.lq-video-highlight__eyebrow { display: inline-flex; align-self: flex-start; margin-bottom: 1.1rem; color: #fff; font-size: .78rem; font-weight: 800; letter-spacing: .12em; line-height: 1.3; text-transform: uppercase; }
+.lq-video-highlight__copy h2 { margin: .8rem 0 1rem; color: #fff; font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.1; }
+.lq-video-highlight__copy p { max-width: 650px; margin: 0; font-size: 1.05rem; line-height: 1.65; }
+.lq-video-highlight__button { align-self: flex-start; margin-top: 2rem; padding: .75rem 1.4rem; border-radius: 999px; color: var(--color-primary-dark, #0d9488) !important; background: #fff !important; font-weight: 800; }
+.lq-video-highlight__button:hover { color: #fff !important; background: var(--color-primary-darker, #0f766e) !important; }
+.lq-video-highlight__media { position: relative; z-index: 1; min-height: 360px; background: var(--color-primary-dark, #0d9488); }
+.lq-video-highlight__media iframe { display: block; width: 100%; height: 100%; min-height: 430px; border: 0; }
+@media (max-width: 800px) { .lq-video-highlight { grid-template-columns: 1fr; } .lq-video-highlight__frame { top: 6%; bottom: auto; left: 7%; width: 86%; height: 48%; } .lq-video-highlight__media iframe { min-height: 280px; } }
+
+/* L'illustration « À propos » suit la couleur primaire configurée dans le back-office. */
+.lq-about__visual {
+  #about-halo stop:first-child,
+  #about-line stop:first-child,
+  #about-core stop:first-child { stop-color: var(--color-primary, #14b8a6); }
+
+  #about-halo stop:last-child { stop-color: var(--color-primary-dark, #0d9488); }
+  #about-line stop:last-child,
+  #about-core stop:last-child { stop-color: var(--color-primary-darker, #0f766e); }
+
+  #about-hand stop:first-child { stop-color: var(--color-primary-lighter, #ccfbf1); }
+  #about-hand stop:last-child { stop-color: var(--color-primary-light, #5eead4); }
+  #about-leaf stop:first-child { stop-color: var(--color-primary-light, #99f6e4); }
+  #about-leaf stop:last-child { stop-color: var(--color-primary, #2dd4bf); }
+}
 
 .lq-marquee {
   overflow: hidden;

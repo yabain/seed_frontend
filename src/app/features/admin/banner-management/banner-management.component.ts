@@ -4,9 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { BannerService } from '../../../core/services/banner.service';
 import { FeaturesSectionService } from '../../../core/services/features-section.service';
 import { CountriesSectionService } from '../../../core/services/countries-section.service';
+import { VideoHighlightSectionService } from '../../../core/services/video-highlight-section.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { AdminImageFieldComponent } from '../../../shared/components/admin-image-field/admin-image-field.component';
-import type { BannerSlide, FeatureItem, FeaturesSection, CountryItem, CountriesSection } from '../../../core/models/models';
+import type { BannerFigure, BannerSlide, FeatureItem, FeaturesSection, CountryItem, CountriesSection, VideoHighlightSection } from '../../../core/models/models';
 
 const EMPTY_SLIDES: BannerSlide[] = [
   { eyebrow: '', title: '', subtitle: '', image: '' },
@@ -63,6 +64,12 @@ const DEFAULT_COUNTRIES: CountryItem[] = [
   },
 ];
 
+const DEFAULT_FIGURES: BannerFigure[] = [
+  { value: '50+', label: 'Projets soutenus' },
+  { value: '300+', label: 'Emplois créés en Afrique' },
+  { value: '30+', label: 'Mentors experts' },
+];
+
 @Component({
   selector: 'app-banner-management',
   standalone: true,
@@ -77,9 +84,12 @@ export class BannerManagementComponent implements OnInit {
   readonly rotatingPhrases = signal<string[]>([]);
   readonly rotatingImage = signal('');
   readonly rotatingVisible = signal(true);
+  readonly figures = signal<BannerFigure[]>(DEFAULT_FIGURES.map((figure) => ({ ...figure })));
+  readonly authBackgroundImage = signal('');
   readonly featuresEyebrow = signal('');
   readonly featuresTitle = signal('');
   readonly featuresDescription = signal('');
+  readonly featuresImage = signal('');
   readonly featuresItems = signal<FeatureItem[]>(DEFAULT_FEATURES.map((f) => ({ ...f })));
   readonly featuresVisible = signal(true);
   readonly countriesTitle = signal('4 Countries');
@@ -92,11 +102,15 @@ export class BannerManagementComponent implements OnInit {
   readonly savingVisibility = signal(false);
   readonly savingFeatures = signal(false);
   readonly savingCountries = signal(false);
+  readonly savingLandingExtras = signal(false);
+  readonly savingVideoHighlight = signal(false);
+  readonly videoHighlight: VideoHighlightSection = { eyebrow: '', title: '', description: '', buttonLabel: 'En savoir plus', buttonLink: '', videoUrl: '', visible: true };
 
   constructor(
     private readonly bannerService: BannerService,
     private readonly featuresSectionService: FeaturesSectionService,
     private readonly countriesSectionService: CountriesSectionService,
+    private readonly videoHighlightSectionService: VideoHighlightSectionService,
     private readonly toastService: ToastService,
   ) {}
 
@@ -124,6 +138,8 @@ export class BannerManagementComponent implements OnInit {
         );
         this.rotatingImage.set(banner.rotatingImage ?? '');
         this.rotatingVisible.set(banner.rotatingVisible ?? true);
+        this.figures.set(banner.figures?.length ? banner.figures.slice(0, 3) : DEFAULT_FIGURES.map((figure) => ({ ...figure })));
+        this.authBackgroundImage.set(banner.authBackgroundImage ?? '');
         this.loaded.set(true);
       },
       error: () => {
@@ -137,6 +153,7 @@ export class BannerManagementComponent implements OnInit {
         this.featuresEyebrow.set(section.eyebrow ?? '');
         this.featuresTitle.set(section.title ?? '');
         this.featuresDescription.set(section.description ?? '');
+        this.featuresImage.set(section.image ?? '');
         this.featuresItems.set(
           section.features?.length
             ? section.features.map((f) => ({ ...f }))
@@ -164,6 +181,11 @@ export class BannerManagementComponent implements OnInit {
         this.toastService.error('Impossible de charger la section pays.');
       },
     });
+
+    this.videoHighlightSectionService.getPublic().subscribe({
+      next: (section) => Object.assign(this.videoHighlight, section),
+      error: () => this.toastService.error('Impossible de charger la section vidéo.'),
+    });
   }
 
   setImage(index: number, url: string): void {
@@ -175,7 +197,7 @@ export class BannerManagementComponent implements OnInit {
   saveSlides(): void {
     this.savingSlides.set(true);
     this.bannerService
-      .update(this.slides(), this.fixedText(), this.rotatingPhrases(), this.rotatingImage(), this.rotatingVisible())
+      .update(this.slides(), this.fixedText(), this.rotatingPhrases(), this.rotatingImage(), this.rotatingVisible(), this.figures(), this.authBackgroundImage())
       .subscribe({
         next: () => {
           this.savingSlides.set(false);
@@ -193,7 +215,7 @@ export class BannerManagementComponent implements OnInit {
   saveRotating(): void {
     this.savingRotating.set(true);
     this.bannerService
-      .update(this.slides(), this.fixedText(), this.rotatingPhrases(), this.rotatingImage(), this.rotatingVisible())
+      .update(this.slides(), this.fixedText(), this.rotatingPhrases(), this.rotatingImage(), this.rotatingVisible(), this.figures(), this.authBackgroundImage())
       .subscribe({
         next: () => {
           this.savingRotating.set(false);
@@ -229,7 +251,7 @@ export class BannerManagementComponent implements OnInit {
     this.rotatingVisible.set(value);
     this.savingVisibility.set(true);
     this.bannerService
-      .update(this.slides(), this.fixedText(), this.rotatingPhrases(), this.rotatingImage(), value)
+      .update(this.slides(), this.fixedText(), this.rotatingPhrases(), this.rotatingImage(), value, this.figures(), this.authBackgroundImage())
       .subscribe({
         next: () => {
           this.savingVisibility.set(false);
@@ -243,6 +265,30 @@ export class BannerManagementComponent implements OnInit {
           );
         },
       });
+  }
+
+  saveLandingExtras(): void {
+    this.savingLandingExtras.set(true);
+    this.bannerService
+      .update(this.slides(), this.fixedText(), this.rotatingPhrases(), this.rotatingImage(), this.rotatingVisible(), this.figures(), this.authBackgroundImage())
+      .subscribe({
+        next: () => {
+          this.savingLandingExtras.set(false);
+          this.toastService.success('Chiffres et image d’authentification enregistrés.');
+        },
+        error: (err) => {
+          this.savingLandingExtras.set(false);
+          this.toastService.error(err.details?.join(' ') || err.message || 'Erreur lors de l’enregistrement.');
+        },
+      });
+  }
+
+  saveVideoHighlight(): void {
+    this.savingVideoHighlight.set(true);
+    this.videoHighlightSectionService.update(this.videoHighlight).subscribe({
+      next: () => { this.savingVideoHighlight.set(false); this.toastService.success('Section vidéo enregistrée.'); },
+      error: (err) => { this.savingVideoHighlight.set(false); this.toastService.error(err.details?.join(' ') || err.message || 'Erreur lors de l’enregistrement.'); },
+    });
   }
 
   addFeature(): void {
@@ -272,6 +318,7 @@ export class BannerManagementComponent implements OnInit {
         this.featuresEyebrow(),
         this.featuresTitle(),
         this.featuresDescription(),
+        this.featuresImage(),
         this.featuresItems(),
         this.featuresVisible(),
       )
@@ -297,6 +344,7 @@ export class BannerManagementComponent implements OnInit {
         this.featuresEyebrow(),
         this.featuresTitle(),
         this.featuresDescription(),
+        this.featuresImage(),
         this.featuresItems(),
         value,
       )

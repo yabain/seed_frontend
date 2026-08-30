@@ -14,8 +14,8 @@
       />
       <span class="brand-badge" *ngIf="!siteConfig()?.logo">{{ (siteConfig()?.orgName || 'S').charAt(0) }}</span>
       <span class="brand-text" *ngIf="!siteConfig()?.logo">
-        <strong>{{ siteConfig()?.orgName || 'SEED' }}</strong>
-        <small>{{ siteConfig()?.tagline || 'Yaba-In SARL' }}</small>
+        <strong>{{ siteConfig()?.orgName || '' }}</strong>
+        <small>{{ siteConfig()?.tagline || '' }}</small>
       </span>
     </a>
 

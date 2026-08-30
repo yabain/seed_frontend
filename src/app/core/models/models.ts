@@ -162,6 +162,11 @@ export interface BannerSlide {
   image: string;
 }
 
+export interface BannerFigure {
+  value: string;
+  label: string;
+}
+
 export interface Banner {
   _id?: string;
   slides: BannerSlide[];
@@ -169,6 +174,8 @@ export interface Banner {
   rotatingPhrases?: string[];
   rotatingImage?: string;
   rotatingVisible?: boolean;
+  figures?: BannerFigure[];
+  authBackgroundImage?: string;
 }
 
 export interface FeatureItem {
@@ -182,6 +189,7 @@ export interface FeaturesSection {
   eyebrow?: string;
   title?: string;
   description?: string;
+  image?: string;
   features: FeatureItem[];
   visible?: boolean;
 }
@@ -197,6 +205,17 @@ export interface CountriesSection {
   title?: string;
   backgroundImage?: string;
   countries: CountryItem[];
+  visible?: boolean;
+}
+
+export interface VideoHighlightSection {
+  _id?: string;
+  eyebrow?: string;
+  title?: string;
+  description?: string;
+  buttonLabel?: string;
+  buttonLink?: string;
+  videoUrl?: string;
   visible?: boolean;
 }
 

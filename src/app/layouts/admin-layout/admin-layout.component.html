@@ -10,7 +10,7 @@
       />
       <span class="brand-emblem" *ngIf="!siteConfig()?.logo">{{ (siteConfig()?.orgName || 'S').charAt(0) }}</span>
       <span class="brand-name" *ngIf="!siteConfig()?.logo">
-        {{ siteConfig()?.orgName || 'SEED' }}
+        {{ siteConfig()?.orgName || '' }}
         <small>Back-office</small>
       </span>
     </a>
@@ -112,7 +112,7 @@
           />
           <span class="brand-emblem" *ngIf="!siteConfig()?.logo">{{ (siteConfig()?.orgName || 'S').charAt(0) }}</span>
           <span class="brand-name" *ngIf="!siteConfig()?.logo">
-            {{ siteConfig()?.orgName || 'SEED' }}
+            {{ siteConfig()?.orgName || '' }}
             <small>Back-office</small>
           </span>
         </a>
@@ -141,7 +141,7 @@
             </ng-container>
           </ul>
           <div class="pc-navbar-card bg-primary rounded">
-            <h4 class="text-white">{{ siteConfig()?.orgName || 'SEEDS' }}</h4>
+            <h4 class="text-white">{{ siteConfig()?.orgName || '' }}</h4>
             <p class="text-white">{{ siteConfig()?.tagline || 'Plateforme institutionnelle' }}</p>
             <a routerLink="/" class="btn btn-light text-primary">Voir le site</a>
           </div>
@@ -177,7 +177,7 @@
       <div class="col my-1">
         <p class="m-0">
           Copyright &copy; {{ year }}
-          <strong>{{ siteConfig()?.orgName || 'SEEDS' }}</strong>{{ siteConfig()?.tagline ? ' — ' + siteConfig()?.tagline : ' — Plateforme institutionnelle' }}
+          <strong>{{ siteConfig()?.orgName || '' }}</strong>{{ siteConfig()?.tagline ? ' — ' + siteConfig()?.tagline : ' — Plateforme institutionnelle' }}
         </p>
       </div>
       <div class="col-auto my-1">
