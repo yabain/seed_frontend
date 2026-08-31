@@ -1,22 +1,31 @@
-<section class="page-hero">
+<section class="page-hero" [style.background-image]="pageBackground() ? 'url(' + pageBackground() + ')' : null">
   <div class="container">
-    <span class="eyebrow">Actualités</span>
-    <h1>Nos actualités</h1>
-    <p>Découvrez nos dernières nouvelles.</p>
+    <span class="eyebrow">{{ siteConfig()?.landingSections?.news?.eyebrow || 'Actualités' }}</span>
+    <h1>{{ siteConfig()?.landingSections?.news?.title || 'Nos actualités' }}</h1>
+    <p>{{ siteConfig()?.landingSections?.news?.description || 'Découvrez nos dernières nouvelles.' }}</p>
   </div>
 </section>
 
 <section class="section">
   <div class="container">
-    <div class="search-bar d-flex gap-1 mb-3">
+    <div class="news-intro">
+      <div>
+        <span class="section-kicker">À la une</span>
+        <h2>Suivez nos dernières actualités</h2>
+      </div>
+      <p *ngIf="!loading()">{{ result().total }} actualité{{ result().total > 1 ? 's' : '' }} à découvrir</p>
+    </div>
+
+    <div class="news-search">
+      <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
       <input
         class="form-control"
         type="search"
-        [(ngModel)]="search"
+        [value]="search"
+        (input)="onSearchInput($any($event.target).value)"
         placeholder="Rechercher une actualité…"
-        (keyup.enter)="onSearch()"
+        aria-label="Rechercher une actualité"
       />
-      <button class="btn btn--primary" (click)="onSearch()">Rechercher</button>
     </div>
 
     <div class="grid grid--3" *ngIf="loading()" aria-busy="true">
@@ -33,17 +42,24 @@
     </div>
 
     <div class="grid grid--3" *ngIf="!loading() && result().items.length">
-      <article class="card card--hover news-card" *ngFor="let item of result().items">
-        <div class="news-thumb">
+      <article class="news-card" *ngFor="let item of result().items" (click)="goToDetail(item)">
+        <div class="news-card__media">
           <img *ngIf="item.image" [src]="item.image" [alt]="item.title" />
-          <span *ngIf="!item.image" class="news-thumb-placeholder"><i class="fa-solid fa-newspaper"></i></span>
-          <span class="badge badge--green news-date">{{ formatDate(item.publishedAt || item.createdAt) }}</span>
+          <span *ngIf="!item.image" class="news-card__placeholder"><i class="fa-solid fa-newspaper"></i></span>
+          <span class="news-card__date">
+            <i class="fa-regular fa-calendar"></i>
+            {{ formatDate(item.publishedAt || item.createdAt) }}
+          </span>
         </div>
-        <div class="news-body">
-          <span class="badge badge--gray" *ngFor="let tag of item.tags">{{ tag }}</span>
+        <div class="news-card__body">
+          <span class="news-card__tag" *ngIf="item.tags?.length">{{ item.tags?.[0] }}</span>
           <h3>{{ item.title }}</h3>
-          <p *ngIf="item.excerpt">{{ item.excerpt }}</p>
-          <a routerLink="/news/{{ item.slug || item._id }}" class="btn btn--sm btn--ghost">Lire la suite <i class="fa-solid fa-arrow-right"></i></a>
+          <p class="news-card__desc" *ngIf="item.excerpt">
+            {{ item.excerpt.length > 150 ? (item.excerpt | slice:0:150) + '…' : item.excerpt }}
+          </p>
+          <div class="news-card__footer">
+            <span class="news-card__link">Lire l’actualité <i class="fa-solid fa-arrow-right"></i></span>
+          </div>
         </div>
       </article>
     </div>

@@ -19,6 +19,7 @@ export class BannerService {
     rotatingVisible: boolean,
     figures: BannerFigure[],
     authBackgroundImage: string,
+    pageBackgroundImage: string,
   ): Observable<Banner> {
     return this.api.put<Banner>('/banner', {
       slides,
@@ -28,6 +29,7 @@ export class BannerService {
       rotatingVisible,
       figures,
       authBackgroundImage,
+      pageBackgroundImage,
     });
   }
 }

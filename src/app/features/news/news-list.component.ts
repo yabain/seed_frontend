@@ -1,26 +1,50 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { NewsService } from '../../core/services/news.service';
+import { SiteConfigService } from '../../core/services/site-config.service';
+import { PageBackgroundService } from '../../core/services/page-background.service';
 import type { Paginated, News } from '../../core/models/models';
 
 @Component({
   selector: 'app-news-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule],
   templateUrl: './news-list.component.html',
   styleUrl: './news-list.component.scss',
 })
-export class NewsListComponent implements OnInit {
+export class NewsListComponent implements OnInit, OnDestroy {
+  private readonly siteConfigService = inject(SiteConfigService);
+  private readonly pageBackgroundService = inject(PageBackgroundService);
+  readonly siteConfig = this.siteConfigService.config;
+  readonly pageBackground = this.pageBackgroundService.background;
   readonly result = signal<Paginated<News>>({ items: [], total: 0, page: 1, limit: 9 });
   readonly loading = signal(true);
   search = '';
+  private searchTimer?: ReturnType<typeof setTimeout>;
 
-  constructor(private readonly newsService: NewsService) {}
+  constructor(
+    private readonly newsService: NewsService,
+    private readonly router: Router,
+  ) {}
 
   ngOnInit(): void {
+    this.pageBackgroundService.load();
     this.loadPage(1);
+  }
+
+  ngOnDestroy(): void {
+    if (this.searchTimer) clearTimeout(this.searchTimer);
+  }
+
+  goToDetail(item: News): void {
+    void this.router.navigate(['/news', item.slug || item._id]);
+  }
+
+  onSearchInput(value: string): void {
+    if (this.searchTimer) clearTimeout(this.searchTimer);
+    this.search = value;
+    this.searchTimer = setTimeout(() => this.loadPage(1), 300);
   }
 
   loadPage(page: number): void {
@@ -32,10 +56,6 @@ export class NewsListComponent implements OnInit {
       },
       error: () => this.loading.set(false),
     });
-  }
-
-  onSearch(): void {
-    this.loadPage(1);
   }
 
   pages(): number[] {

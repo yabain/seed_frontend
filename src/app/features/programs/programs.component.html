@@ -1,8 +1,8 @@
-<section class="page-hero">
+<section class="page-hero" [style.background-image]="pageBackground() ? 'url(' + pageBackground() + ')' : null">
   <div class="container">
-    <span class="eyebrow">Nos Actions</span>
-    <h1>Programmes & domaines d’intervention</h1>
-    <p>Découvrez nos actions concrètes.</p>
+    <span class="eyebrow">{{ siteConfig()?.landingSections?.programs?.eyebrow || 'Nos Actions' }}</span>
+    <h1>{{ siteConfig()?.landingSections?.programs?.title || 'Programmes & domaines d’intervention' }}</h1>
+    <p>{{ siteConfig()?.landingSections?.programs?.description || 'Découvrez nos actions concrètes.' }}</p>
   </div>
 </section>
 

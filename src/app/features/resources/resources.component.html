@@ -1,8 +1,8 @@
-<section class="page-hero">
+<section class="page-hero" [style.background-image]="pageBackground() ? 'url(' + pageBackground() + ')' : null">
   <div class="container">
-    <span class="eyebrow">Ressources</span>
-    <h1>Centre de ressources</h1>
-    <p>Téléchargez nos rapports, guides et documents institutionnels.</p>
+    <span class="eyebrow">{{ siteConfig()?.landingSections?.resources?.eyebrow || 'Ressources' }}</span>
+    <h1>{{ siteConfig()?.landingSections?.resources?.title || 'Centre de ressources' }}</h1>
+    <p>{{ siteConfig()?.landingSections?.resources?.description || 'Téléchargez nos rapports, guides et documents institutionnels.' }}</p>
   </div>
 </section>
 

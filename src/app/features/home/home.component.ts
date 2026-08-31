@@ -51,7 +51,7 @@ interface Slide {
 
 const SLIDE_INTERVAL = 8000;
 const FALLBACK_PARTNERS: Partner[] = [
-  { _id: '1', name: 'Yaba-In SARL' },
+  { _id: '1', name: '[Organisation]' },
   { _id: '2', name: 'Acteurs locaux' },
   { _id: '3', name: 'ONG partenaires' },
   { _id: '4', name: 'Écoles associées' },
@@ -690,6 +690,17 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       month: 'long',
       year: 'numeric',
     });
+  }
+
+  programIconClass(icon?: string): string {
+    const icons: Record<string, string> = {
+      education: 'fa-solid fa-graduation-cap',
+      environment: 'fa-solid fa-leaf',
+      entrepreneurship: 'fa-solid fa-lightbulb',
+      health: 'fa-solid fa-heart-pulse',
+    };
+
+    return icons[icon ?? ''] || 'fa-solid fa-seedling';
   }
 
   categoryLabel(categories?: string[]): string {

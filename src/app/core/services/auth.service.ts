@@ -27,7 +27,12 @@ export class AuthService {
   constructor(private readonly api: ApiGatewayService) {
     const storedToken = localStorage.getItem(TOKEN_KEY);
     if (storedToken) {
-      this.tokenSignal.set(storedToken);
+      if (this.isTokenExpired(storedToken)) {
+        localStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem(ADMIN_KEY);
+      } else {
+        this.tokenSignal.set(storedToken);
+      }
     }
     const storedAdmin = localStorage.getItem(ADMIN_KEY);
     if (storedAdmin) {
@@ -36,6 +41,24 @@ export class AuthService {
       } catch {
         localStorage.removeItem(ADMIN_KEY);
       }
+    }
+  }
+
+  private isTokenExpired(token: string): boolean {
+    try {
+      const payload = token.split('.')[1];
+      if (!payload) {
+        return true;
+      }
+      const decoded = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/'))) as {
+        exp?: number;
+      };
+      if (typeof decoded.exp !== 'number') {
+        return false;
+      }
+      return decoded.exp * 1000 <= Date.now();
+    } catch {
+      return true;
     }
   }
 

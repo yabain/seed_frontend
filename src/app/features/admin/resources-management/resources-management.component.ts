@@ -5,13 +5,14 @@ import { ResourcesService } from '../../../core/services/resources.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { SegmentVisibilityComponent } from '../../../shared/components/segment-visibility/segment-visibility.component';
+import { LandingSectionEditorComponent } from '../../../shared/components/landing-section-editor/landing-section-editor.component';
 import { formatBytes } from '../../../shared/utils/file.util';
 import type { Resource } from '../../../core/models/models';
 
 @Component({
   selector: 'app-resources-management',
   standalone: true,
-  imports: [CommonModule, RouterLink, SegmentVisibilityComponent],
+  imports: [CommonModule, RouterLink, SegmentVisibilityComponent, LandingSectionEditorComponent],
   templateUrl: './resources-management.component.html',
   styleUrl: '../management.scss',
 })

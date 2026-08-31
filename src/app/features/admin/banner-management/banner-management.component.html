@@ -150,7 +150,7 @@
         (ngModelChange)="fixedText.set($event)"
         name="rotating-fixed"
         maxlength="200"
-        placeholder="Chez Yaba-In, nous"
+        placeholder="Chez [Organisation], nous"
       />
       <span class="form-hint">
         Utilisez <code>{{ '{' }}orgName{{ '}' }}</code> pour insérer le nom de l'organisation.
@@ -253,7 +253,7 @@
         (ngModelChange)="featuresEyebrow.set($event)"
         name="features-eyebrow"
         maxlength="200"
-        placeholder="Pourquoi Yaba-In"
+        placeholder="Pourquoi [Organisation]"
       />
     </div>
 
@@ -447,6 +447,15 @@
     </div>
     <div class="form-actions">
       <span class="skeleton skeleton-btn"></span>
+    </div>
+  </section>
+
+  <section class="card mt-2" *ngIf="loaded()">
+    <h2><i class="ti ti-photo"></i> Arrière-plan des pages du site</h2>
+    <p class="text-muted mb-2">Image d’arrière-plan affichée en tête des pages du site (Actualités, Programmes, Ressources, Événements, Partenaires, Contact, …).</p>
+    <app-admin-image-field [image]="pageBackgroundImage()" (imageChange)="pageBackgroundImage.set($event)" variant="wide" alt="Arrière-plan des pages du site" />
+    <div class="form-actions">
+      <button class="btn btn--primary" (click)="saveLandingExtras()" [disabled]="savingLandingExtras()">{{ savingLandingExtras() ? 'Enregistrement…' : 'Enregistrer' }}</button>
     </div>
   </section>
 

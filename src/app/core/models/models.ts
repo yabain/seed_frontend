@@ -175,6 +175,7 @@ export interface Banner {
   rotatingImage?: string;
   rotatingVisible?: boolean;
   figures?: BannerFigure[];
+  pageBackgroundImage?: string;
   authBackgroundImage?: string;
 }
 
@@ -245,6 +246,7 @@ export interface LandingSections {
   news?: LandingSectionText;
   programs?: LandingSectionText;
   partners?: LandingSectionText;
+  resources?: LandingSectionText;
 }
 
 export interface SiteConfig {

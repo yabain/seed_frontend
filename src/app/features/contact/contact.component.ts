@@ -1,8 +1,9 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ContactService } from '../../core/services/contact.service';
 import { SiteConfigService } from '../../core/services/site-config.service';
+import { PageBackgroundService } from '../../core/services/page-background.service';
 import { ToastService } from '../../core/services/toast.service';
 
 @Component({
@@ -13,7 +14,9 @@ import { ToastService } from '../../core/services/toast.service';
   styleUrl: './contact.component.scss',
 })
 export class ContactComponent {
+  private readonly pageBackgroundService = inject(PageBackgroundService);
   readonly siteConfig = this.siteConfigService.config;
+  readonly pageBackground = this.pageBackgroundService.background;
   readonly submitting = signal(false);
   readonly submitted = signal(false);
 
@@ -46,7 +49,9 @@ export class ContactComponent {
     private readonly contactService: ContactService,
     private readonly siteConfigService: SiteConfigService,
     private readonly toastService: ToastService,
-  ) {}
+  ) {
+    this.pageBackgroundService.load();
+  }
 
   submit(): void {
     if (this.contactForm.invalid) {

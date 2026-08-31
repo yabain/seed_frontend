@@ -13,6 +13,7 @@ const DEFAULTS: Record<LandingSectionKey, Required<LandingSectionText>> = {
   news: { eyebrow: 'Actualités', title: 'Nos dernières nouvelles', description: 'Suivez notre actualité et nos réalisations.' },
   programs: { eyebrow: 'Nos actions', title: 'Programmes et projets actifs', description: 'Des initiatives concrètes portées avec nos partenaires.' },
   partners: { eyebrow: '', title: '', description: '' },
+  resources: { eyebrow: 'Ressources', title: 'Centre de ressources', description: 'Téléchargez nos rapports, guides et documents institutionnels.' },
 };
 
 @Component({

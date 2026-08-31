@@ -1,7 +1,9 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { EventsService } from '../../core/services/events.service';
+import { SiteConfigService } from '../../core/services/site-config.service';
+import { PageBackgroundService } from '../../core/services/page-background.service';
 import type { Paginated, SeedEvent } from '../../core/models/models';
 
 @Component({
@@ -12,6 +14,10 @@ import type { Paginated, SeedEvent } from '../../core/models/models';
   styleUrl: './events-list.component.scss',
 })
 export class EventsListComponent implements OnInit {
+  private readonly siteConfigService = inject(SiteConfigService);
+  private readonly pageBackgroundService = inject(PageBackgroundService);
+  readonly siteConfig = this.siteConfigService.config;
+  readonly pageBackground = this.pageBackgroundService.background;
   readonly result = signal<Paginated<SeedEvent>>({ items: [], total: 0, page: 1, limit: 9 });
   readonly loading = signal(true);
   search = '';
@@ -23,6 +29,7 @@ export class EventsListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.pageBackgroundService.load();
     this.loadPage(1);
   }
 

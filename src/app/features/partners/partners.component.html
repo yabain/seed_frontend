@@ -1,8 +1,8 @@
-<section class="page-hero">
+<section class="page-hero" [style.background-image]="pageBackground() ? 'url(' + pageBackground() + ')' : null">
   <div class="container">
-    <span class="eyebrow">Partenaires</span>
-    <h1>Nos partenaires</h1>
-    <p>Les institutions et entreprises qui soutiennent nos missions au quotidien.</p>
+    <span class="eyebrow">{{ siteConfig()?.landingSections?.partners?.eyebrow || 'Partenaires' }}</span>
+    <h1>{{ siteConfig()?.landingSections?.partners?.title || 'Nos partenaires' }}</h1>
+    <p>{{ siteConfig()?.landingSections?.partners?.description || 'Les institutions et entreprises qui soutiennent nos missions au quotidien.' }}</p>
   </div>
 </section>
 

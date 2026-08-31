@@ -86,6 +86,7 @@ export class BannerManagementComponent implements OnInit {
   readonly rotatingVisible = signal(true);
   readonly figures = signal<BannerFigure[]>(DEFAULT_FIGURES.map((figure) => ({ ...figure })));
   readonly authBackgroundImage = signal('');
+  readonly pageBackgroundImage = signal('');
   readonly featuresEyebrow = signal('');
   readonly featuresTitle = signal('');
   readonly featuresDescription = signal('');
@@ -139,6 +140,7 @@ export class BannerManagementComponent implements OnInit {
         this.rotatingImage.set(banner.rotatingImage ?? '');
         this.rotatingVisible.set(banner.rotatingVisible ?? true);
         this.figures.set(banner.figures?.length ? banner.figures.slice(0, 3) : DEFAULT_FIGURES.map((figure) => ({ ...figure })));
+        this.pageBackgroundImage.set(banner.pageBackgroundImage ?? '');
         this.authBackgroundImage.set(banner.authBackgroundImage ?? '');
         this.loaded.set(true);
       },
@@ -197,7 +199,7 @@ export class BannerManagementComponent implements OnInit {
   saveSlides(): void {
     this.savingSlides.set(true);
     this.bannerService
-      .update(this.slides(), this.fixedText(), this.rotatingPhrases(), this.rotatingImage(), this.rotatingVisible(), this.figures(), this.authBackgroundImage())
+      .update(this.slides(), this.fixedText(), this.rotatingPhrases(), this.rotatingImage(), this.rotatingVisible(), this.figures(), this.authBackgroundImage(), this.pageBackgroundImage())
       .subscribe({
         next: () => {
           this.savingSlides.set(false);
@@ -215,7 +217,7 @@ export class BannerManagementComponent implements OnInit {
   saveRotating(): void {
     this.savingRotating.set(true);
     this.bannerService
-      .update(this.slides(), this.fixedText(), this.rotatingPhrases(), this.rotatingImage(), this.rotatingVisible(), this.figures(), this.authBackgroundImage())
+      .update(this.slides(), this.fixedText(), this.rotatingPhrases(), this.rotatingImage(), this.rotatingVisible(), this.figures(), this.authBackgroundImage(), this.pageBackgroundImage())
       .subscribe({
         next: () => {
           this.savingRotating.set(false);
@@ -251,7 +253,7 @@ export class BannerManagementComponent implements OnInit {
     this.rotatingVisible.set(value);
     this.savingVisibility.set(true);
     this.bannerService
-      .update(this.slides(), this.fixedText(), this.rotatingPhrases(), this.rotatingImage(), value, this.figures(), this.authBackgroundImage())
+      .update(this.slides(), this.fixedText(), this.rotatingPhrases(), this.rotatingImage(), value, this.figures(), this.authBackgroundImage(), this.pageBackgroundImage())
       .subscribe({
         next: () => {
           this.savingVisibility.set(false);
@@ -270,7 +272,7 @@ export class BannerManagementComponent implements OnInit {
   saveLandingExtras(): void {
     this.savingLandingExtras.set(true);
     this.bannerService
-      .update(this.slides(), this.fixedText(), this.rotatingPhrases(), this.rotatingImage(), this.rotatingVisible(), this.figures(), this.authBackgroundImage())
+      .update(this.slides(), this.fixedText(), this.rotatingPhrases(), this.rotatingImage(), this.rotatingVisible(), this.figures(), this.authBackgroundImage(), this.pageBackgroundImage())
       .subscribe({
         next: () => {
           this.savingLandingExtras.set(false);

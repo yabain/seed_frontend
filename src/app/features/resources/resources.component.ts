@@ -1,6 +1,8 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ResourcesService } from '../../core/services/resources.service';
+import { SiteConfigService } from '../../core/services/site-config.service';
+import { PageBackgroundService } from '../../core/services/page-background.service';
 import type { Paginated, Resource } from '../../core/models/models';
 
 @Component({
@@ -11,6 +13,10 @@ import type { Paginated, Resource } from '../../core/models/models';
   styleUrl: './resources.component.scss',
 })
 export class ResourcesComponent implements OnInit {
+  private readonly siteConfigService = inject(SiteConfigService);
+  private readonly pageBackgroundService = inject(PageBackgroundService);
+  readonly siteConfig = this.siteConfigService.config;
+  readonly pageBackground = this.pageBackgroundService.background;
   readonly categories = signal<string[]>([]);
   readonly result = signal<Paginated<Resource>>({ items: [], total: 0, page: 1, limit: 12 });
   readonly loading = signal(true);
@@ -19,6 +25,7 @@ export class ResourcesComponent implements OnInit {
   constructor(private readonly resourcesService: ResourcesService) {}
 
   ngOnInit(): void {
+    this.pageBackgroundService.load();
     this.resourcesService.getCategories().subscribe({
       next: (categories) => this.categories.set(categories),
       error: () => this.categories.set([]),

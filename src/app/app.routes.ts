@@ -1,17 +1,20 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
 import { RoleGuard } from './core/guards/role.guard';
+import { PublicOnlyGuard } from './core/guards/public-only.guard';
 
 const CONTENT_ROLES = ['user', 'consultant', 'admin', 'superadmin'];
 
 export const appRoutes: Routes = [
   {
     path: 'admin/login',
+    canActivate: [PublicOnlyGuard],
     loadComponent: () =>
       import('./features/admin/login/login.component').then((m) => m.LoginComponent),
   },
   {
     path: 'admin/forgot-password',
+    canActivate: [PublicOnlyGuard],
     loadComponent: () =>
       import('./features/admin/forgot-password/forgot-password.component').then(
         (m) => m.ForgotPasswordComponent,

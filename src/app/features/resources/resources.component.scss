@@ -1,6 +1,6 @@
 .page-hero {
   position: relative;
-  background: url('../../../assets/img/seeds_letters.webp') center / cover no-repeat;
+  background: linear-gradient(135deg, color-mix(in srgb, color-mix(in srgb, var(--color-primary) 32%, #010b09) 82%, transparent), color-mix(in srgb, var(--color-primary) 70%, transparent));
 
   &::before {
     content: '';

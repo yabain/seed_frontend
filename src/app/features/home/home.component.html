@@ -92,30 +92,6 @@
       </div>
 
       <div class="lq-about__cards">
-        <article class="lq-glass lq-card lq-card--illustration lq-about__card lq-about__card--mission reveal reveal--from-left">
-          <div class="lq-card__illu">
-            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="100" cy="100" r="80" fill="url(#mission-grad)" opacity="0.12"/>
-              <circle cx="100" cy="100" r="56" stroke="url(#mission-stroke)" stroke-width="2.5" stroke-dasharray="6 4" opacity="0.35"/>
-              <circle cx="100" cy="100" r="34" fill="url(#mission-grad)" opacity="0.18"/>
-              <circle cx="100" cy="100" r="14" fill="url(#mission-grad)"/>
-              <path d="M100 20 L100 46" stroke="url(#mission-stroke)" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
-              <path d="M100 154 L100 180" stroke="url(#mission-stroke)" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
-              <path d="M20 100 L46 100" stroke="url(#mission-stroke)" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
-              <path d="M154 100 L180 100" stroke="url(#mission-stroke)" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
-              <circle cx="100" cy="100" r="4.5" fill="#fff"/>
-              <defs>
-                <linearGradient id="mission-grad" x1="40" y1="40" x2="160" y2="160"><stop stop-color="#14b8a6"/><stop offset="1" stop-color="#0d9488"/></linearGradient>
-                <linearGradient id="mission-stroke" x1="20" y1="20" x2="180" y2="180"><stop stop-color="#14b8a6"/><stop offset="1" stop-color="#0f766e"/></linearGradient>
-              </defs>
-            </svg>
-          </div>
-          <span class="lq-about__label">Notre boussole</span>
-          <h3>Notre mission</h3>
-          <p>
-            {{ about()?.mission || fallbackMission }}
-          </p>
-        </article>
         <article class="lq-glass lq-card lq-card--illustration lq-about__card lq-about__card--vision reveal reveal--from-right">
           <div class="lq-card__illu">
             <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -139,6 +115,30 @@
           <h3>Notre vision</h3>
           <p>
             {{ about()?.vision || fallbackVision }}
+          </p>
+        </article>
+        <article class="lq-glass lq-card lq-card--illustration lq-about__card lq-about__card--mission reveal reveal--from-left">
+          <div class="lq-card__illu">
+            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="100" cy="100" r="80" fill="url(#mission-grad)" opacity="0.12"/>
+              <circle cx="100" cy="100" r="56" stroke="url(#mission-stroke)" stroke-width="2.5" stroke-dasharray="6 4" opacity="0.35"/>
+              <circle cx="100" cy="100" r="34" fill="url(#mission-grad)" opacity="0.18"/>
+              <circle cx="100" cy="100" r="14" fill="url(#mission-grad)"/>
+              <path d="M100 20 L100 46" stroke="url(#mission-stroke)" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+              <path d="M100 154 L100 180" stroke="url(#mission-stroke)" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+              <path d="M20 100 L46 100" stroke="url(#mission-stroke)" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+              <path d="M154 100 L180 100" stroke="url(#mission-stroke)" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+              <circle cx="100" cy="100" r="4.5" fill="#fff"/>
+              <defs>
+                <linearGradient id="mission-grad" x1="40" y1="40" x2="160" y2="160"><stop stop-color="#14b8a6"/><stop offset="1" stop-color="#0d9488"/></linearGradient>
+                <linearGradient id="mission-stroke" x1="20" y1="20" x2="180" y2="180"><stop stop-color="#14b8a6"/><stop offset="1" stop-color="#0f766e"/></linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <span class="lq-about__label">Notre boussole</span>
+          <h3>Notre mission</h3>
+          <p>
+            {{ about()?.mission || fallbackMission }}
           </p>
         </article>
         <!-- <article class="lq-glass lq-card lq-card--illustration lq-about__card lq-about__card--values reveal">
@@ -430,7 +430,7 @@
       <div class="lq-cards lq-cards--4" *ngIf="programs().length; else noPrograms">
         <article class="lq-glass lq-card lq-card--feature reveal" *ngFor="let program of programs()">
           <span class="lq-card__icon">
-            <i class="fa-solid fa-seedling" *ngIf="!program.icon"></i>{{ program.icon || '' }}
+            <i [class]="programIconClass(program.icon)"></i>
           </span>
           <h3>{{ program.title }}</h3>
           <p>{{ program.excerpt || program.description }}</p>

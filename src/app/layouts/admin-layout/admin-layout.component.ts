@@ -159,7 +159,7 @@ export class AdminLayoutComponent implements OnInit {
       return;
     }
     this.profileMenuOpen = false;
-    if (window.innerWidth < 1025 && target && target.closest('.pc-sidebar')) {
+    if (window.innerWidth < 1025 && target && (target.closest('.pc-sidebar') || target.closest('.mobile-menu'))) {
       return;
     }
     this.mobileOpen = false;

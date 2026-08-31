@@ -1,7 +1,9 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ProgramsService } from '../../core/services/programs.service';
+import { SiteConfigService } from '../../core/services/site-config.service';
+import { PageBackgroundService } from '../../core/services/page-background.service';
 import type { Program } from '../../core/models/models';
 
 const ICONS: Record<string, string> = {
@@ -19,12 +21,17 @@ const ICONS: Record<string, string> = {
   styleUrl: './programs.component.scss',
 })
 export class ProgramsComponent implements OnInit {
+  private readonly siteConfigService = inject(SiteConfigService);
+  private readonly pageBackgroundService = inject(PageBackgroundService);
+  readonly siteConfig = this.siteConfigService.config;
+  readonly pageBackground = this.pageBackgroundService.background;
   readonly programs = signal<Program[]>([]);
   readonly loading = signal(true);
 
   constructor(private readonly programsService: ProgramsService) {}
 
   ngOnInit(): void {
+    this.pageBackgroundService.load();
     this.programsService.getPublic().subscribe({
       next: (items) => this.programs.set(items),
       error: () => this.programs.set([]),

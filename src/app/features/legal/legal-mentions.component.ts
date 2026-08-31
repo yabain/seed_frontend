@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { SiteConfigService } from '../../core/services/site-config.service';
+import { PageBackgroundService } from '../../core/services/page-background.service';
 
 @Component({
   selector: 'app-legal-mentions',
@@ -12,4 +13,10 @@ import { SiteConfigService } from '../../core/services/site-config.service';
 })
 export class LegalMentionsComponent {
   readonly siteConfig = inject(SiteConfigService).config;
+  private readonly pageBackgroundService = inject(PageBackgroundService);
+  readonly pageBackground = this.pageBackgroundService.background;
+
+  constructor() {
+    this.pageBackgroundService.load();
+  }
 }
