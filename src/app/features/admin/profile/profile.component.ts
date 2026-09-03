@@ -4,14 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { AdminImageFieldComponent } from '../../../shared/components/admin-image-field/admin-image-field.component';
+import { ROLE_LABELS, type UserRole } from '../../../core/constants/roles';
 import type { AdminProfile } from '../../../core/models/models';
-
-const ROLE_LABELS: Record<string, string> = {
-  user: 'Utilisateur',
-  consultant: 'Consultant',
-  admin: 'Administrateur',
-  superadmin: 'Super-administrateur',
-};
 
 @Component({
   selector: 'app-profile',
@@ -46,7 +40,7 @@ export class ProfileComponent {
   }
 
   roleLabel(role?: string): string {
-    return ROLE_LABELS[role ?? ''] ?? role ?? '—';
+    return ROLE_LABELS[role as UserRole] ?? role ?? '—';
   }
 
   initials(name?: string): string {

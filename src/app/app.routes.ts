@@ -2,8 +2,7 @@ import { Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
 import { RoleGuard } from './core/guards/role.guard';
 import { PublicOnlyGuard } from './core/guards/public-only.guard';
-
-const CONTENT_ROLES = ['user', 'consultant', 'admin', 'superadmin'];
+import { CONTENT_ROLES, ADMIN_ROLES } from './core/constants/roles';
 
 export const appRoutes: Routes = [
   {
@@ -61,7 +60,7 @@ export const appRoutes: Routes = [
       },
       {
         path: 'news/categories',
-        data: { roles: ['admin', 'superadmin'] },
+        data: { roles: [...ADMIN_ROLES] },
         loadComponent: () =>
           import('./features/admin/categories-management/categories-management.component').then(
             (m) => m.CategoriesManagementComponent,
@@ -84,7 +83,7 @@ export const appRoutes: Routes = [
       },
       {
         path: 'news/:id/edit',
-        data: { roles: ['admin', 'superadmin'] },
+        data: { roles: [...ADMIN_ROLES] },
         loadComponent: () =>
           import('./features/admin/news-management/news-form/news-form.component').then(
             (m) => m.NewsFormComponent,
@@ -115,7 +114,7 @@ export const appRoutes: Routes = [
       },
       {
         path: 'resources/:id/edit',
-        data: { roles: ['admin', 'superadmin'] },
+        data: { roles: [...ADMIN_ROLES] },
         loadComponent: () =>
           import(
             './features/admin/resources-management/resource-form/resource-form.component'
@@ -146,7 +145,7 @@ export const appRoutes: Routes = [
       },
       {
         path: 'programs/:id/edit',
-        data: { roles: ['admin', 'superadmin'] },
+        data: { roles: [...ADMIN_ROLES] },
         loadComponent: () =>
           import(
             './features/admin/programs-management/program-form/program-form.component'
@@ -318,7 +317,7 @@ export const appRoutes: Routes = [
       },
       {
         path: 'events/:id/edit',
-        data: { roles: ['admin', 'superadmin'] },
+        data: { roles: [...ADMIN_ROLES] },
         loadComponent: () =>
           import('./features/admin/events-management/event-form/event-form.component').then(
             (m) => m.EventFormComponent,

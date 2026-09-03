@@ -5,14 +5,8 @@ import { Router, RouterLink } from '@angular/router';
 import { UsersService } from '../../../core/services/users.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { AuthService } from '../../../core/services/auth.service';
-import type { AdminUser, UserRole, UsersListResult, UserStats } from '../../../core/models/models';
-
-export const ROLE_LABELS: Record<UserRole, string> = {
-  user: 'Utilisateur',
-  consultant: 'Consultant',
-  admin: 'Administrateur',
-  superadmin: 'Super admin',
-};
+import type { AdminUser, UsersListResult, UserStats } from '../../../core/models/models';
+import { ROLE_LABELS, USER_ROLES, type UserRole } from '../../../core/constants/roles';
 
 export type StatusFilter = '' | 'active' | 'inactive' | 'admin' | 'consultant' | 'user';
 
@@ -42,7 +36,7 @@ export class UsersManagementComponent implements OnInit {
   readonly page = signal(1);
   readonly limit = signal(10);
 
-  readonly roleOptions: UserRole[] = ['user', 'consultant', 'admin', 'superadmin'];
+  readonly roleOptions: readonly UserRole[] = USER_ROLES;
   readonly roleLabels = ROLE_LABELS;
 
   readonly statItems = signal<StatItem[]>([]);
@@ -173,7 +167,22 @@ export class UsersManagementComponent implements OnInit {
     return (first + second).toUpperCase();
   }
 
-  goToDetail(user: AdminUser): void {    void this.router.navigate(['/admin/users', user.id]);
+  goToDetail(user: AdminUser): void {
+    void this.router.navigate(['/admin/users', user.id]);
+  }
+
+  toggleActive(user: AdminUser): void {
+    if (this.isSelf(user)) {
+      this.toastService.error('Vous ne pouvez pas désactiver votre propre compte.');
+      return;
+    }
+    this.usersService.toggleUserActive(user.id).subscribe({
+      next: () => {
+        this.toastService.success(user.isActive ? 'Compte désactivé.' : 'Compte activé.');
+        this.load();
+      },
+      error: () => this.toastService.error("Impossible de changer le statut du compte."),
+    });
   }
 
   isSelf(user: AdminUser): boolean {

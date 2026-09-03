@@ -85,7 +85,17 @@
             <td>{{ formatDate(user.lastLoginAt) }}</td>
             <td>
               <div class="row-actions">
-                <button class="btn btn--sm btn--ghost" (click)="goToDetail(user)">Détails</button>
+                <button
+                  class="btn btn--sm"
+                  [class.btn--ghost]="user.isActive"
+                  [class.btn--danger]="!user.isActive"
+                  [disabled]="isSelf(user)"
+                  title="{{ isSelf(user) ? 'Vous ne pouvez pas désactiver votre propre compte' : (user.isActive ? 'Désactiver le compte' : 'Activer le compte') }}"
+                  (click)="toggleActive(user)"
+                >
+                  <i class="fa-solid {{ user.isActive ? 'fa-ban' : 'fa-circle-check' }}"></i>
+                  {{ user.isActive ? 'Désactiver' : 'Activer' }}
+                </button>
                 <a class="btn btn--sm btn--ghost" [routerLink]="['/admin/users', user.id, 'edit']">Modifier</a>
               </div>
             </td>

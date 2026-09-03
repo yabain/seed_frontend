@@ -1,6 +1,6 @@
 # yFrontend — Plateforme web institutionnelle (Angular)
 
-Application web **single-page responsive** de la plateforme de l'organisation **yFrontend**, développée par **Yaba-In SARL**.
+Application web **single-page responsive** de la plateforme de l'organisation **yFrontend**, développée par **digiKUNTZ**.
 
 Stack : **Angular 17** (Standalone Components, Signals, Router) · **TypeScript** · **SCSS**.
 

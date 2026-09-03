@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
 import { ApiGatewayService } from './api-gateway.service';
 
 export type AnnouncementStatus =
@@ -104,10 +102,7 @@ export const ANNOUNCEMENT_GROUP_OPTIONS: Array<{
 
 @Injectable({ providedIn: 'root' })
 export class AnnouncementsService {
-  constructor(
-    private readonly api: ApiGatewayService,
-    private readonly http: HttpClient,
-  ) {}
+  constructor(private readonly api: ApiGatewayService) {}
 
   list(filters?: {
     status?: string;
@@ -179,12 +174,13 @@ export class AnnouncementsService {
     includeHeader = true,
     includeFooter = true,
   ): Observable<string> {
-    // L'API renvoie le HTML brut (Content-Type texte) : réponse en texte.
-    return this.http.post(
-      `${environment.apiUrl}/admin/announcements/preview`,
-      { bodyHtml, includeHeader, includeFooter },
-      { responseType: 'text' },
-    );
+    // L'API renvoie le HTML brut (texte). L'envoi du cookie d'authentification
+    // est géré par ApiGatewayService.
+    return this.api.postText('/admin/announcements/preview', {
+      bodyHtml,
+      includeHeader,
+      includeFooter,
+    });
   }
 
   uploadAttachment(file: File): Observable<{
@@ -195,11 +191,11 @@ export class AnnouncementsService {
   }> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post<{
+    return this.api.postForm<{
       url: string;
       path: string;
       fileName: string;
       size: number;
-    }>(`${environment.apiUrl}/admin/announcements/attachments`, formData);
+    }>('/admin/announcements/attachments', formData);
   }
 }

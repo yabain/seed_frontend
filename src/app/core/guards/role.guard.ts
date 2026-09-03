@@ -5,10 +5,10 @@ import {
   Router,
   UrlTree,
 } from '@angular/router';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
-
-export const ADMIN_ROLES = ['admin', 'superadmin'] as const;
-export const CONTENT_ROLES = ['user', 'consultant', 'admin', 'superadmin'] as const;
+import { ADMIN_ROLES, type UserRole } from '../constants/roles';
 
 @Injectable({ providedIn: 'root' })
 export class RoleGuard implements CanActivateChild {
@@ -17,25 +17,30 @@ export class RoleGuard implements CanActivateChild {
     private readonly router: Router,
   ) {}
 
-  canActivateChild(route: ActivatedRouteSnapshot): boolean | UrlTree {
-    if (!this.authService.isAuthenticated()) {
-      return this.router.createUrlTree(['/admin/login'], {
-        queryParams: { redirect: this.router.url },
-      });
-    }
+  canActivateChild(route: ActivatedRouteSnapshot): Observable<boolean | UrlTree> {
+    return this.authService.ensureSession().pipe(
+      map((isAuthenticated) => {
+        if (!isAuthenticated) {
+          return this.router.createUrlTree(['/admin/login'], {
+            queryParams: { redirect: this.router.url },
+          });
+        }
 
-    const required = (route.data['roles'] as readonly string[] | undefined) ?? [
-      ...ADMIN_ROLES,
-    ];
-    if (required.includes('*')) {
-      return true;
-    }
+        const required =
+          (route.data['roles'] as readonly UserRole[] | undefined) ?? [
+            ...ADMIN_ROLES,
+          ];
+        if ((required as readonly string[]).includes('*')) {
+          return true;
+        }
 
-    const role = this.authService.admin()?.role ?? '';
-    if (required.includes(role)) {
-      return true;
-    }
+        const role = (this.authService.admin()?.role ?? '') as string;
+        if ((required as readonly string[]).includes(role)) {
+          return true;
+        }
 
-    return this.router.createUrlTree(['/admin/news']);
+        return this.router.createUrlTree(['/admin/news']);
+      }),
+    );
   }
 }

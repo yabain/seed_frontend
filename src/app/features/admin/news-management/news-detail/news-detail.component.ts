@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NewsService } from '../../../../core/services/news.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { AuthService } from '../../../../core/services/auth.service';
+import { isAdminRole } from '../../../../core/constants/roles';
 import type { ErrorMessage } from '../../../../core/interceptors/error.interceptor';
 import type { News } from '../../../../core/models/models';
 
@@ -27,7 +28,7 @@ export class NewsDetailComponent implements OnInit {
   ) {}
 
   get isAdmin(): boolean {
-    return ['admin', 'superadmin'].includes(this.authService.admin()?.role ?? '');
+    return isAdminRole(this.authService.admin()?.role);
   }
 
   ngOnInit(): void {

@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://asfh.racciram.org/api',
+   apiUrl: 'https://backend.asfh.cm/api',
   siteUrl: 'https://asfh.cm',
 };

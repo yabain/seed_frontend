@@ -440,7 +440,7 @@
         <p class="lq-empty reveal">Les programmes arrivent bientôt.</p>
       </ng-template>
 
-      <div class="text-center mt-2">
+      <div class="text-left mt-2">
         <a routerLink="/programs" class="btn lq-btn--glass-transparent">Découvrir tous nos programmes <i
             class="fa-solid fa-arrow-right"></i></a>
       </div>
@@ -477,7 +477,8 @@
             <div class="lq-field">
               <label for="newsletter-phone">Téléphone (optionnel)</label>
               <input id="newsletter-phone" class="lq-input" type="tel" [(ngModel)]="newsletterForm.phone"
-                name="newsletterPhone" placeholder="+225 07 00 00 00 00" />
+                name="newsletterPhone" placeholder="+225 07 00 00 00 00"
+                pattern="^\+?[0-9][0-9\s().-]{5,19}$" title="Format international (ex. +225 07 00 00 00 00)" />
             </div>
           </div>
           <button class="btn lq-btn--glow lq-btn--block" type="submit" [disabled]="newsletterSubmitting()">

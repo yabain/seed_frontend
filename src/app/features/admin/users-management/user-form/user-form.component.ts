@@ -6,14 +6,8 @@ import { forkJoin, map, Observable } from 'rxjs';
 import { UsersService } from '../../../../core/services/users.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { environment } from '../../../../../environments/environment';
-import type { AdminUser, UserRole } from '../../../../core/models/models';
-
-const ROLE_LABELS: Record<UserRole, string> = {
-  user: 'Utilisateur',
-  consultant: 'Consultant',
-  admin: 'Administrateur',
-  superadmin: 'Super admin',
-};
+import type { AdminUser } from '../../../../core/models/models';
+import { ROLE_LABELS, USER_ROLES, type UserRole } from '../../../../core/constants/roles';
 
 @Component({
   selector: 'app-user-form',
@@ -23,7 +17,7 @@ const ROLE_LABELS: Record<UserRole, string> = {
   styleUrl: '../../resources-management/resource-form/resource-form.component.scss',
 })
 export class UserFormComponent implements OnInit {
-  readonly roleOptions: UserRole[] = ['user', 'consultant', 'admin', 'superadmin'];
+  readonly roleOptions: readonly UserRole[] = USER_ROLES;
   readonly roleLabels = ROLE_LABELS;
 
   readonly loading = signal(false);

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiGatewayService } from './api-gateway.service';
+import type { UserRole } from '../constants/roles';
 import type {
   AdminUser,
-  UserRole,
   UsersListResult,
   UserLogsResult,
   UserStats,

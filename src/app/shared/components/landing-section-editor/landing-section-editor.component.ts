@@ -2,6 +2,7 @@ import { Component, Input, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
+import { isAdminRole } from '../../../core/constants/roles';
 import { SiteConfigService } from '../../../core/services/site-config.service';
 import { ToastService } from '../../../core/services/toast.service';
 import type { LandingSectionText, LandingSections } from '../../../core/models/models';
@@ -37,7 +38,7 @@ export class LandingSectionEditorComponent implements OnInit {
   ) {}
 
   get isAdmin(): boolean {
-    return ['admin', 'superadmin'].includes(this.authService.admin()?.role ?? '');
+    return isAdminRole(this.authService.admin()?.role);
   }
 
   ngOnInit(): void {

@@ -1,8 +1,10 @@
+import type { UserRole } from '../constants/roles';
+
 export interface Admin {
   id: string;
   name: string;
   email: string;
-  role: string;
+  role: UserRole;
   phone?: string;
   avatar?: string;
 }
@@ -13,11 +15,6 @@ export interface AdminProfile extends Admin {
   createdAt: string;
 }
 
-export interface LoginResponse {
-  accessToken: string;
-  admin: Admin;
-}
-
 export interface RequiresTwoFactorResponse {
   requiresTwoFactor: boolean;
   email: string;
@@ -25,7 +22,6 @@ export interface RequiresTwoFactorResponse {
 }
 
 export interface TwoFactorVerifyResponse {
-  accessToken: string;
   admin: Admin;
 }
 
@@ -127,8 +123,6 @@ export interface ContactMessage {
   ip?: string;
   createdAt: string;
 }
-
-export type UserRole = 'user' | 'consultant' | 'admin' | 'superadmin';
 
 export interface AdminUser {
   id: string;

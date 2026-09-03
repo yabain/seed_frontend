@@ -4,6 +4,7 @@ import { RouterLink, Router } from '@angular/router';
 import { ResourcesService } from '../../../core/services/resources.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { isAdminRole } from '../../../core/constants/roles';
 import { SegmentVisibilityComponent } from '../../../shared/components/segment-visibility/segment-visibility.component';
 import { LandingSectionEditorComponent } from '../../../shared/components/landing-section-editor/landing-section-editor.component';
 import { formatBytes } from '../../../shared/utils/file.util';
@@ -27,7 +28,7 @@ export class ResourcesManagementComponent implements OnInit {
   private searchTimer: any;
 
   get isAdmin(): boolean {
-    return ['admin', 'superadmin'].includes(this.authService.admin()?.role ?? '');
+    return isAdminRole(this.authService.admin()?.role);
   }
 
   constructor(

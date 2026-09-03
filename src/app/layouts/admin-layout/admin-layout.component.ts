@@ -1,23 +1,22 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, HostListener, OnInit, computed, inject } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
 import { SiteConfigService } from '../../core/services/site-config.service';
+import { CONTENT_ROLES, ROLE_LABELS, isAdminRole, type UserRole } from '../../core/constants/roles';
 
 interface AdminNavItem {
   label: string;
   path: string;
   icon: string;
   exact?: boolean;
-  roles?: string[];
+  roles?: readonly UserRole[];
 }
 
 interface AdminNavGroup {
   caption: string;
   items: AdminNavItem[];
 }
-
-const CONTENT_ROLES = ['user', 'consultant', 'admin', 'superadmin'];
 
 @Component({
   selector: 'app-admin-layout',
@@ -29,6 +28,7 @@ const CONTENT_ROLES = ['user', 'consultant', 'admin', 'superadmin'];
 })
 export class AdminLayoutComponent implements OnInit {
   protected readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
   private readonly siteConfigService = inject(SiteConfigService);
 
   readonly siteConfig = this.siteConfigService.config;
@@ -39,14 +39,8 @@ export class AdminLayoutComponent implements OnInit {
   }
 
   roleLabel(): string {
-    const labels: Record<string, string> = {
-      user: 'Utilisateur',
-      consultant: 'Consultant',
-      admin: 'Administrateur',
-      superadmin: 'Super-admin',
-    };
     const role = this.auth.admin()?.role ?? '';
-    return labels[role] ?? role;
+    return ROLE_LABELS[role as UserRole] ?? role;
   }
 
   ngOnInit(): void {
@@ -118,12 +112,12 @@ export class AdminLayoutComponent implements OnInit {
 
   readonly visibleGroups = computed<AdminNavGroup[]>(() => {
     const role = this.auth.admin()?.role ?? '';
-    const isAdmin = role === 'admin' || role === 'superadmin';
+    const isAdmin = isAdminRole(role);
     return this.navGroups
       .map((group) => ({
         ...group,
         items: group.items.filter((item) =>
-          isAdmin ? true : (item.roles?.includes(role) ?? false),
+          isAdmin ? true : (item.roles?.includes(role as UserRole) ?? false),
         ),
       }))
       .filter((group) => group.items.length > 0);
@@ -176,7 +170,8 @@ export class AdminLayoutComponent implements OnInit {
   }
 
   logout(): void {
-    this.auth.logout();
-    window.location.href = '/admin/login';
+    void this.auth.logout().subscribe(() => {
+      void this.router.navigate(['/admin/login']);
+    });
   }
 }

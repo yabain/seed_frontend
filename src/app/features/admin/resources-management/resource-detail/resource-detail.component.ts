@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ResourcesService } from '../../../../core/services/resources.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { AuthService } from '../../../../core/services/auth.service';
+import { isAdminRole } from '../../../../core/constants/roles';
 import type { Resource } from '../../../../core/models/models';
 
 @Component({
@@ -26,7 +27,7 @@ export class ResourceDetailComponent implements OnInit {
   ) {}
 
   get isAdmin(): boolean {
-    return ['admin', 'superadmin'].includes(this.authService.admin()?.role ?? '');
+    return isAdminRole(this.authService.admin()?.role);
   }
 
   ngOnInit(): void {

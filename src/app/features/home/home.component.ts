@@ -23,6 +23,11 @@ import { AboutService } from '../../core/services/about.service';
 import { SiteConfigService } from '../../core/services/site-config.service';
 import { ProspectsService } from '../../core/services/prospects.service';
 import { EventsService } from '../../core/services/events.service';
+import { toVideoEmbedUrl as buildVideoEmbedUrl } from '../../shared/utils/video-embed.util';
+import {
+  isValidEmail,
+  isValidInternationalPhone,
+} from '../../shared/utils/validators.util';
 import type { News, Partner, Program, Banner, BannerFigure, SiteAbout, SeedEvent, FeaturesSection, FeatureItem, CountriesSection, CountryItem, VideoHighlightSection } from '../../core/models/models';
 
 interface Figure {
@@ -356,20 +361,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private toVideoEmbedUrl(url?: string): SafeResourceUrl | null {
-    if (!url) return null;
-    try {
-      const parsed = new URL(url);
-      const host = parsed.hostname.replace('www.', '');
-      let embed = '';
-      if (host === 'youtu.be') embed = `https://www.youtube-nocookie.com/embed/${parsed.pathname.slice(1)}`;
-      else if (host.endsWith('youtube.com')) {
-        const id = parsed.searchParams.get('v') || parsed.pathname.split('/').filter(Boolean).pop();
-        if (id) embed = `https://www.youtube-nocookie.com/embed/${id}`;
-      } else if (host.endsWith('facebook.com') || host.endsWith('fb.watch')) {
-        embed = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false`;
-      }
-      return embed ? this.sanitizer.bypassSecurityTrustResourceUrl(embed) : null;
-    } catch { return null; }
+    const safeUrl = buildVideoEmbedUrl(url);
+    return safeUrl ? this.sanitizer.bypassSecurityTrustResourceUrl(safeUrl) : null;
   }
 
   nextGroup(): void {
@@ -641,11 +634,27 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (!this.newsletterForm.name.trim()) {
       this.newsletterError.set('Le nom est requis.');
+      this.focusNewsletterField('newsletter-name');
       return;
     }
 
     if (!this.newsletterForm.email) {
       this.newsletterError.set('L’adresse e-mail est requise.');
+      this.focusNewsletterField('newsletter-email');
+      return;
+    }
+
+    if (!isValidEmail(this.newsletterForm.email)) {
+      this.newsletterError.set('L’adresse e-mail est invalide.');
+      this.focusNewsletterField('newsletter-email');
+      return;
+    }
+
+    if (this.newsletterForm.phone && !isValidInternationalPhone(this.newsletterForm.phone)) {
+      this.newsletterError.set(
+        'Le numéro de téléphone est invalide. Utilisez un format international (ex. +225 07 00 00 00 00).',
+      );
+      this.focusNewsletterField('newsletter-phone');
       return;
     }
 
@@ -668,6 +677,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.newsletterError.set('Impossible de vous inscrire. Veuillez réessayer.');
       },
     });
+  }
+
+  private focusNewsletterField(id: string): void {
+    const el = (this.elementRef.nativeElement as Element).querySelector<HTMLElement>(`#${id}`);
+    el?.focus();
   }
 
   formatDate(iso?: string): string {
