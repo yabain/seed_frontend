@@ -112,6 +112,37 @@ export interface Partner {
   isActive?: boolean;
 }
 
+export interface TeamSection {
+  _id?: string;
+  title: string;
+  subtitle?: string;
+  isActive?: boolean;
+}
+
+export interface TeamSocialLinks {
+  facebook?: string;
+  twitter?: string;
+  x?: string;
+  linkedin?: string;
+  instagram?: string;
+}
+
+export interface TeamMember {
+  _id?: string;
+  photo?: string;
+  name: string;
+  role?: string;
+  isActive?: boolean;
+  socialLinks?: TeamSocialLinks;
+  sectionIds?: string[];
+}
+
+export interface Team {
+  _id?: string;
+  sections: TeamSection[];
+  members: TeamMember[];
+}
+
 export interface ContactMessage {
   _id: string;
   name: string;
@@ -227,6 +258,7 @@ export interface SiteSegments {
   programs: boolean;
   partners: boolean;
   events: boolean;
+  team: boolean;
 }
 
 export interface LandingSectionText {
@@ -241,6 +273,7 @@ export interface LandingSections {
   programs?: LandingSectionText;
   partners?: LandingSectionText;
   resources?: LandingSectionText;
+  team?: LandingSectionText;
 }
 
 export interface SiteConfig {

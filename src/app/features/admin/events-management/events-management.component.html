@@ -72,7 +72,7 @@
             </span>
           </td>
           <td>{{ formatDate(item.startDate) }} – {{ formatDate(item.endDate) }}</td>
-          <td (click)="$event.stopPropagation()">
+          <td *ngIf="isAdmin" (click)="$event.stopPropagation()">
             <button
               class="toggle-btn"
               [class.toggle-btn--on]="item.isVisibleOnLanding"
@@ -84,11 +84,13 @@
               </span>
             </button>
           </td>
+          <td *ngIf="!isAdmin">—</td>
           <td (click)="$event.stopPropagation()">
-            <div class="row-actions">
+            <div class="row-actions" *ngIf="isAdmin">
               <a class="btn btn--sm btn--ghost" [routerLink]="['/admin/events', item._id, 'edit']">Modifier</a>
               <button class="btn btn--sm btn--danger" (click)="remove(item)">Supprimer</button>
             </div>
+            <a *ngIf="!isAdmin" class="btn btn--sm btn--ghost" [routerLink]="['/admin/events', item._id]">Voir</a>
           </td>
         </tr>
         <tr *ngIf="!loading() && !result().items.length">

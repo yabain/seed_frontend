@@ -20,6 +20,10 @@ export interface EmailItem {
   subject: string;
   body: string;
   status: boolean;
+  category: 'single' | 'announcement';
+  groupId?: string;
+  sentCount: number;
+  totalCount: number;
   createdAt: string;
 }
 
@@ -65,8 +69,12 @@ export class MailService {
     return this.api.post<boolean>('/email/send-test', { to, subject, message });
   }
 
-  getOutputMails(page: number, keyword?: string): Observable<EmailListResult> {
-    const params: Record<string, string | number> = { page };
+  getOutputMails(
+    page: number,
+    keyword?: string,
+    limit = 10,
+  ): Observable<EmailListResult> {
+    const params: Record<string, string | number> = { page, limit };
     if (keyword) params['keyword'] = keyword;
     return this.api.get<EmailListResult>('/email', params);
   }

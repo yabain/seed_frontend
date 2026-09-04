@@ -35,6 +35,7 @@ export class HeaderComponent {
     // { label: 'Partenaires', path: '/partners', segment: 'partners', landingSection: 'partners' },
     { label: 'Ressources', path: '/resources', segment: 'resources' },
     { label: 'Événements', path: '/events', segment: 'events', landingSection: 'events' },
+    { label: 'Équipe', path: '/team', segment: 'team', landingSection: 'team' },
     { label: 'Contact', path: '/contact' },
   ];
 

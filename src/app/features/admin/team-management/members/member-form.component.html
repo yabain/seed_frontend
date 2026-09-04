@@ -1,0 +1,125 @@
+<div class="admin-page">
+  <header class="page-head">
+    <h1>
+      <i class="fa-solid fa-user-edit"></i>
+      {{ editing() ? 'Modifier le membre' : 'Nouveau membre' }}
+    </h1>
+    <div class="page-head__actions">
+      <button type="button" class="btn btn--ghost" (click)="cancel()">
+        <i class="ti ti-arrow-left"></i> Retour à la liste
+      </button>
+    </div>
+  </header>
+
+  <div class="card mt-2" *ngIf="loading()">
+    <div class="member-form">
+      <aside class="member-form__side">
+        <label class="member-form__side-title">Photo</label>
+        <span class="skeleton skeleton-thumb skeleton-thumb--round-lg"></span>
+      </aside>
+      <div class="member-form__fields">
+        <div class="form-grid">
+          <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+          <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+        </div>
+        <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+        <div class="form-field"><span class="skeleton skeleton-text skeleton-text--long"></span></div>
+        <div class="form-actions">
+          <span class="skeleton skeleton-btn"></span>
+          <span class="skeleton skeleton-btn"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mt-2" *ngIf="!loading()">
+    <div class="member-form">
+      <aside class="member-form__side">
+        <label class="member-form__side-title">Photo</label>
+        <p class="text-muted member-form__side-hint">
+          Convertie en WebP puis importée dans « uploads ».
+        </p>
+        <app-admin-image-field
+          [image]="form.photo"
+          (imageChange)="setPhoto($event)"
+          variant="square"
+          [maxWidth]="800"
+          [maxHeight]="800"
+          alt="Aperçu photo"
+        />
+      </aside>
+
+      <div class="member-form__fields">
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Nom complet *</label>
+            <input class="form-control" type="text" [(ngModel)]="form.name" placeholder="Prénom et nom" />
+          </div>
+
+          <div class="form-field">
+            <label>Rôle / Fonction</label>
+            <input class="form-control" type="text" [(ngModel)]="form.role" placeholder="Ex : Directeur exécutif" />
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label>Sections (groupes)</label>
+          <div class="chip-list" *ngIf="sections().length">
+            <button
+              type="button"
+              class="chip"
+              *ngFor="let s of sections()"
+              [class.chip--active]="(form.sectionIds ?? []).includes(s._id ?? '')"
+              (click)="toggleSection(s._id ?? '')"
+            >
+              <i class="fa-solid fa-tag"></i> {{ s.title }}
+            </button>
+          </div>
+          <p class="text-muted text-sm" *ngIf="!sections().length">
+            Aucune section. Créez d'abord des sections via « Gérer les sections ».
+          </p>
+        </div>
+
+        <div class="form-field">
+          <label>
+            <input type="checkbox" [(ngModel)]="form.isActive" /> Visible sur le site
+          </label>
+        </div>
+
+        <div class="form-section-title">
+          <i class="fa-solid fa-share-nodes"></i> Réseaux sociaux
+        </div>
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label><i class="fa-brands fa-facebook"></i> Facebook</label>
+            <input class="form-control" type="url" [(ngModel)]="form.socialLinks!.facebook" placeholder="https://facebook.com/…" />
+          </div>
+          <div class="form-field">
+            <label><i class="fa-brands fa-x-twitter"></i> X / Twitter</label>
+            <input class="form-control" type="url" [(ngModel)]="form.socialLinks!.x" placeholder="https://x.com/…" />
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label><i class="fa-brands fa-linkedin"></i> LinkedIn</label>
+            <input class="form-control" type="url" [(ngModel)]="form.socialLinks!.linkedin" placeholder="https://linkedin.com/…" />
+          </div>
+          <div class="form-field">
+            <label><i class="fa-brands fa-instagram"></i> Instagram</label>
+            <input class="form-control" type="url" [(ngModel)]="form.socialLinks!.instagram" placeholder="https://instagram.com/…" />
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn--primary" (click)="save()" [disabled]="saving()">
+            <i class="fa-solid fa-check"></i>
+            {{ saving() ? 'Enregistrement…' : 'Enregistrer' }}
+          </button>
+          <button class="btn btn--ghost" type="button" (click)="cancel()">Annuler</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -6,12 +6,18 @@ import { AuthService } from '../../../core/services/auth.service';
 import { SiteConfigService } from '../../../core/services/site-config.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { BannerService } from '../../../core/services/banner.service';
+import { GoogleSignInButtonComponent } from './google-sign-in-button.component';
 import type { ErrorMessage } from '../../../core/interceptors/error.interceptor';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink,
+    GoogleSignInButtonComponent,
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
@@ -51,6 +57,26 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.siteConfigService.load();
     this.bannerService.getPublic().subscribe({ next: (banner) => this.authBackgroundImage.set(banner.authBackgroundImage ?? '') });
+  }
+
+  loginWithGoogle(credential: string): void {
+    if (this.submitting()) return;
+    this.submitting.set(true);
+
+    this.authService.googleLogin(credential).subscribe({
+      next: () => {
+        this.submitting.set(false);
+        void this.router.navigateByUrl('/admin/dashboard');
+      },
+      error: (err: ErrorMessage) => {
+        this.submitting.set(false);
+        this.toastService.error(
+          err.details?.join(' ') ||
+            err.message ||
+            'La connexion avec Google a échoué. Vérifiez que votre adresse e-mail correspond à un compte existant.',
+        );
+      },
+    });
   }
 
   submitCredentials(): void {

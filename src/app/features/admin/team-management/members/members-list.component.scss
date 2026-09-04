@@ -1,0 +1,93 @@
+:host {
+  display: block;
+}
+
+/* ================= Cellule membre ================= */
+.member-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+
+  &__avatar {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background-color: var(--color-gray-200);
+    background-size: cover;
+    background-position: center;
+    display: grid;
+    place-items: center;
+  }
+
+  &__avatar--fallback {
+    font-weight: 700;
+    color: var(--color-primary);
+    background: color-mix(in srgb, var(--color-primary) 12%, #fff);
+    border: 1px solid color-mix(in srgb, var(--color-primary) 20%, transparent);
+  }
+
+  &__meta {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+
+    strong {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+/* ================= Toggle ================= */
+.switch {
+  position: relative;
+  width: 46px;
+  height: 26px;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 999px;
+  background: var(--color-gray-300);
+  cursor: pointer;
+  transition: background 0.25s ease;
+  padding: 0;
+  outline-offset: 3px;
+
+  &__knob {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--color-white);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  &--on {
+    background: var(--color-primary);
+
+    .switch__knob {
+      transform: translateX(20px);
+    }
+  }
+
+  &.is-busy {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+  }
+}
+
+/* Skeleton d'avatar rond */
+.skeleton-thumb--round {
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+}

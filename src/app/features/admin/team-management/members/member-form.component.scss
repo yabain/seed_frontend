@@ -1,0 +1,102 @@
+:host {
+  display: block;
+}
+
+.member-form {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.member-form__side {
+  position: sticky;
+  top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding-right: 1.5rem;
+  border-right: 1px solid var(--color-gray-200);
+}
+
+.member-form__side-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.member-form__side-hint {
+  font-size: 0.82rem;
+  margin-bottom: 0.75rem;
+}
+
+.member-form__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+/* ================= Chips sections ================= */
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-gray-300);
+  background: var(--color-white);
+  color: var(--color-gray-600);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+
+  &:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+
+  &--active {
+    background: color-mix(in srgb, var(--color-primary) 10%, #fff);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+}
+
+.form-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--ink);
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--color-gray-100);
+}
+
+.skeleton-thumb--round-lg {
+  border-radius: 50%;
+  width: 108px;
+  height: 108px;
+}
+
+@media (max-width: 900px) {
+  .member-form {
+    grid-template-columns: 1fr;
+  }
+
+  .member-form__side {
+    position: static;
+    border-right: none;
+    padding-right: 0;
+  }
+}

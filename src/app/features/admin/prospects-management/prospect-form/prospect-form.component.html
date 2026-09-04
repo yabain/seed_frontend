@@ -1,0 +1,66 @@
+<div class="admin-page">
+  <header class="page-head form-head">
+    <div>
+      <h1>
+        <i class="ti" [class.ti-user-plus]="!isEdit" [class.ti-user-edit]="isEdit"></i>
+        {{ isEdit ? 'Modifier le prospect' : 'Ajouter un prospect' }}
+      </h1>
+      <p class="text-muted">Inscriptions à la lettre d'information.</p>
+    </div>
+    <button class="btn btn--ghost btn--sm" (click)="cancel()">
+      <i class="fa-solid fa-arrow-left"></i> Retour à la liste
+    </button>
+  </header>
+
+  <p class="empty-state" *ngIf="loading()">Chargement…</p>
+
+  <section class="card mt-2" *ngIf="!loading()">
+    <div class="form-grid">
+      <div class="form-field">
+        <label for="prospect-name">Nom</label>
+        <input
+          id="prospect-name"
+          class="form-control"
+          type="text"
+          [(ngModel)]="form.name"
+          name="name"
+          placeholder="Prénom et nom"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="prospect-email">E-mail *</label>
+        <input
+          id="prospect-email"
+          class="form-control"
+          type="email"
+          [(ngModel)]="form.email"
+          name="email"
+          placeholder="exemple@domaine.com"
+        />
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label for="prospect-phone">Téléphone</label>
+      <input
+        id="prospect-phone"
+        class="form-control"
+        type="tel"
+        [(ngModel)]="form.phone"
+        name="phone"
+        placeholder="+2250700000000"
+      />
+      <small class="text-muted">
+        L'e-mail ou le téléphone est obligatoire (au moins l'un des deux).
+      </small>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn--primary" (click)="save()" [disabled]="saving()">
+        {{ saving() ? 'Enregistrement…' : 'Enregistrer' }}
+      </button>
+      <button class="btn btn--ghost" (click)="cancel()">Annuler</button>
+    </div>
+  </section>
+</div>

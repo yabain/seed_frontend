@@ -45,7 +45,10 @@ export class EventsManagementComponent implements OnInit {
   load(): void {
     this.loading.set(true);
     const query = { page: this.page(), limit: this.limit(), search: this.searchQuery() };
-    this.eventsService.getAll(query).subscribe({
+    const request = this.isAdmin
+      ? this.eventsService.getAll(query)
+      : this.eventsService.getPublic(query);
+    request.subscribe({
       next: (data) => this.result.set(data),
       error: () => this.toastService.error('Impossible de charger les événements.'),
       complete: () => this.loading.set(false),

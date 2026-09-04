@@ -85,6 +85,7 @@ export class AdminLayoutComponent implements OnInit {
         { label: 'Bannière', path: '/admin/banner', icon: 'ti ti-photo' },
         { label: 'Partenaires', path: '/admin/partners', icon: 'ti ti-users-group' },
         { label: 'À propos', path: '/admin/about', icon: 'ti ti-info-circle' },
+        { label: 'Équipe', path: '/admin/team', icon: 'ti ti-users' },
       ],
     },
     {

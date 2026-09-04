@@ -2,6 +2,7 @@ export const environment = {
   production: false,
    apiUrl: 'http://localhost:3000/api',
   siteUrl: 'http://localhost:4200',
+  googleClientId: '',
   // apiUrl: 'https://seeds.racciram.org/api',
   // siteUrl: 'https://seeds.yaba-in.com',
 };

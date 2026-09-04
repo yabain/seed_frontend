@@ -1,0 +1,168 @@
+<div class="admin-page">
+  <header class="page-head page-head--between">
+    <div class="page-head__text">
+      <h1><i class="fa-solid fa-users"></i> Membres de l'équipe</h1>
+      <p class="text-muted">
+        {{ total() }} membre(s) · gérez la visibilité, l'ajout et la modification des portraits.
+      </p>
+    </div>
+    <div class="page-head__actions">
+      <a class="btn btn--outline" routerLink="/admin/team/sections">
+        <i class="fa-solid fa-shapes"></i> Gérer les sections
+      </a>
+      <a class="btn btn--primary" routerLink="/admin/team/new">
+        <i class="fa-solid fa-plus"></i> Ajouter un membre
+      </a>
+    </div>
+  </header>
+
+  <!-- Filtres -->
+  <div class="toolbar">
+    <input
+      class="form-control search"
+      type="search"
+      [value]="searchQuery()"
+      (input)="onSearch($any($event.target).value)"
+      placeholder="Rechercher un membre (nom, fonction)…"
+    />
+    <select
+      class="form-control"
+      [value]="sectionFilter()"
+      (change)="onSectionChange($any($event.target).value)"
+      aria-label="Filtrer par section"
+      style="max-width: 320px;"
+    >
+      <option value="">Toutes les sections</option>
+      <option *ngFor="let s of sections()" [value]="s._id">{{ s.title }}</option>
+    </select>
+  </div>
+
+  <!-- Liste -->
+  <div class="card mt-2 table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Membre</th>
+          <th>Fonction</th>
+          <th>Section(s)</th>
+          <th>Visibilité</th>
+          <th class="text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let _ of loading() ? [1, 2, 3, 4] : []" class="skeleton-row">
+          <td>
+            <div class="member-cell">
+              <span class="skeleton skeleton-thumb skeleton-thumb--round"></span>
+              <span class="skeleton skeleton-text skeleton-text--long"></span>
+            </div>
+          </td>
+          <td><span class="skeleton skeleton-text"></span></td>
+          <td><span class="skeleton skeleton-text"></span></td>
+          <td><span class="skeleton skeleton-badge"></span></td>
+          <td>
+            <div class="row-actions">
+              <span class="skeleton skeleton-btn"></span>
+              <span class="skeleton skeleton-btn"></span>
+            </div>
+          </td>
+        </tr>
+
+        <tr
+          *ngFor="let member of !loading() ? items() : []"
+          class="clickable"
+          (click)="open(member)"
+        >
+          <td>
+            <div class="member-cell">
+              <span
+                *ngIf="member.photo"
+                class="member-cell__avatar"
+                [style.background-image]="'url(' + member.photo + ')'"
+                role="img"
+                [attr.aria-label]="'Photo de ' + member.name"
+              ></span>
+              <span *ngIf="!member.photo" class="member-cell__avatar member-cell__avatar--fallback">
+                {{ member.name.charAt(0) }}
+              </span>
+              <span class="member-cell__meta">
+                <strong>{{ member.name }}</strong>
+              </span>
+            </div>
+          </td>
+          <td>{{ member.role || '—' }}</td>
+          <td>{{ sectionLabel(member) }}</td>
+          <td>
+            <span [class]="member.isActive === false ? 'badge badge--gray' : 'badge badge--green'">
+              {{ member.isActive === false ? 'Masqué' : 'Visible' }}
+            </span>
+          </td>
+          <td (click)="$event.stopPropagation()">
+            <div class="row-actions">
+              <span
+                class="switch"
+                [class.switch--on]="member.isActive !== false"
+                role="switch"
+                [attr.aria-checked]="member.isActive !== false"
+                [attr.aria-label]="(member.isActive === false ? 'Afficher' : 'Masquer') + ' ' + member.name"
+                title="{{ member.isActive === false ? 'Rendre visible' : 'Masquer' }}"
+                [class.is-busy]="togglingId() === member._id"
+                (click)="toggleActive(member)"
+              >
+                <span class="switch__knob"></span>
+              </span>
+              <a
+                class="btn btn--sm btn--outline"
+                [routerLink]="['/admin/team', member._id, 'edit']"
+              >Modifier</a>
+              <a
+                class="btn btn--sm btn--ghost"
+                [routerLink]="['/admin/team', member._id]"
+              >Détails</a>
+              <button
+                class="btn btn--sm btn--danger"
+                (click)="remove(member)"
+              >Supprimer</button>
+            </div>
+          </td>
+        </tr>
+
+        <tr *ngIf="!loading() && !items().length">
+          <td colspan="5">
+            <p class="empty-state">
+              Aucun membre ne correspond à ces critères.
+            </p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination" *ngIf="!loading() && pagination()">
+    <div class="pagination__size">
+      <label class="pagination__label" for="member-limit">Par page</label>
+      <select
+        id="member-limit"
+        class="form-control"
+        [value]="limit()"
+        (change)="onLimitChange($any($event.target).value)"
+      >
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+      </select>
+    </div>
+    <div class="pagination__nav">
+      <button class="btn btn--ghost btn--sm" (click)="previousPage()" [disabled]="!hasPrev()">
+        Précédent
+      </button>
+      <span class="pagination__info">
+        Page {{ pagination()?.currentPage }} / {{ pagination()?.totalPages }} ·
+        {{ pagination()?.totalItems }} membre(s)
+      </span>
+      <button class="btn btn--ghost btn--sm" (click)="nextPage()" [disabled]="!hasNext()">
+        Suivant
+      </button>
+    </div>
+  </div>
+</div>

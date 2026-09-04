@@ -1,0 +1,129 @@
+<div class="admin-page">
+  <header class="page-head page-head--between">
+    <div class="page-head__text">
+      <h1><i class="ti ti-list-details"></i> Gérer les sections</h1>
+      <p class="text-muted">Organisez les groupes de l'équipe : ajoutez, modifiez ou désactivez les sections.</p>
+    </div>
+    <div class="page-head__actions">
+      <a class="btn btn--ghost" routerLink="/admin/team">
+        <i class="ti ti-arrow-left"></i> Retour à l'équipe
+      </a>
+      <button type="button" class="btn btn--primary" (click)="startCreate()">
+        <i class="fa-solid fa-plus"></i> Nouvelle section
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== Formulaire création / édition ===== -->
+  <section class="card mt-2 section-editor" *ngIf="showForm()">
+    <div class="section-editor__head">
+      <span class="section-editor__icon">
+        <i class="fa-solid" [ngClass]="editingIndex() >= 0 ? 'fa-pen' : 'fa-plus'"></i>
+      </span>
+      <div class="section-editor__title">
+        <h2>{{ editingIndex() >= 0 ? 'Modifier la section' : 'Nouvelle section' }}</h2>
+        <p>{{ editingIndex() >= 0 ? 'Mettez à jour les informations du groupe.' : 'Créez un nouveau groupe de membres.' }}</p>
+      </div>
+    </div>
+
+    <div class="section-editor__body">
+      <div class="form-field">
+        <label for="section-title">Titre du groupe *</label>
+        <input
+          id="section-title"
+          class="form-control"
+          type="text"
+          placeholder="Ex : Direction, Programme, Logistique…"
+          [(ngModel)]="form.title"
+        />
+      </div>
+      <div class="form-field">
+        <label for="section-subtitle">Sous-titre</label>
+        <input
+          id="section-subtitle"
+          class="form-control"
+          type="text"
+          placeholder="Courte description du groupe (optionnel)"
+          [(ngModel)]="form.subtitle"
+        />
+      </div>
+    </div>
+
+    <div class="section-editor__actions">
+      <button type="button" class="btn btn--ghost" (click)="cancelEdit()">Annuler</button>
+      <button type="button" class="btn btn--primary" (click)="submit()" [disabled]="saving()">
+        <i class="fa-solid fa-check"></i>
+        {{ saving() ? 'Enregistrement…' : 'Enregistrer' }}
+      </button>
+    </div>
+  </section>
+
+  <!-- ===== Skeleton ===== -->
+  <div class="card mt-2" *ngIf="loading()">
+    <div class="skeleton-list">
+      <div class="skeleton-line" *ngFor="let s of [1, 2, 3, 4]">
+        <span class="skeleton skeleton-text" style="width: 12%;"></span>
+        <span class="skeleton skeleton-text skeleton-text--long"></span>
+        <span class="skeleton skeleton-badge"></span>
+        <span class="skeleton skeleton-btn"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Liste des sections ===== -->
+  <ng-container *ngIf="!loading()">
+    <div class="card mt-2" *ngIf="sections().length">
+      <div class="section-list">
+        <div class="section-row" *ngFor="let section of sections(); let i = index">
+          <div class="section-row__index">{{ (i + 1).toString().padStart(2, '0') }}</div>
+
+          <div class="section-row__info">
+            <strong class="section-row__title">{{ section.title }}</strong>
+            <span class="section-row__subtitle" *ngIf="section.subtitle">{{ section.subtitle }}</span>
+            <span class="section-row__subtitle" *ngIf="!section.subtitle">Aucune description</span>
+          </div>
+
+          <div class="section-row__state">
+            <span class="badge" [class.badge--green]="section.isActive !== false" [class.badge--gray]="section.isActive === false">
+              {{ section.isActive !== false ? 'Active' : 'Désactivée' }}
+            </span>
+          </div>
+
+          <!-- Toggle -->
+          <button
+            type="button"
+            class="switch"
+            [class.switch--on]="section.isActive !== false"
+            (click)="toggle(section)"
+            role="switch"
+            [attr.aria-checked]="section.isActive !== false"
+            [attr.aria-label]="(section.isActive !== false ? 'Désactiver' : 'Activer') + ' ' + section.title"
+          >
+            <span class="switch__knob"></span>
+          </button>
+
+          <div class="section-row__actions">
+            <button type="button" class="btn btn--sm btn--ghost" (click)="startEdit(i)">
+              <i class="fa-solid fa-pen"></i>
+              <span class="sr-only">Modifier</span>
+            </button>
+            <button type="button" class="btn btn--sm btn--danger" (click)="remove(i)">
+              <i class="fa-solid fa-trash"></i>
+              <span class="sr-only">Supprimer</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mt-2" *ngIf="!sections().length">
+      <div class="empty-state empty-state--large">
+        <i class="ti ti-folder-off"></i>
+        <p>Aucune section pour l'instant.</p>
+        <button type="button" class="btn btn--outline" (click)="startCreate()">
+          <i class="fa-solid fa-plus"></i> Créer votre première section
+        </button>
+      </div>
+    </div>
+  </ng-container>
+</div>

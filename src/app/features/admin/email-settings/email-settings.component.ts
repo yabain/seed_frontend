@@ -38,6 +38,7 @@ export class EmailSettingsComponent implements OnInit {
   readonly emailList = signal<EmailItem[]>([]);
   readonly emailMeta = signal<EmailMeta | null>(null);
   readonly emailPage = signal(1);
+  readonly emailLimit = signal(10);
   readonly emailKeyword = signal('');
 
   readonly stats = signal<EmailStat[]>([]);
@@ -165,16 +166,22 @@ export class EmailSettingsComponent implements OnInit {
 
   loadOutputMails(): void {
     this.gettingOutput.set(true);
-    this.mailService.getOutputMails(this.emailPage(), this.emailKeyword() || undefined).subscribe({
-      next: (result) => {
-        this.emailList.set(result.data);
-        this.emailMeta.set(result.meta);
-        this.gettingOutput.set(false);
-      },
-      error: () => {
-        this.gettingOutput.set(false);
-      },
-    });
+    this.mailService
+      .getOutputMails(
+        this.emailPage(),
+        this.emailKeyword() || undefined,
+        this.emailLimit(),
+      )
+      .subscribe({
+        next: (result) => {
+          this.emailList.set(result.data);
+          this.emailMeta.set(result.meta);
+          this.gettingOutput.set(false);
+        },
+        error: () => {
+          this.gettingOutput.set(false);
+        },
+      });
   }
 
   loadStats(): void {
@@ -221,6 +228,16 @@ export class EmailSettingsComponent implements OnInit {
     this.emailKeyword.set(value);
     this.emailPage.set(1);
     this.loadOutputMails();
+  }
+
+  onEmailLimitChange(value: string): void {
+    this.emailLimit.set(parseInt(value, 10));
+    this.emailPage.set(1);
+    this.loadOutputMails();
+  }
+
+  getGroupResult(item: EmailItem): string {
+    return `${item.sentCount}/${item.totalCount}`;
   }
 
   getFirst60Chars(text: string): string {

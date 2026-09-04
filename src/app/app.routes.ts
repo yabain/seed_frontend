@@ -187,6 +187,41 @@ export const appRoutes: Routes = [
           ),
       },
       {
+        path: 'team',
+        loadComponent: () =>
+          import('./features/admin/team-management/members/members-list.component').then(
+            (m) => m.MembersListComponent,
+          ),
+      },
+      {
+        path: 'team/sections',
+        loadComponent: () =>
+          import(
+            './features/admin/team-management/sections/sections-management.component'
+          ).then((m) => m.SectionsManagementComponent),
+      },
+      {
+        path: 'team/new',
+        loadComponent: () =>
+          import(
+            './features/admin/team-management/members/member-form.component'
+          ).then((m) => m.MemberFormComponent),
+      },
+      {
+        path: 'team/:id/edit',
+        loadComponent: () =>
+          import(
+            './features/admin/team-management/members/member-form.component'
+          ).then((m) => m.MemberFormComponent),
+      },
+      {
+        path: 'team/:id',
+        loadComponent: () =>
+          import(
+            './features/admin/team-management/members/member-detail.component'
+          ).then((m) => m.MemberDetailComponent),
+      },
+      {
         path: 'messages',
         loadComponent: () =>
           import('./features/admin/messages-management/messages-management.component').then(
@@ -256,6 +291,20 @@ export const appRoutes: Routes = [
           import('./features/admin/prospects-management/prospects-management.component').then(
             (m) => m.ProspectsManagementComponent,
           ),
+      },
+      {
+        path: 'prospects/new',
+        loadComponent: () =>
+          import(
+            './features/admin/prospects-management/prospect-form/prospect-form.component'
+          ).then((m) => m.ProspectFormComponent),
+      },
+      {
+        path: 'prospects/:id/edit',
+        loadComponent: () =>
+          import(
+            './features/admin/prospects-management/prospect-form/prospect-form.component'
+          ).then((m) => m.ProspectFormComponent),
       },
       {
         path: 'announcements',
@@ -356,6 +405,11 @@ export const appRoutes: Routes = [
         path: 'partners',
         loadComponent: () =>
           import('./features/partners/partners.component').then((m) => m.PartnersComponent),
+      },
+      {
+        path: 'team',
+        loadComponent: () =>
+          import('./features/team/team.component').then((m) => m.TeamComponent),
       },
       {
         path: 'resources',

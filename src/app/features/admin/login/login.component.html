@@ -62,6 +62,12 @@
       <button class="btn btn--primary btn--block" type="submit" [disabled]="submitting()">
         {{ submitting() ? 'Connexion…' : 'Se connecter' }}
       </button>
+
+      <div class="login-divider"><span>ou</span></div>
+
+      <app-google-sign-in-button
+        (credential)="loginWithGoogle($event)"
+      ></app-google-sign-in-button>
     </form>
 
     <ng-template #twoFactorTemplate>

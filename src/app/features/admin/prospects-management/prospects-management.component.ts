@@ -1,10 +1,14 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ProspectsService } from '../../../core/services/prospects.service';
 import { ToastService } from '../../../core/services/toast.service';
-import type { ProspectItem, ProspectPagination } from '../../../core/services/prospects.service';
+import {
+  ProspectImportResult,
+  ProspectItem,
+  ProspectPagination,
+} from '../../../core/services/prospects.service';
 
 @Component({
   selector: 'app-prospects-management',
@@ -14,7 +18,11 @@ import type { ProspectItem, ProspectPagination } from '../../../core/services/pr
   styleUrl: './prospects-management.component.scss',
 })
 export class ProspectsManagementComponent implements OnInit {
+  @ViewChild('importInput') importInput!: ElementRef<HTMLInputElement>;
+
   readonly loading = signal(true);
+  readonly exporting = signal(false);
+  readonly importing = signal(false);
   readonly items = signal<ProspectItem[]>([]);
   readonly keyword = signal('');
 
@@ -103,6 +111,72 @@ export class ProspectsManagementComponent implements OnInit {
       day: 'numeric',
       month: 'short',
       year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     });
+  }
+
+  export(): void {
+    this.exporting.set(true);
+    this.prospectsService.exportExcel().subscribe({
+      next: (blob) => {
+        this.downloadBlob(blob, 'prospects.xlsx');
+        this.exporting.set(false);
+      },
+      error: () => {
+        this.toastService.error('Impossible d’exporter les prospects.');
+        this.exporting.set(false);
+      },
+    });
+  }
+
+  downloadTemplate(): void {
+    this.prospectsService.downloadTemplate().subscribe({
+      next: (blob) => {
+        this.downloadBlob(blob, 'prospects-template.xlsx');
+      },
+      error: () => {
+        this.toastService.error('Impossible de télécharger le modèle.');
+      },
+    });
+  }
+
+  onImportSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    this.importing.set(true);
+    this.prospectsService.importExcel(file).subscribe({
+      next: (result) => {
+        this.importing.set(false);
+        this.showImportResult(result);
+        this.load();
+      },
+      error: (err) => {
+        this.importing.set(false);
+        this.toastService.error(
+          err?.message || 'Échec de l’import des prospects.',
+        );
+      },
+    });
+  }
+
+  private showImportResult(result: ProspectImportResult): void {
+    const summary =
+      `Import terminé : ${result.created} créé(s), ` +
+      `${result.updated} mis à jour, ${result.skipped} ignoré(s) parmi ` +
+      `${result.totalRows} ligne(s).`;
+    this.toastService.success(summary);
+  }
+
+  private downloadBlob(blob: Blob, filename: string): void {
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = filename;
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+    URL.revokeObjectURL(url);
   }
 }

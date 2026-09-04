@@ -24,6 +24,14 @@ export interface ProspectListResult {
   pagination: ProspectPagination;
 }
 
+export interface ProspectImportResult {
+  totalRows: number;
+  created: number;
+  updated: number;
+  skipped: number;
+  ignored: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ProspectsService {
   constructor(private readonly api: ApiGatewayService) {}
@@ -48,5 +56,27 @@ export class ProspectsService {
 
   delete(id: string): Observable<{ deleted: boolean }> {
     return this.api.delete<{ deleted: boolean }>(`/prospects/${id}`);
+  }
+
+  exportExcel(): Observable<Blob> {
+    return this.api.getBlob('/prospects/export');
+  }
+
+  downloadTemplate(): Observable<Blob> {
+    return this.api.getBlob('/prospects/template');
+  }
+
+  importExcel(file: File): Observable<ProspectImportResult> {
+    return new Observable<ProspectImportResult>((subscriber) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64 = (reader.result as string).split(',')[1];
+        this.api
+          .post<ProspectImportResult>('/prospects/import', { file: base64 })
+          .subscribe(subscriber);
+      };
+      reader.onerror = () => subscriber.error(new Error('Lecture du fichier impossible.'));
+      reader.readAsDataURL(file);
+    });
   }
 }

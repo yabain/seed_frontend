@@ -216,6 +216,7 @@
       <table class="table">
         <thead>
           <tr>
+            <th>Type</th>
             <th>Destinataire</th>
             <th>Sujet</th>
             <th>Date</th>
@@ -224,8 +225,19 @@
         </thead>
         <tbody>
           <tr *ngFor="let email of !gettingOutput() ? emailList() : []">
+            <td>
+              <span class="badge" [class.badge--amber]="email.category === 'announcement'">
+                {{ email.category === 'announcement' ? 'Groupe' : 'Simple' }}
+              </span>
+            </td>
             <td>{{ email.to }}</td>
-            <td>{{ getFirst60Chars(email.subject) }}</td>
+            <td>
+              <span *ngIf="email.category === 'announcement'">
+                {{ getFirst60Chars(email.subject) }}
+                <span class="group-result">({{ getGroupResult(email) }})</span>
+              </span>
+              <span *ngIf="email.category !== 'announcement'">{{ getFirst60Chars(email.subject) }}</span>
+            </td>
             <td>{{ email.createdAt | date:'dd-MM-yyyy HH:mm' }}</td>
             <td>
               <span class="badge" [class.badge--green]="email.status" [class.badge--red]="!email.status">
@@ -234,9 +246,10 @@
             </td>
           </tr>
           <tr *ngIf="!emailList().length && !gettingOutput()">
-            <td colspan="4"><p class="empty-state">Aucun e-mail.</p></td>
+            <td colspan="5"><p class="empty-state">Aucun e-mail.</p></td>
           </tr>
           <tr *ngFor="let _ of gettingOutput() ? [1,2,3,4,5] : []" class="skeleton-row">
+            <td><span class="skeleton skeleton-badge"></span></td>
             <td><span class="skeleton skeleton-text"></span></td>
             <td><span class="skeleton skeleton-text skeleton-text--long"></span></td>
             <td><span class="skeleton skeleton-text"></span></td>
@@ -247,13 +260,29 @@
     </div>
 
     <div class="pagination" *ngIf="emailMeta() && !gettingOutput()">
-      <button class="btn btn--ghost btn--sm" (click)="previousEmailPage()" [disabled]="!emailMeta()?.hasPrevPage">
-        <i class="fa-solid fa-arrow-left"></i> Précédent
-      </button>
-      <span class="pagination__info">Page {{ emailMeta()?.currentPage }} / {{ emailMeta()?.totalPages }} ({{ emailMeta()?.totalItems }} e-mails)</span>
-      <button class="btn btn--ghost btn--sm" (click)="nextEmailPage()" [disabled]="!emailMeta()?.hasNextPage">
-        Suivant <i class="fa-solid fa-arrow-right"></i>
-      </button>
+      <div class="pagination__size">
+        <label class="pagination__label" for="email-limit">Par page</label>
+        <select
+          id="email-limit"
+          class="form-control"
+          [value]="emailLimit()"
+          (change)="onEmailLimitChange($any($event.target).value)"
+        >
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+      </div>
+      <div class="pagination__nav">
+        <button class="btn btn--ghost btn--sm" (click)="previousEmailPage()" [disabled]="!emailMeta()?.hasPrevPage">
+          <i class="fa-solid fa-arrow-left"></i> Précédent
+        </button>
+        <span class="pagination__info">Page {{ emailMeta()?.currentPage }} / {{ emailMeta()?.totalPages }} ({{ emailMeta()?.totalItems }} e-mails)</span>
+        <button class="btn btn--ghost btn--sm" (click)="nextEmailPage()" [disabled]="!emailMeta()?.hasNextPage">
+          Suivant <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
     </div>
   </div>
 </div>

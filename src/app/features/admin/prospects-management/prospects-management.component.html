@@ -12,6 +12,30 @@
       (input)="onSearch($any($event.target).value)"
       [value]="keyword()"
     />
+
+    <div class="toolbar-actions">
+      <a class="btn btn--outline" routerLink="/admin/prospects/new">
+        <i class="fa-solid fa-plus"></i> Ajouter
+      </a>
+      <button class="btn btn--outline" (click)="downloadTemplate()">
+        <i class="fa-solid fa-file-excel"></i> Modèle
+      </button>
+      <button class="btn btn--outline" (click)="export()" [disabled]="exporting()">
+        <i class="fa-solid fa-file-export"></i>
+        {{ exporting() ? 'Export…' : 'Exporter' }}
+      </button>
+      <button class="btn btn--primary" (click)="importInput.click()" [disabled]="importing()">
+        <i class="fa-solid fa-file-import"></i>
+        {{ importing() ? 'Import…' : 'Importer' }}
+      </button>
+      <input
+        #importInput
+        type="file"
+        accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        hidden
+        (change)="onImportSelected($event)"
+      />
+    </div>
   </div>
 
   <div class="card mt-2 table-wrap">
@@ -21,8 +45,7 @@
           <th>Nom</th>
           <th>E-mail</th>
           <th>Téléphone</th>
-          <th>Date d'inscription</th>
-        </tr>
+          <th>Date d'inscription</th>        </tr>
       </thead>
         <tbody>
           <tr *ngFor="let prospect of !loading() ? items() : []">

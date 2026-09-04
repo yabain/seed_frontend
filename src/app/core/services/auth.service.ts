@@ -83,6 +83,18 @@ export class AuthService {
     );
   }
 
+  googleLogin(idToken: string): Observable<TwoFactorVerifyResponse> {
+    return this.api
+      .post<TwoFactorVerifyResponse>('/admin/auth/google', { idToken })
+      .pipe(
+        tap((response) => {
+          this.applyProfile(response.admin);
+          this.authenticatedSignal.set(true);
+          this.ready = true;
+        }),
+      );
+  }
+
   sendTwoFactorCode(email: string): Observable<SendTwoFactorCodeResponse> {
     return this.api.post<SendTwoFactorCodeResponse>(
       '/admin/auth/2fa/send-code',

@@ -53,6 +53,17 @@ export class ApiGatewayService {
     return this.http.delete<T>(`${this.baseUrl}${path}`, REQUEST_OPTIONS);
   }
 
+  /**
+   * GET renvoyant un binaire brut (ex. téléchargement de fichier Excel),
+   * envoie le cookie d'authentification (`withCredentials`).
+   */
+  getBlob(path: string): Observable<Blob> {
+    return this.http.get(`${this.baseUrl}${path}`, {
+      ...REQUEST_OPTIONS,
+      responseType: 'blob',
+    });
+  }
+
   private buildParams(
     params?: Record<string, string | number | boolean | undefined>,
   ): HttpParams {

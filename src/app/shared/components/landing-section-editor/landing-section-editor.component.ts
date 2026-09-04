@@ -15,6 +15,7 @@ const DEFAULTS: Record<LandingSectionKey, Required<LandingSectionText>> = {
   programs: { eyebrow: 'Nos actions', title: 'Programmes et projets actifs', description: 'Des initiatives concrètes portées avec nos partenaires.' },
   partners: { eyebrow: '', title: '', description: '' },
   resources: { eyebrow: 'Ressources', title: 'Centre de ressources', description: 'Téléchargez nos rapports, guides et documents institutionnels.' },
+  team: { eyebrow: 'Notre équipe', title: 'Les personnes qui nous font avancer', description: 'Découvrez les membres engagés au service de nos missions.' },
 };
 
 @Component({

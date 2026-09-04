@@ -1,0 +1,124 @@
+<div class="admin-page">
+  <div class="detail-toolbar">
+    <button type="button" class="btn btn--ghost" (click)="back()">
+      <i class="ti ti-arrow-left"></i> Retour à la liste
+    </button>
+    <div class="detail-toolbar__actions" *ngIf="member() as m">
+      <a class="btn btn--outline" [routerLink]="['/admin/team', m._id, 'edit']">
+        <i class="fa-solid fa-pen"></i> Modifier
+      </a>
+      <button type="button" class="btn btn--danger" (click)="remove()">
+        <i class="fa-solid fa-trash"></i> Supprimer
+      </button>
+    </div>
+  </div>
+
+  <!-- Skeleton -->
+  <div class="card mt-2" *ngIf="loading()">
+    <div class="member-detail">
+      <aside class="member-detail__photo">
+        <span class="skeleton skeleton-thumb skeleton-thumb--round-xl"></span>
+      </aside>
+      <div class="member-detail__body">
+        <span class="skeleton skeleton-text skeleton-text--long"></span>
+        <span class="skeleton skeleton-text"></span>
+        <span class="skeleton skeleton-text skeleton-text--long"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mt-2" *ngIf="!loading() && member() as m">
+    <div class="member-detail">
+      <aside class="member-detail__photo">
+        <img
+          *ngIf="m.photo"
+          [src]="m.photo"
+          [alt]="'Photo de ' + m.name"
+          class="member-detail__img"
+        />
+        <span *ngIf="!m.photo" class="member-detail__fallback">{{ m.name.charAt(0) }}</span>
+
+        <span
+          class="member-detail__status"
+          [class.member-detail__status--off]="m.isActive === false"
+        >
+          <i
+            [class]="m.isActive === false ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"
+          ></i>
+          {{ m.isActive === false ? 'Masqué' : 'Visible' }}
+        </span>
+      </aside>
+
+      <div class="member-detail__body">
+        <div class="member-detail__head">
+          <div>
+            <h1 class="member-detail__name">{{ m.name }}</h1>
+            <p class="member-detail__role">
+              <i class="fa-solid fa-briefcase"></i> {{ m.role || 'Sans fonction' }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Sections -->
+        <div class="member-detail__block" *ngIf="sectionNames(m).length">
+          <h3 class="member-detail__label"><i class="fa-solid fa-shapes"></i> Sections</h3>
+          <div class="member-detail__tags">
+            <span class="member-detail__tag" *ngFor="let title of sectionNames(m)">
+              <i class="fa-solid fa-tag"></i> {{ title }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Réseaux sociaux -->
+        <div class="member-detail__block" *ngIf="hasSocials(m)">
+          <h3 class="member-detail__label"><i class="fa-solid fa-share-nodes"></i> Réseaux sociaux</h3>
+          <div class="member-detail__socials">
+            <a
+              *ngIf="m.socialLinks?.facebook"
+              [href]="m.socialLinks!.facebook!"
+              target="_blank"
+              rel="noopener"
+              [attr.aria-label]="'Facebook de ' + m.name"
+            ><i class="fa-brands fa-facebook"></i></a>
+            <a
+              *ngIf="m.socialLinks?.x"
+              [href]="m.socialLinks!.x!"
+              target="_blank"
+              rel="noopener"
+              [attr.aria-label]="'X de ' + m.name"
+            ><i class="fa-brands fa-x-twitter"></i></a>
+            <a
+              *ngIf="m.socialLinks?.twitter"
+              [href]="m.socialLinks!.twitter!"
+              target="_blank"
+              rel="noopener"
+              [attr.aria-label]="'Twitter de ' + m.name"
+            ><i class="fa-brands fa-twitter"></i></a>
+            <a
+              *ngIf="m.socialLinks?.linkedin"
+              [href]="m.socialLinks!.linkedin!"
+              target="_blank"
+              rel="noopener"
+              [attr.aria-label]="'LinkedIn de ' + m.name"
+            ><i class="fa-brands fa-linkedin"></i></a>
+            <a
+              *ngIf="m.socialLinks?.instagram"
+              [href]="m.socialLinks!.instagram!"
+              target="_blank"
+              rel="noopener"
+              [attr.aria-label]="'Instagram de ' + m.name"
+            ><i class="fa-brands fa-instagram"></i></a>
+          </div>
+        </div>
+
+        <!-- Actions de visibilité -->
+        <div class="member-detail__actions">
+          <button type="button" class="btn btn--outline" (click)="toggleActive()">
+            <i [class]="m.isActive === false ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'"></i>
+            {{ m.isActive === false ? 'Rendre visible' : 'Masquer' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

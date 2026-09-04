@@ -16,6 +16,8 @@ const SEGMENT_DESCRIPTIONS: Record<SegmentKey, string> = {
     'Affiche ou masque la section « Partenaires » sur la page d\'accueil ainsi que le lien du menu.',
   events:
     'Affiche ou masque la section « Événements » sur la page d\'accueil ainsi que le lien du menu.',
+  team:
+    'Affiche ou masque la page « Équipe » ainsi que son lien dans le menu du front office.',
 };
 
 @Component({
@@ -47,6 +49,7 @@ export class SegmentVisibilityComponent {
       programs: true,
       partners: true,
       events: true,
+      team: true,
       ...(this.siteConfigService.config()?.segments ?? {}),
       [this.segment()]: next,
     };
