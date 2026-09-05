@@ -59,6 +59,12 @@
           </div>
         </div>
 
+        <!-- Description -->
+        <div class="member-detail__block" *ngIf="m.description">
+          <h3 class="member-detail__label"><i class="fa-solid fa-quote-left"></i> Description</h3>
+          <p class="member-detail__desc">{{ m.description }}</p>
+        </div>
+
         <!-- Sections -->
         <div class="member-detail__block" *ngIf="sectionNames(m).length">
           <h3 class="member-detail__label"><i class="fa-solid fa-shapes"></i> Sections</h3>

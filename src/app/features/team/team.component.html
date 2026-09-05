@@ -3,7 +3,7 @@
   <!-- ================= HERO ================= -->
   <header class="team-hero" [style.background-image]="pageBackground() ? 'url(' + pageBackground() + ')' : null">
     <div class="team-hero__grain" aria-hidden="true"></div>
-    <div class="container team-hero__inner">
+    <div class="team-hero__inner">
       <span class="team-eyebrow">
         <i class="fa-solid fa-hands-helping"></i>
         {{ siteConfig()?.landingSections?.team?.eyebrow || 'Notre équipe' }}
@@ -14,10 +14,6 @@
       <p class="team-hero__lead">
         {{ siteConfig()?.landingSections?.team?.description || 'Découvrez les membres engagés au service de nos missions.' }}
       </p>
-      <div class="team-hero__meta">
-        <span><i class="fa-solid fa-user-group"></i> {{ visibleMemberCount() }} membres</span>
-        <span *ngIf="hasVisibleSections()"><i class="fa-solid fa-layer-group"></i> {{ visibleSections().length }} départements</span>
-      </div>
     </div>
   </header>
 
@@ -34,124 +30,169 @@
     </div>
   </section>
 
-  <!-- ================= MEMBRES ================= -->
+  <!-- ================= SECTIONS ================= -->
   <main class="team-main">
     <div class="container">
 
+      <!-- Skeleton -->
       <div class="team-skeleton" *ngIf="loading()" aria-busy="true">
-        <div class="team-skeleton__group">
-          <span class="sk sk--title sk--w30 sk--center"></span>
-        </div>
-        <div class="grid grid--4">
-          <div class="team-skeleton__card" *ngFor="let s of [0, 1, 2, 3, 4, 5, 6, 7]">
-            <div class="sk sk--thumb team-skeleton__photo"></div>
-            <span class="sk sk--title sk--w60 sk--center"></span>
-            <span class="sk sk--text sk--w40 sk--center"></span>
-            <span class="sk sk--text sk--w70 sk--center"></span>
+        <div class="team-skeleton__card" *ngFor="let s of [0, 1, 2, 3, 4, 5, 6, 7]">
+          <span class="sk team-skeleton__photo"></span>
+          <div class="team-skeleton__strip">
+            <span class="sk sk--title sk--w80"></span>
+            <span class="sk sk--text sk--w55"></span>
           </div>
         </div>
       </div>
 
       <ng-container *ngIf="!loading()">
 
-        <!-- Cas : tous les membres sans groupe -->
-        <section class="team-section" *ngIf="!hasVisibleSections() && visibleMemberCount() > 0">
-          <div class="section-header team-section__head">
-            <span class="team-eyebrow team-eyebrow--pill"><i class="fa-solid fa-user-group"></i> Notre équipe</span>
-            <h2>Ceux qui font vivre nos missions</h2>
-            <p>Des profils engagés et complémentaires, unis autour d'un objectif commun.</p>
+        <!-- Cas : tous les membres sans section -->
+        <section class="team-glass-section" *ngIf="populatedSections().length === 0 && membersOf().length > 0" [style]="sectionStyle(0)">
+          <div class="team-glass-section__header">
+            <div class="team-glass-section__tile">
+              <i class="fa-solid fa-user-group"></i>
+            </div>
+            <div class="team-glass-section__heading">
+              <h2 class="team-glass-section__title">Notre équipe</h2>
+              <p class="team-glass-section__sub">Ceux qui font vivre nos missions</p>
+            </div>
           </div>
-          <div class="grid grid--4 team-grid">
-            <article class="team-card" *ngFor="let member of membersOf()">
-              <div class="team-card__media">
-                <img *ngIf="member.photo" [src]="member.photo" [alt]="member.name" class="team-card__photo" />
-                <span *ngIf="!member.photo" class="team-card__fallback">{{ member.name.charAt(0) }}</span>
-                <div class="team-card__socials" *ngIf="hasSocials(member)">
-                  <a *ngIf="member.socialLinks?.facebook" [href]="member.socialLinks!.facebook!" target="_blank" rel="noopener" [attr.aria-label]="'Facebook de ' + member.name"><i class="ti ti-brand-facebook"></i></a>
-                  <a *ngIf="member.socialLinks?.x" [href]="member.socialLinks!.x!" target="_blank" rel="noopener" [attr.aria-label]="'X de ' + member.name"><i class="ti ti-brand-x"></i></a>
-                  <a *ngIf="member.socialLinks?.twitter" [href]="member.socialLinks!.twitter!" target="_blank" rel="noopener" [attr.aria-label]="'Twitter de ' + member.name"><i class="ti ti-brand-twitter"></i></a>
-                  <a *ngIf="member.socialLinks?.linkedin" [href]="member.socialLinks!.linkedin!" target="_blank" rel="noopener" [attr.aria-label]="'LinkedIn de ' + member.name"><i class="ti ti-brand-linkedin"></i></a>
-                  <a *ngIf="member.socialLinks?.instagram" [href]="member.socialLinks!.instagram!" target="_blank" rel="noopener" [attr.aria-label]="'Instagram de ' + member.name"><i class="ti ti-brand-instagram"></i></a>
+          <div class="team-grid team-grid--glass">
+            <article
+              class="team-glass-card"
+              *ngFor="let member of membersOf(); let i = index"
+              [style.--card-delay]="i * 0.06 + 's'"
+              [class.is-open]="expandedCard() === i"
+              (click)="toggleCard(i)"
+              (keydown.enter)="toggleCard(i)"
+              tabindex="0"
+              role="button"
+              [attr.aria-label]="'Voir le profil de ' + member.name"
+            >
+              <span class="team-glass-card__media">
+                <img *ngIf="member.photo" [src]="member.photo" [alt]="member.name" loading="lazy" class="team-glass-card__photo" />
+                <span *ngIf="!member.photo" class="team-glass-card__fallback">{{ member.name.charAt(0) }}</span>
+              </span>
+
+              <div class="team-glass-card__cap">
+                <div class="team-glass-card__head">
+                  <h3 class="team-glass-card__name">{{ member.name }}</h3>
+                  <span class="team-glass-card__role" *ngIf="member.role">{{ member.role }}</span>
+                  <p class="team-glass-card__desc" *ngIf="member.description">{{ member.description }}</p>
                 </div>
-              </div>
-              <div class="team-card__body">
-                <h3 class="team-card__name">{{ member.name }}</h3>
-                <span class="team-card__role" *ngIf="member.role">{{ member.role }}</span>
+                <div class="team-glass-card__socials" *ngIf="hasSocials(member)" (click)="$event.stopPropagation()">
+                  <a *ngIf="member.socialLinks?.facebook" [href]="member.socialLinks!.facebook!" target="_blank" rel="noopener" [attr.aria-label]="'Facebook de ' + member.name"><i class="fa-brands fa-facebook-f"></i></a>
+                  <a *ngIf="member.socialLinks?.x" [href]="member.socialLinks!.x!" target="_blank" rel="noopener" [attr.aria-label]="'X de ' + member.name"><i class="fa-brands fa-x-twitter"></i></a>
+                  <a *ngIf="member.socialLinks?.twitter" [href]="member.socialLinks!.twitter!" target="_blank" rel="noopener" [attr.aria-label]="'Twitter de ' + member.name"><i class="fa-brands fa-twitter"></i></a>
+                  <a *ngIf="member.socialLinks?.linkedin" [href]="member.socialLinks!.linkedin!" target="_blank" rel="noopener" [attr.aria-label]="'LinkedIn de ' + member.name"><i class="fa-brands fa-linkedin-in"></i></a>
+                  <a *ngIf="member.socialLinks?.instagram" [href]="member.socialLinks!.instagram!" target="_blank" rel="noopener" [attr.aria-label]="'Instagram de ' + member.name"><i class="fa-brands fa-instagram"></i></a>
+                </div>
               </div>
             </article>
           </div>
-          <p class="team-empty" *ngIf="!visibleMemberCount()">
-            <i class="fa-solid fa-users"></i> La liste de l'équipe sera bientôt disponible.
-          </p>
         </section>
 
-        <!-- Cas : membres groupés par département -->
-        <section class="team-section" *ngIf="hasVisibleSections()">
-          <div class="section-header team-section__head">
-            <span class="team-eyebrow team-eyebrow--pill"><i class="fa-solid fa-layer-group"></i> Organisation</span>
-            <h2>Découvrez nos départements</h2>
-            <p>Des équipes dédiées, chacune à son domaine d'expertise.</p>
-          </div>
-
-          <div class="team-group" *ngFor="let section of visibleSections(); let gi = index">
-            <div class="team-group__head" *ngIf="section.title">
-              <h3 class="team-group__title">
-                <span class="team-group__index">{{ (gi + 1).toString().padStart(2, '0') }}</span>
-                {{ section.title }}
-              </h3>
-              <p class="team-group__subtitle" *ngIf="section.subtitle">{{ section.subtitle }}</p>
+        <!-- Cas : membres groupés par section -->
+        <ng-container *ngIf="populatedSections().length > 0">
+          <section
+            class="team-glass-section"
+            *ngFor="let section of populatedSections(); let gi = index"
+            [style]="sectionStyle(gi)"
+          >
+            <div class="team-glass-section__header" *ngIf="section.title">
+              <div class="team-glass-section__tile">
+                <i class="fa-solid fa-cube"></i>
+              </div>
+              <div class="team-glass-section__heading">
+                <h2 class="team-glass-section__title">{{ section.title }}</h2>
+                <p class="team-glass-section__sub" *ngIf="section.subtitle">{{ section.subtitle }}</p>
+              </div>
             </div>
 
-            <div class="grid grid--4 team-grid">
-              <article class="team-card" *ngFor="let member of membersOf(section._id)">
-                <div class="team-card__media">
-                  <img *ngIf="member.photo" [src]="member.photo" [alt]="member.name" class="team-card__photo" />
-                  <span *ngIf="!member.photo" class="team-card__fallback">{{ member.name.charAt(0) }}</span>
-                  <div class="team-card__socials" *ngIf="hasSocials(member)">
-                    <a *ngIf="member.socialLinks?.facebook" [href]="member.socialLinks!.facebook!" target="_blank" rel="noopener" [attr.aria-label]="'Facebook de ' + member.name"><i class="ti ti-brand-facebook"></i></a>
-                    <a *ngIf="member.socialLinks?.x" [href]="member.socialLinks!.x!" target="_blank" rel="noopener" [attr.aria-label]="'X de ' + member.name"><i class="ti ti-brand-x"></i></a>
-                    <a *ngIf="member.socialLinks?.twitter" [href]="member.socialLinks!.twitter!" target="_blank" rel="noopener" [attr.aria-label]="'Twitter de ' + member.name"><i class="ti ti-brand-twitter"></i></a>
-                    <a *ngIf="member.socialLinks?.linkedin" [href]="member.socialLinks!.linkedin!" target="_blank" rel="noopener" [attr.aria-label]="'LinkedIn de ' + member.name"><i class="ti ti-brand-linkedin"></i></a>
-                    <a *ngIf="member.socialLinks?.instagram" [href]="member.socialLinks!.instagram!" target="_blank" rel="noopener" [attr.aria-label]="'Instagram de ' + member.name"><i class="ti ti-brand-instagram"></i></a>
+            <div class="team-grid team-grid--glass">
+              <article
+                class="team-glass-card"
+                *ngFor="let member of membersOf(section._id); let i = index"
+                [style.--card-delay]="i * 0.06 + 's'"
+                [class.is-open]="expandedCard() === i"
+                (click)="toggleCard(i)"
+                (keydown.enter)="toggleCard(i)"
+                tabindex="0"
+                role="button"
+                [attr.aria-label]="'Voir le profil de ' + member.name"
+              >
+                <span class="team-glass-card__media">
+                  <img *ngIf="member.photo" [src]="member.photo" [alt]="member.name" loading="lazy" class="team-glass-card__photo" />
+                  <span *ngIf="!member.photo" class="team-glass-card__fallback">{{ member.name.charAt(0) }}</span>
+                </span>
+
+                <div class="team-glass-card__cap">
+                  <div class="team-glass-card__head">
+                    <h3 class="team-glass-card__name">{{ member.name }}</h3>
+                    <span class="team-glass-card__role" *ngIf="member.role">{{ member.role }}</span>
+                    <p class="team-glass-card__desc" *ngIf="member.description">{{ member.description }}</p>
                   </div>
-                </div>
-                <div class="team-card__body">
-                  <h3 class="team-card__name">{{ member.name }}</h3>
-                  <span class="team-card__role" *ngIf="member.role">{{ member.role }}</span>
+                  <div class="team-glass-card__socials" *ngIf="hasSocials(member)" (click)="$event.stopPropagation()">
+                    <a *ngIf="member.socialLinks?.facebook" [href]="member.socialLinks!.facebook!" target="_blank" rel="noopener" [attr.aria-label]="'Facebook de ' + member.name"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a *ngIf="member.socialLinks?.x" [href]="member.socialLinks!.x!" target="_blank" rel="noopener" [attr.aria-label]="'X de ' + member.name"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a *ngIf="member.socialLinks?.twitter" [href]="member.socialLinks!.twitter!" target="_blank" rel="noopener" [attr.aria-label]="'Twitter de ' + member.name"><i class="fa-brands fa-twitter"></i></a>
+                    <a *ngIf="member.socialLinks?.linkedin" [href]="member.socialLinks!.linkedin!" target="_blank" rel="noopener" [attr.aria-label]="'LinkedIn de ' + member.name"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a *ngIf="member.socialLinks?.instagram" [href]="member.socialLinks!.instagram!" target="_blank" rel="noopener" [attr.aria-label]="'Instagram de ' + member.name"><i class="fa-brands fa-instagram"></i></a>
+                  </div>
                 </div>
               </article>
             </div>
+          </section>
 
-            <p class="team-empty" *ngIf="membersOf(section._id).length === 0">
-              Les membres de ce département seront bientôt annoncés.
-            </p>
-          </div>
+          <!-- Membres sans section -->
+          <section class="team-glass-section" *ngIf="membersOf().length" [style]="sectionStyle(visibleSections().length)">
+            <div class="team-glass-section__header">
+              <div class="team-glass-section__tile">
+                <i class="fa-solid fa-user-group"></i>
+              </div>
+              <div class="team-glass-section__heading">
+                <h2 class="team-glass-section__title">Autres membres</h2>
+              </div>
+            </div>
+            <div class="team-grid team-grid--glass">
+              <article
+                class="team-glass-card"
+                *ngFor="let member of membersOf(); let i = index"
+                [style.--card-delay]="i * 0.06 + 's'"
+                [class.is-open]="expandedCard() === i"
+                (click)="toggleCard(i)"
+                (keydown.enter)="toggleCard(i)"
+                tabindex="0"
+                role="button"
+                [attr.aria-label]="'Voir le profil de ' + member.name"
+              >
+                <span class="team-glass-card__media">
+                  <img *ngIf="member.photo" [src]="member.photo" [alt]="member.name" loading="lazy" class="team-glass-card__photo" />
+                  <span *ngIf="!member.photo" class="team-glass-card__fallback">{{ member.name.charAt(0) }}</span>
+                </span>
 
-          <!-- Membres sans groupe restant -->
-          <div class="team-group" *ngIf="membersOf().length">
-            <div class="grid grid--4 team-grid team-grid--flush-top">
-              <article class="team-card" *ngFor="let member of membersOf()">
-                <div class="team-card__media">
-                  <img *ngIf="member.photo" [src]="member.photo" [alt]="member.name" class="team-card__photo" />
-                  <span *ngIf="!member.photo" class="team-card__fallback">{{ member.name.charAt(0) }}</span>
-                  <div class="team-card__socials" *ngIf="hasSocials(member)">
-                    <a *ngIf="member.socialLinks?.facebook" [href]="member.socialLinks!.facebook!" target="_blank" rel="noopener" [attr.aria-label]="'Facebook de ' + member.name"><i class="ti ti-brand-facebook"></i></a>
-                    <a *ngIf="member.socialLinks?.x" [href]="member.socialLinks!.x!" target="_blank" rel="noopener" [attr.aria-label]="'X de ' + member.name"><i class="ti ti-brand-x"></i></a>
-                    <a *ngIf="member.socialLinks?.twitter" [href]="member.socialLinks!.twitter!" target="_blank" rel="noopener" [attr.aria-label]="'Twitter de ' + member.name"><i class="ti ti-brand-twitter"></i></a>
-                    <a *ngIf="member.socialLinks?.linkedin" [href]="member.socialLinks!.linkedin!" target="_blank" rel="noopener" [attr.aria-label]="'LinkedIn de ' + member.name"><i class="ti ti-brand-linkedin"></i></a>
-                    <a *ngIf="member.socialLinks?.instagram" [href]="member.socialLinks!.instagram!" target="_blank" rel="noopener" [attr.aria-label]="'Instagram de ' + member.name"><i class="ti ti-brand-instagram"></i></a>
+                <div class="team-glass-card__cap">
+                  <div class="team-glass-card__head">
+                    <h3 class="team-glass-card__name">{{ member.name }}</h3>
+                    <span class="team-glass-card__role" *ngIf="member.role">{{ member.role }}</span>
+                    <p class="team-glass-card__desc" *ngIf="member.description">{{ member.description }}</p>
                   </div>
-                </div>
-                <div class="team-card__body">
-                  <h3 class="team-card__name">{{ member.name }}</h3>
-                  <span class="team-card__role" *ngIf="member.role">{{ member.role }}</span>
+                  <div class="team-glass-card__socials" *ngIf="hasSocials(member)" (click)="$event.stopPropagation()">
+                    <a *ngIf="member.socialLinks?.facebook" [href]="member.socialLinks!.facebook!" target="_blank" rel="noopener" [attr.aria-label]="'Facebook de ' + member.name"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a *ngIf="member.socialLinks?.x" [href]="member.socialLinks!.x!" target="_blank" rel="noopener" [attr.aria-label]="'X de ' + member.name"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a *ngIf="member.socialLinks?.twitter" [href]="member.socialLinks!.twitter!" target="_blank" rel="noopener" [attr.aria-label]="'Twitter de ' + member.name"><i class="fa-brands fa-twitter"></i></a>
+                    <a *ngIf="member.socialLinks?.linkedin" [href]="member.socialLinks!.linkedin!" target="_blank" rel="noopener" [attr.aria-label]="'LinkedIn de ' + member.name"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a *ngIf="member.socialLinks?.instagram" [href]="member.socialLinks!.instagram!" target="_blank" rel="noopener" [attr.aria-label]="'Instagram de ' + member.name"><i class="fa-brands fa-instagram"></i></a>
+                  </div>
                 </div>
               </article>
             </div>
-          </div>
-        </section>
+          </section>
+        </ng-container>
 
-        <p class="team-empty team-empty--large" *ngIf="!visibleMemberCount()">
+        <!-- État vide -->
+        <p class="team-empty team-empty--large" *ngIf="totalVisibleMemberCount() === 0">
           <i class="fa-solid fa-users-slash"></i>
           <strong>L'équipe est en cours de constitution.</strong>
           <span>Revenez bientôt pour découvrir les portraits de nos membres.</span>

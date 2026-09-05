@@ -101,6 +101,7 @@ export class AdminLayoutComponent implements OnInit {
       caption: 'Système',
       items: [
         { label: 'Comptes', path: '/admin/users', icon: 'ti ti-user-cog' },
+        { label: 'Don', path: '/admin/donations', icon: 'ti ti-gift' },
         { label: 'Journal', path: '/admin/audit-logs', icon: 'ti ti-clock-2' },
       ],
     },

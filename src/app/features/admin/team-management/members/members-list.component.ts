@@ -4,13 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink, Router } from '@angular/router';
 import { TeamService, TeamMemberListResult } from '../../../../core/services/team.service';
 import { ToastService } from '../../../../core/services/toast.service';
+import { SegmentVisibilityComponent } from '../../../../shared/components/segment-visibility/segment-visibility.component';
 import type { TeamMember, TeamSection } from '../../../../core/models/models';
 import type { ErrorMessage } from '../../../../core/interceptors/error.interceptor';
 
 @Component({
   selector: 'app-members-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, SegmentVisibilityComponent],
   templateUrl: './members-list.component.html',
   styleUrls: ['../../management.scss', './members-list.component.scss'],
 })

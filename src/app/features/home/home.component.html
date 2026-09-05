@@ -38,7 +38,9 @@
           <a routerLink="/contact" class="btn lq-btn--glow">
             Nous contacter <i class="fa-solid fa-arrow-right"></i>
           </a>
-          <a routerLink="/programs" class="btn lq-btn--glass">Découvrir nos actions <i
+          <a *ngIf="siteConfig()?.segments?.donations ?? false" routerLink="/don" class="btn lq-btn--glass">{{ siteConfig()?.landingSections?.donations?.buttonLabel || 'Faire un don' }} <i
+              class="fa-solid fa-hand-holding-usd"></i></a>
+          <a *ngIf="!(siteConfig()?.segments?.donations ?? false)" routerLink="/programs" class="btn lq-btn--glass">Découvrir nos actions <i
               class="fa-solid fa-arrow-right"></i></a>
         </div>
         <div class="lq-hero__stats">
@@ -441,8 +443,8 @@
       </ng-template>
 
       <div class="text-left mt-2">
-        <a routerLink="/programs" class="btn lq-btn--glass-transparent">Découvrir tous nos programmes <i
-            class="fa-solid fa-arrow-right"></i></a>
+        <a *ngIf="siteConfig()?.segments?.donations ?? false" routerLink="/don" class="btn lq-btn--glass-transparent">{{ siteConfig()?.landingSections?.donations?.buttonLabel || 'Faire un don' }} <i class="fa-solid fa-hand-holding-usd"></i></a>
+        <a *ngIf="!(siteConfig()?.segments?.donations ?? false)" routerLink="/programs" class="btn lq-btn--glass-transparent">Découvrir tous nos programmes <i class="fa-solid fa-arrow-right"></i></a>
       </div>
     </div>
   </section>

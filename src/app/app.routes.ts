@@ -372,6 +372,27 @@ export const appRoutes: Routes = [
             (m) => m.EventFormComponent,
           ),
       },
+      {
+        path: 'donations',
+        loadComponent: () =>
+          import('./features/admin/donations-management/donations-management.component').then(
+            (m) => m.DonationsManagementComponent,
+          ),
+      },
+      {
+        path: 'donations/new',
+        loadComponent: () =>
+          import('./features/admin/donations-management/donation-form/donation-form.component').then(
+            (m) => m.DonationFormComponent,
+          ),
+      },
+      {
+        path: 'donations/:id/edit',
+        loadComponent: () =>
+          import('./features/admin/donations-management/donation-form/donation-form.component').then(
+            (m) => m.DonationFormComponent,
+          ),
+      },
     ],
   },
   {
@@ -410,6 +431,11 @@ export const appRoutes: Routes = [
         path: 'team',
         loadComponent: () =>
           import('./features/team/team.component').then((m) => m.TeamComponent),
+      },
+      {
+        path: 'don',
+        loadComponent: () =>
+          import('./features/donations/donations.component').then((m) => m.DonationsComponent),
       },
       {
         path: 'resources',

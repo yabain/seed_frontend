@@ -16,6 +16,10 @@
       <label [for]="section + '-description'">Paragraphe</label>
       <textarea class="form-control" rows="3" [id]="section + '-description'" [(ngModel)]="content.description" [name]="section + '-description'" maxlength="500"></textarea>
     </div>
+    <div class="form-field">
+      <label [for]="section + '-buttonLabel'">Texte du bouton</label>
+      <input class="form-control" [id]="section + '-buttonLabel'" [(ngModel)]="content.buttonLabel" [name]="section + '-buttonLabel'" maxlength="100" placeholder="Ex. Faire un don, Payer maintenant…" />
+    </div>
     <button class="btn btn--primary" (click)="save()" [disabled]="saving()">{{ saving() ? 'Enregistrement…' : 'Enregistrer les textes' }}</button>
   </div>
 </section>

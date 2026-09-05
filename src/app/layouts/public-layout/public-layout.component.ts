@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { HeaderComponent } from '../../shared/components/header/header.component';
@@ -18,9 +18,23 @@ export class PublicLayoutComponent {
   private readonly statsService = inject(StatsService);
   private readonly router = inject(Router);
 
+  /** Vrai sur la landing page (host sur laquelle on n'affiche pas la grille). */
+  readonly isHome = signal(false);
+
   constructor() {
     this.siteConfigService.load();
+    this.trackRoute();
     this.trackVisits();
+  }
+
+  private trackRoute(): void {
+    this.router.events
+      .pipe(
+        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+      )
+      .subscribe((event) => {
+        this.isHome.set(event.urlAfterRedirects === '/');
+      });
   }
 
   private trackVisits(): void {

@@ -132,6 +132,7 @@ export interface TeamMember {
   photo?: string;
   name: string;
   role?: string;
+  description?: string;
   isActive?: boolean;
   socialLinks?: TeamSocialLinks;
   sectionIds?: string[];
@@ -204,10 +205,17 @@ export interface Banner {
   authBackgroundImage?: string;
 }
 
-export interface FeatureItem {
-  icon?: string;
+export interface DonationMethod {
+  _id?: string;
   name: string;
-  details: string;
+  logo?: string;
+  qrCodeImage?: string;
+  paymentLink: string;
+  isActive: boolean;
+  order?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  details?: string;
 }
 
 export interface FeaturesSection {
@@ -224,6 +232,16 @@ export interface CountryItem {
   image?: string;
   title: string;
   subtitle?: string;
+}
+
+export interface FeatureItem {
+  id?: string;
+  name: string;
+  description?: string;
+  details?: string;
+  image?: string;
+  route?: string;
+  icon?: string;
 }
 
 export interface CountriesSection {
@@ -259,12 +277,14 @@ export interface SiteSegments {
   partners: boolean;
   events: boolean;
   team: boolean;
+  donations: boolean;
 }
 
 export interface LandingSectionText {
   eyebrow?: string;
   title?: string;
   description?: string;
+  buttonLabel?: string;
 }
 
 export interface LandingSections {
@@ -274,6 +294,7 @@ export interface LandingSections {
   partners?: LandingSectionText;
   resources?: LandingSectionText;
   team?: LandingSectionText;
+  donations?: LandingSectionText;
 }
 
 export interface SiteConfig {

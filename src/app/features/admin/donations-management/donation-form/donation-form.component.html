@@ -1,0 +1,114 @@
+<div class="admin-page">
+  <header class="page-head">
+    <h1>
+      <i class="ti ti-gift"></i>
+      {{ editing() ? 'Modifier la méthode de don' : 'Nouvelle méthode de don' }}
+    </h1>
+    <div class="page-head__actions">
+      <button type="button" class="btn btn--ghost" (click)="cancel()">
+        <i class="ti ti-arrow-left"></i> Retour à la liste
+      </button>
+    </div>
+  </header>
+
+  <div class="card mt-2" *ngIf="loading()">
+    <div class="donation-form">
+      <div class="donation-form__images">
+        <div>
+          <label class="donation-form__field-title">Logo</label>
+          <span class="skeleton skeleton-thumb skeleton-thumb--lg"></span>
+        </div>
+        <div>
+          <label class="donation-form__field-title">Code QR</label>
+          <span class="skeleton skeleton-thumb skeleton-thumb--lg"></span>
+        </div>
+      </div>
+      <div class="donation-form__fields">
+        <div class="form-grid">
+          <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+          <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+          <div class="form-field"><span class="skeleton skeleton-text"></span></div>
+        </div>
+        <div class="form-field"><span class="skeleton skeleton-text skeleton-text--long"></span></div>
+        <div class="form-actions">
+          <span class="skeleton skeleton-btn"></span>
+          <span class="skeleton skeleton-btn"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mt-2" *ngIf="!loading()">
+    <div class="donation-form">
+      <div class="donation-form__images">
+        <div>
+          <label class="donation-form__field-title">Logo</label>
+          <p class="text-muted donation-form__hint">Converti en WebP puis importé dans « uploads ».</p>
+          <app-admin-image-field
+            [image]="form.logo"
+            (imageChange)="setLogo($event)"
+            variant="square"
+            [maxWidth]="800"
+            [maxHeight]="800"
+            alt="Aperçu logo"
+          />
+        </div>
+        <div>
+          <label class="donation-form__field-title">Code QR</label>
+          <p class="text-muted donation-form__hint">Image du QR code vers le lien de paiement.</p>
+          <app-admin-image-field
+            [image]="form.qrCodeImage"
+            (imageChange)="setQrCode($event)"
+            variant="square"
+            [maxWidth]="800"
+            [maxHeight]="800"
+            alt="Aperçu code QR"
+          />
+        </div>
+      </div>
+
+      <div class="donation-form__fields">
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Nom de la méthode *</label>
+            <input class="form-control" type="text" [(ngModel)]="form.name" placeholder="Ex. Mobile Money, Carte bancaire…" />
+          </div>
+
+          <div class="form-field">
+            <label>Lien de paiement *</label>
+            <input class="form-control" type="url" [(ngModel)]="form.paymentLink" placeholder="https://…" />
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Ordre d’affichage</label>
+            <input class="form-control" type="number" [(ngModel)]="form.order" min="0" />
+          </div>
+
+          <div class="form-field">
+            <label>
+              <input type="checkbox" [(ngModel)]="form.isActive" /> Visible sur la page de don
+            </label>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label>Description</label>
+          <textarea class="form-control" rows="3" [(ngModel)]="form.details"
+            placeholder="Hébergement sécurisé, don rapide en quelques secondes…"></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn--primary" (click)="save()" [disabled]="saving()">
+            {{ saving() ? 'Enregistrement…' : 'Enregistrer' }}
+          </button>
+          <button class="btn btn--ghost" type="button" (click)="cancel()">Annuler</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

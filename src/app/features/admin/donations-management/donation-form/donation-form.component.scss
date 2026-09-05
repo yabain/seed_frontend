@@ -1,0 +1,50 @@
+.donation-form {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.donation-form__images {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  padding-right: 1.5rem;
+  border-right: 1px solid var(--color-gray-200);
+}
+
+.donation-form__field-title {
+  display: block;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 0.2rem;
+}
+
+.donation-form__hint {
+  font-size: 0.82rem;
+  margin-bottom: 0.75rem;
+}
+
+.donation-form__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+.skeleton-thumb--lg {
+  width: 100%;
+  height: 160px;
+  display: block;
+}
+
+@media (max-width: 900px) {
+  .donation-form {
+    grid-template-columns: 1fr;
+  }
+
+  .donation-form__images {
+    padding-right: 0;
+    border-right: none;
+  }
+}

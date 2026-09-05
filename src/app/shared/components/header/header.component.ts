@@ -37,6 +37,7 @@ export class HeaderComponent {
     { label: 'Événements', path: '/events', segment: 'events', landingSection: 'events' },
     { label: 'Équipe', path: '/team', segment: 'team', landingSection: 'team' },
     { label: 'Contact', path: '/contact' },
+    { label: 'Don', path: '/don', segment: 'donations' },
   ];
 
   readonly links = computed(() => {

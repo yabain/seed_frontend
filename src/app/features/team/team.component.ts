@@ -65,25 +65,24 @@ export class TeamComponent implements OnInit {
     return (this.team().sections ?? []).filter((s) => s.isActive !== false);
   }
 
-  /** Vrai s'il existe au moins une section active à afficher. */
-  hasVisibleSections(): boolean {
-    return this.visibleSections().length > 0;
+  /**
+   * Sections affichées publiquement : sections actives contenant
+   * au moins un membre (une section vide n'est jamais affichée).
+   */
+  populatedSections(): TeamSection[] {
+    return this.visibleSections().filter(
+      (s) => this.membersOf(s._id).length > 0,
+    );
   }
 
-  /** Nombre de membres affichés publiquement (actifs + libres). */
-  visibleMemberCount(): number {
-    const sections = this.visibleSections();
-    if (sections.length === 0) {
-      return (this.team().members ?? []).length;
-    }
-    const activeIds = new Set(sections.map((s) => s._id));
-    return (this.team().members ?? []).filter((m) => {
-      const ids = m.sectionIds ?? [];
-      if (!ids.length) {
-        return true;
-      }
-      return !ids.some((id) => activeIds.has(id));
-    }).length;
+  /** Nombre total de membres visibles (libres + membres des sections affichées). */
+  totalVisibleMemberCount(): number {
+    return (
+      this.populatedSections().reduce(
+        (sum, s) => sum + this.membersOf(s._id).length,
+        0,
+      ) + this.membersOf().length
+    );
   }
 
   hasSocials(member: TeamMember): boolean {
@@ -97,4 +96,44 @@ export class TeamComponent implements OnInit {
         links.instagram)
     );
   }
+
+  /**
+ * Palette de teintes dérivées de la couleur primaire (récupérée en base),
+ * pour rester dans la même famille de couleur que l'identité du site.
+ */
+private palette(): string[] {
+  const raw = (this.siteConfig()?.primaryColor ?? '').trim();
+  const base = /^#[0-9a-fA-F]{6}$/.test(raw) ? raw : '#0ea5e9';
+  return [0, 6, 12, 18, 24, 30, 10, 20].map((amount) => this.tint(base, amount));
+}
+
+/** Éclaircit un hex vers le blanc. */
+private tint(hex: string, amount: number): string {
+  const num = parseInt(hex.slice(1), 16);
+  const delta = Math.round(2.55 * amount);
+  const channel = (value: number) =>
+    Math.min(255, Math.max(0, value + delta))
+      .toString(16)
+      .padStart(2, '0');
+  return (
+    '#' +
+    channel((num >> 16) & 0xff) +
+    channel((num >> 8) & 0xff) +
+    channel(num & 0xff)
+  );
+}
+
+/** Propriété CSS custom d'accent (couleur unique) pour la section d'index donné. */
+sectionStyle(index: number): Record<string, string> {
+  const palette = this.palette();
+  return {
+    '--sec-c1': palette[index % palette.length],
+  };
+}
+
+readonly expandedCard = signal<number | null>(null);
+
+toggleCard(index: number): void {
+  this.expandedCard.update((current) => (current === index ? null : index));
+}
 }

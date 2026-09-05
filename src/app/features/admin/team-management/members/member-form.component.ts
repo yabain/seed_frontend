@@ -25,6 +25,7 @@ export class MemberFormComponent implements OnInit {
     _id: '',
     name: '',
     role: '',
+    description: '',
     photo: '',
     isActive: true,
     socialLinks: { facebook: '', twitter: '', x: '', linkedin: '', instagram: '' },
@@ -49,6 +50,7 @@ export class MemberFormComponent implements OnInit {
           this.form._id = member._id ?? '';
           this.form.name = member.name ?? '';
           this.form.role = member.role ?? '';
+          this.form.description = member.description ?? '';
           this.form.photo = member.photo ?? '';
           this.form.isActive = member.isActive ?? true;
           this.form.socialLinks = {
@@ -105,6 +107,7 @@ export class MemberFormComponent implements OnInit {
     const payload: Partial<TeamMember> = {
       name: this.form.name.trim(),
       role: (this.form.role ?? '').trim(),
+      description: (this.form.description ?? '').trim(),
       photo: this.form.photo ?? '',
       isActive: this.form.isActive ?? true,
       socialLinks: {

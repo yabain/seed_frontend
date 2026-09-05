@@ -1,0 +1,80 @@
+<section class="don-page">
+  <div class="don-aurora" aria-hidden="true">
+    <span class="don-aurora__orb don-aurora__orb--one"></span>
+    <span class="don-aurora__orb don-aurora__orb--two"></span>
+    <span class="don-aurora__orb don-aurora__orb--three"></span>
+  </div>
+  <span class="don-grid" aria-hidden="true"></span>
+
+  <div class="don-page__inner">
+    <header class="don-hero">
+      <span class="don-eyebrow">
+        <i class="fa-solid fa-heart" aria-hidden="true"></i>
+        {{ siteConfig()?.landingSections?.donations?.eyebrow || 'Faire un don' }}
+      </span>
+      <h1 class="don-hero__title">
+        {{ siteConfig()?.landingSections?.donations?.title || 'Contribuez à notre mission' }}
+      </h1>
+      <p class="don-hero__sub">
+        {{
+          siteConfig()?.landingSections?.donations?.description ||
+            'Chaque geste compte. Choisissez la méthode qui vous convient et soutenez nos projets en quelques secondes.'
+        }}
+      </p>
+    </header>
+
+    <section class="don-methods" *ngIf="loading()" aria-live="polite" aria-busy="true">
+      <article class="don-card don-card--skeleton" *ngFor="let i of [1, 2, 3]">
+        <span class="don-skeleton don-skeleton--logo"></span>
+        <span class="don-skeleton don-skeleton--qr"></span>
+        <span class="don-skeleton don-skeleton--title"></span>
+        <span class="don-skeleton don-skeleton--line"></span>
+        <span class="don-skeleton don-skeleton--btn"></span>
+      </article>
+    </section>
+
+    <section class="don-methods" *ngIf="!loading()">
+      <div class="don-methods__grid">
+        <ng-container *ngFor="let method of methods()">
+        <article class="don-card" *ngIf="method.name">
+          <header class="don-card__head">
+            <span class="don-card__logo" *ngIf="method.logo">
+              <img [src]="method.logo" [alt]="method.name" />
+            </span>
+            <div class="don-card__head-text">
+              <h3 class="don-card__name">{{ method.name }}</h3>
+              <p class="don-card__desc" *ngIf="method.details">{{ method.details }}</p>
+            </div>
+          </header>
+
+          <div class="don-card__qr-wrap" *ngIf="method.qrCodeImage">
+            <span class="don-card__qr-tile">
+              <img class="don-card__qr" [src]="method.qrCodeImage" alt="Code QR pour {{ method.name }}" />
+            </span>
+            <span class="don-card__qr-hint">
+              <i class="fa-solid fa-qrcode" aria-hidden="true"></i>
+              Scannez pour payer
+            </span>
+          </div>
+
+          <a
+            *ngIf="method.paymentLink"
+            [href]="method.paymentLink"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="don-card__cta"
+          >
+            {{ siteConfig()?.landingSections?.donations?.buttonLabel || 'Payer maintenant' }}
+            <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          </a>
+        </article>
+        </ng-container>
+      </div>
+
+      <div class="don-empty" *ngIf="methods().length === 0">
+        <i class="fa-solid fa-hand-holding-heart" aria-hidden="true"></i>
+        <p>Aucune méthode de don disponible pour le moment.</p>
+      </div>
+    </section>
+  </div>
+</section>

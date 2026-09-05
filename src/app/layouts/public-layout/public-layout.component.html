@@ -1,5 +1,5 @@
 <app-header />
-<main class="public-main">
+<main class="public-main" [class.public-main--grid]="!isHome()">
   <router-outlet />
 </main>
 <app-footer />

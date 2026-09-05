@@ -13,11 +13,13 @@ const SEGMENT_DESCRIPTIONS: Record<SegmentKey, string> = {
   programs:
     'Affiche ou masque la section « Programmes » sur la page d\'accueil ainsi que le lien du menu.',
   partners:
-    'Affiche ou masque la section « Partenaires » sur la page d\'accueil ainsi que le lien du menu.',
+    'Affiche ou masque la section « Partenaires » sur la landing page ainsi que le lien du menu.',
   events:
-    'Affiche ou masque la section « Événements » sur la page d\'accueil ainsi que le lien du menu.',
+    'Affiche ou masque la section « Événements » sur la landing page ainsi que le lien du menu.',
   team:
     'Affiche ou masque la page « Équipe » ainsi que son lien dans le menu du front office.',
+  donations:
+    'Affiche ou masque le lien « Don » dans la navbar ainsi que la page de don.',
 };
 
 @Component({
@@ -43,14 +45,9 @@ export class SegmentVisibilityComponent {
     const next = !this.checked();
     // L'API reçoit toujours l'état complet. Cela évite qu'une mise à jour
     // partielle d'un segment réinitialise les autres valeurs de visibilité.
+    const currentSegments = this.siteConfigService.config()?.segments as SiteSegments ?? {};
     const segments: SiteSegments = {
-      news: true,
-      resources: true,
-      programs: true,
-      partners: true,
-      events: true,
-      team: true,
-      ...(this.siteConfigService.config()?.segments ?? {}),
+      ...currentSegments,
       [this.segment()]: next,
     };
     const payload: Partial<SiteConfig> = {

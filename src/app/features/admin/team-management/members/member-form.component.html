@@ -62,8 +62,20 @@
           </div>
         </div>
 
-        <div class="form-field">
-          <label>Sections (groupes)</label>
+<div class="form-field">
+            <label>Description</label>
+            <textarea
+              class="form-control"
+              rows="3"
+              [(ngModel)]="form.description"
+              placeholder="Courte présentation du membre (affichée au survol de sa carte)"
+              maxlength="1000"
+            ></textarea>
+            <p class="text-muted text-sm">Affichée sur la page Équipe lors du survol de la carte.</p>
+          </div>
+
+          <div class="form-field">
+            <label>Sections (groupes)</label>
           <div class="chip-list" *ngIf="sections().length">
             <button
               type="button"
